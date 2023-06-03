@@ -1,11 +1,13 @@
 # Default variables, override in host or host group variables
 hostname_packages:
   - hostname
-#hostname: "{{ ansible_hostname }}"
 
+hostname: "{{ ansible_hostname }}"
+#hostname: "{{ ansible_hostname }}.hpc.local"
+
+host_entries: []
 # Example usage, define in host or host group variables
 #hosts_entries:
 #  - "10.10.1.1      hpc.local                 hpc"
 #  - "10.10.101.1 base.hpc.taltech.ee"
 #
-#hostname: "{{ ansible_hostname }}.hpc.local"

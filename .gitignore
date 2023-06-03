@@ -24,6 +24,7 @@ secret/
 *.bak
 *.tmp
 *.temp
+tmp/
 
 # Logs
 *.log

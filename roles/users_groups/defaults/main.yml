@@ -5,6 +5,7 @@ users_enable_sudo: true
 # The only mandatory parameter is the name.
 # Template example of group vars:
 
+users: []
 #users:
 #  - name: ''                           # username
 #    gecos: ''                          # comment
@@ -20,6 +21,7 @@ users_enable_sudo: true
 #    sudo: ''                           # sudo string
 #    system: false                      # If true, the user will be a system user. This does not affect existing users.
 
+users_deleted: []
 #users_deleted:
 #        - name: ''
 #        - name: ''

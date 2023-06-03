@@ -1,9 +1,11 @@
 # Example usage, define in host or host group variables
+exports: []
 #exports:
 #  - directory: "/usr/share/example"
 #    mode: "0755"
 #    destinations: "10.10.10.10/24(rw,no_root_squash) 10.10.255.0/24(rw,no_root_squash)"
 #
+mounts: []
 #mounts:
 #  - device: "10.10.10.10:/mnt/example"
 #    mount_point: "/share/example"

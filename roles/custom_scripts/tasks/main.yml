@@ -10,7 +10,7 @@
 - name: Download scripts
   ansible.builtin.get_url:
     url: "{{ item }}"
-    dest: "{{ item.dest | default('/usr/local/bin/{{ item | basename }}') }}"
+    dest: "{{ item.dest | default('/usr/local/bin/') }}"
     mode: "{{ item.mode | default('0774') }}"
     owner: "{{ item.mode | default('root') }}"
     group: "{{ item.mode | default('admin') }}"

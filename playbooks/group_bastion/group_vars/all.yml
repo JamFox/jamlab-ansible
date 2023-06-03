@@ -1,0 +1,3 @@
+users: "{{ vars_common_all_admin_users }}"
+
+script_urls: "{{ vars_common_all_script_urls }}"

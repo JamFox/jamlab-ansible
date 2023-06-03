@@ -8,33 +8,15 @@
 # 'all' tag is used to skip all roles
 # Even when skipping, syntax errors are still checked
   roles:
-    - { role: ad,             tags: [all, ad],             when: not (disabled_roles.ad | default(false))}
-    - { role: beegfs,         tags: [all, beegfs],         when: not (disabled_roles.beegfs | default(false))}
-    - { role: certs,          tags: [all, certs],          when: not (disabled_roles.certs | default(false))}
     - { role: chrony,         tags: [all, chrony],         when: not (disabled_roles.chrony | default(false))}
+    - { role: custom_scripts, tags: [all, custom_scripts], when: not (disabled_roles.custom_scripts | default(false)) }
     - { role: firewalld,      tags: [all, firewalld],      when: not (disabled_roles.firewalld | default(false))}
-    - { role: infiniband,     tags: [all, infiniband],     when: not (disabled_roles.infiniband | default(false))}
-    - { role: krb5,           tags: [all, krb5],           when: not (disabled_roles.krb5 | default(false))}
-    - { role: ldap,           tags: [all, ldap],           when: not (disabled_roles.ldap | default(false))}
-    - { role: mariadb,        tags: [all, mariadb],        when: not (disabled_roles.mariadb | default(false))}
-    - { role: modules,        tags: [all, modules],        when: not (disabled_roles.modules | default(false))}
     - { role: mounts_exports, tags: [all, mounts_exports], when: not (disabled_roles.mounts_exports | default(false))}
-    - { role: munge,          tags: [all, munge],          when: not (disabled_roles.munge | default(false))}
-    - { role: named,          tags: [all, named],          when: not (disabled_roles.named | default(false))}
     - { role: netplan,        tags: [all, netplan],        when: not (disabled_roles.netplan | default(false))}
-    - { role: networkmanager, tags: [all, networkmanager], when: not (disabled_roles.networkmanager | default(false)) }
     - { role: nfs,            tags: [all, nfs],            when: not (disabled_roles.nfs | default(false)) }
-    - { role: nsswitch,       tags: [all, nsswitch],       when: not (disabled_roles.nsswitch | default(false)) }
-    - { role: nvidia,         tags: [all, nvidia],         when: not (disabled_roles.nvidia | default(false)) }
-    - { role: pam,            tags: [all, pam],            when: not (disabled_roles.pam | default(false)) }
     - { role: resolv_hosts,   tags: [all, resolv_hosts],   when: not (disabled_roles.resolv_hosts | default(false)) }
     - { role: selinux,        tags: [all, selinux],        when: not (disabled_roles.selinux | default(false)) }
-    - { role: slurm,          tags: [all, slurm],          when: not (disabled_roles.slurm | default(false)) }
     - { role: soft_yum,       tags: [all, soft_yum],       when: not (disabled_roles.soft_yum | default(false)) }
     - { role: soft_apt,       tags: [all, soft_apt],       when: not (disabled_roles.soft_apt | default(false)) }
     - { role: sshd,           tags: [all, sshd],           when: not (disabled_roles.sshd | default(false)) }
-    - { role: sssd,           tags: [all, sssd],           when: not (disabled_roles.sssd | default(false)) }
-    - { role: skel,           tags: [all, skel],           when: not (disabled_roles.skel | default(false)) }
-    - { role: sysadmin_tools, tags: [all, sysadmin_tools], when: not (disabled_roles.sysadmin_tools | default(false)) }
     - { role: users_groups,   tags: [all, users_groups],   when: not (disabled_roles.users_groups | default(false)) }
-    - { role: zabbix,         tags: [all, zabbix],         when: not (disabled_roles.zabbix | default(false)) }
