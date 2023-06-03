@@ -1,0 +1,31 @@
+- name: Configure motd
+  when: motd_script_enabled
+  block:
+  - name: Install dnsutils
+    ansible.builtin.apt:
+      name:
+        - dnsutils
+      state: latest
+  - name: Remove default motd
+    ansible.builtin.file:
+      path: /etc/motd
+      state: absent
+  - name: Configure motd
+    ansible.builtin.template:
+      src: files/motd.sh.j2
+      dest: /etc/motd.sh
+      mode: "0755"
+  - name: Enable motd script
+    ansible.builtin.lineinfile:
+      dest: /etc/profile
+      regexp: "^/etc/motd.sh"
+      line: /etc/motd.sh
+      state: present
+
+- name: Disable motd script
+  ansible.builtin.lineinfile:
+    dest: /etc/profile
+    regexp: "^/etc/motd.sh"
+    line: /etc/motd.sh
+    state: absent
+  when: not motd_script_enabled

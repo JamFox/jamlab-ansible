@@ -11,6 +11,7 @@
     - { role: chrony,         tags: [all, chrony],         when: not (disabled_roles.chrony | default(false))}
     - { role: custom_scripts, tags: [all, custom_scripts], when: not (disabled_roles.custom_scripts | default(false)) }
     - { role: firewalld,      tags: [all, firewalld],      when: not (disabled_roles.firewalld | default(false))}
+    - { role: motd,           tags: [all, motd],           when: not (disabled_roles.motd | default(false))}
     - { role: mounts_exports, tags: [all, mounts_exports], when: not (disabled_roles.mounts_exports | default(false))}
     - { role: netplan,        tags: [all, netplan],        when: not (disabled_roles.netplan | default(false))}
     - { role: nfs,            tags: [all, nfs],            when: not (disabled_roles.nfs | default(false)) }

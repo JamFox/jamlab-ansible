@@ -1,4 +1,4 @@
-{{ ansible_managed | comment }}
+# {{ vars_common_all_ansible_managed_comment }}
 {% macro as_bool(var) %}{{ var | bool | ternary('yes', 'no') }}{% endmacro %}
 
 # default zone

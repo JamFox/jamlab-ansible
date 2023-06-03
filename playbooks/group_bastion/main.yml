@@ -6,5 +6,7 @@
     - ../vars_disabled_roles.yml
 
   roles:
-    - { role: users_groups,               tags: [all, users_groups],               when: not (disabled_roles.users_groups | default(false))}
-    - { role: custom_scripts,             tags: [all, custom_scripts],             when: not (disabled_roles.custom_scripts | default(false))}
+    - { role: users_groups,   tags: [all, users_groups],   when: not (disabled_roles.users_groups | default(false))}
+    - { role: motd,           tags: [all, motd],           when: not (disabled_roles.motd | default(false))}
+    - { role: sshd,           tags: [all, sshd],           when: not (disabled_roles.sshd | default(false))}
+    - { role: custom_scripts, tags: [all, custom_scripts], when: not (disabled_roles.custom_scripts | default(false))}

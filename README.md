@@ -24,16 +24,17 @@ Ansible playbooks for configuration management in push mode.
 | Role           | Complete | Dry-Test | Real-Test |
 | -------------- | -------- | -------- | --------- |
 | chrony         | ✔️        | ❌        | ❌         |
-| custom_scripts | ✔️        | ❌        | ❌         |
+| custom_scripts | ✔️        | ✔️        | ✔️         |
 | firewalld      | ✔️        | ✔️        | ❌         |
+| motd           | ✔️        | ✔️        | ✔️         |
 | mounts_exports | ✔️        | ✔️        | ❌         |
 | netplan        | ✔️        | ✔️        | ❌         |
 | nfs            | ✔️        | ❌        | ❌         |
 | resolv_hosts   | ✔️        | ✔️        | ❌         |
 | selinux        | ✔️        | ✔️        | ❌         |
-| soft_yum       | ✔️        | ✔️        | ❌         |
-| soft_apt       | ✔️        | ✔️        | ❌         |
-| sshd           | ✔️        | ✔️        | ❌         |
+| soft_yum       | ✔️        | ✔️        | ✔️         |
+| soft_apt       | ✔️        | ✔️        | ✔️         |
+| sshd           | ✔️        | ✔️        | ✔️         |
 | users_groups   | ✔️        | ✔️        | ✔️         |
 
 ## Usage

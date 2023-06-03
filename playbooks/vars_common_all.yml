@@ -6,10 +6,25 @@ vars_common_all_script_urls:
   - https://raw.githubusercontent.com/JamFox/ansible-parallel/main/ansible-parallel
   - https://raw.githubusercontent.com/JamFox/ansible-parallel/main/teams-msg
 
-vars_common_all_admin_users:
+users:
   - name: 'jamfox'
     primary_group: 'admin'
     homedir: '/home/jamfox'
     sudo: '%admin ALL=(ALL) NOPASSWD: ALL'
     ssh_authorized_keys:
       - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILayJ7ZP6Z6IDms4ujnz9nRnAJEIXwyto1SbSwfzjqst jamfox'
+
+sshd:
+  LogLevel: "INFO"
+  PasswordAuthentication: "no"
+  PermitRootLogin: "prohibit-password"
+  ChallengeResponseAuthentication: "no"
+  GSSAPIAuthentication: "no"
+  KerberosAuthentication: "no"
+  UseDNS: "no"
+  GSSAPICleanupCredentials: "yes"
+  UsePAM: "yes"
+  X11Forwarding: "yes"
+  PrintMotd: "no"
+  AcceptEnv: "LANG LC_*"
+  Subsystem: "sftp /usr/lib/openssh/sftp-server"
