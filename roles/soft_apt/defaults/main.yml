@@ -1,5 +1,6 @@
 # Default values, override in host or host group variables
 soft_packages_keep_latest: true
+soft_packages_autoremove: true
 
 # Example usage, define in host or host group variables
 
