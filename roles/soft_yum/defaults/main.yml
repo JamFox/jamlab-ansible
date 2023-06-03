@@ -1,0 +1,19 @@
+# Default values, override in host or host group variables
+soft_epel_enabled: true
+soft_packages_keep_latest: true
+
+# Example usage, define in host or host group variables
+
+# Enable epel sources
+#soft_epel_enabled: true
+
+# Keeps all packages at latest version
+#soft_packages_keep_latest: true
+
+# Software to keep at latest version
+#soft_packages_latest:
+#  - vim
+
+# Software to keep uninstalled
+#soft_packages_absent:
+#  - idk

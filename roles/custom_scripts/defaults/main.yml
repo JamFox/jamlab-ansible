@@ -1,0 +1,2 @@
+# Default values, override in host or host group variables
+script_urls: []

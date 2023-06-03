@@ -1,0 +1,23 @@
+# Default values, override in host or host group variables
+soft_packages_keep_latest: true
+
+# Example usage, define in host or host group variables
+
+# Keeps all packages at latest version
+#soft_packages_keep_latest: true
+
+# Software to keep at latest version
+#soft_packages_latest:
+#  - vim
+
+# Software to keep uninstalled
+#soft_packages_absent:
+#  - idk
+
+# Extra keys for extra repositories
+#soft_extra_keys:
+#  - { keyserver: keyserver.ubuntu.com, id: F60F4B3D7FA2AF80 }
+
+# Extra repositories
+#soft_extra_repos:
+#  - repo: "deb http://ee.archive.ubuntu.com/ubuntu focal main restricted"

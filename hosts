@@ -1,0 +1,5 @@
+[bastion]
+rpi0         ansible_host=192.168.10.53
+
+[pve]
+pve0

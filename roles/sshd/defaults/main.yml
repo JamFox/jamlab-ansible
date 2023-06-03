@@ -1,0 +1,82 @@
+# Default values, override in host or host group variables
+sshd_packages_centos:
+  - openssh
+  - openssh-server
+
+sshd_packages_debian:
+  - openssh-client
+  - openssh-server
+
+sshd_main_config_file: /etc/ssh/sshd_config
+sshd_sftp_server: /usr/libexec/openssh/sftp-server
+sshd_config_file: /etc/ssh/sshd_config.d/00-ansible_system_role.conf
+sshd_binary: /usr/sbin/sshd
+sshd_config_owner: "root"
+sshd_config_group: "root"
+sshd_config_mode: "0664"
+sshd_service: sshd
+sshd_defaults:
+  Include: /etc/ssh/sshd_config.d/*.conf
+  AuthorizedKeysFile: .ssh/authorized_keys
+  Subsystem: sftp /usr/libexec/sftp-server
+
+# If the below is false, don't manage the service or reload the SSH daemon at all
+sshd_manage_service: true
+# If the below is false, don't reload the ssh daemon on change
+sshd_allow_reload: true
+# If the below is true, also install service files from the templates pointed
+# to by the `sshd_service_template_*` variables
+sshd_install_service: false
+sshd_service_template_service: sshd.service.jinja
+sshd_service_template_at_service: sshd@.service.jinja
+sshd_service_template_socket: sshd.socket.jinja
+# If the below is true, create a backup of the config file when the template is copied
+sshd_backup: true
+# Empty dicts to avoid errors if not defined in host or group vars
+sshd: {}
+# The path to sshd_config file. This is useful when creating an included
+# configuration file snippet or configuring second sshd service
+sshd_runtime_directory: /run/sshd
+sshd_runtime_directory_mode: "0755"
+# Instead of replacing the whole configuration file, just add a specified snippet
+sshd_config_namespace:
+
+# Example usage, define in host or host group variables
+#sshd:
+#  PermitRootLogin: no
+#  PasswordAuthentication: no
+#  Match:
+#    - Condition: "Address 192.0.2.0/24"
+#      PermitRootLogin: yes
+#      PasswordAuthentication: yes
+
+#sshd_config_namespace: accept-env
+#sshd:
+#  AcceptEnv:
+#    LANG
+#    LS_COLORS
+#    EDITOR
+
+# EXAMPLE CONFIG:
+#sshd:
+#  Compression: true
+#  ListenAddress:
+#    - "0.0.0.0"
+#    - "::"
+#  GSSAPIAuthentication: no
+#  Match:
+#    - Condition: "Group user"
+#      GSSAPIAuthentication: yes
+#sshd_UsePrivilegeSeparation: no
+#sshd_match:
+#    - Condition: "Group xusers"
+#      X11Forwarding: yes
+# RESULTS IN FOLLOWING sshd_config:
+#
+# Compression yes
+# GSSAPIAuthentication no
+# UsePrivilegeSeparation no
+# Match Group user
+#   GSSAPIAuthentication yes
+# Match Group xusers
+#   X11Forwarding yes

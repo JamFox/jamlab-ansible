@@ -1,0 +1,9 @@
+- name: Mount all drives
+  ansible.builtin.command: mount -a
+  args:
+    warn: false
+
+- name: Export all drives
+  ansible.builtin.command: exportfs -a
+  args:
+    warn: false

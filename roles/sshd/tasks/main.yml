@@ -1,0 +1,82 @@
+- name: Install sshd packages if CentOS/RedHat
+  ansible.builtin.yum:
+    name: "{{ sshd_packages_centos }}"
+    state: "{{ sshd_package_state | default(default_package_state | default('present')) }}"
+  when: ansible_os_family in ['CentOS', 'RedHat']
+
+- name: Install ssh packages if Debian
+  ansible.builtin.apt:
+    name: "{{ sshd_packages_debian }}"
+    state: "{{ sshd_package_state | default(default_package_state | default('present')) }}"
+  when: ansible_os_family == "Debian"
+
+- name: Render the main configuration
+  when: sshd_config_namespace is none
+  block:
+    - name: Create a directory for drop-in configuration snippets
+      ansible.builtin.file:
+        path: "{{ sshd_config_file | dirname }}"
+        state: directory
+        mode: "0700"
+      when:
+        - sshd_main_config_file is not none
+        - sshd_config_file | dirname != sshd_main_config_file | dirname
+    - name: Create the complete configuration file
+      ansible.builtin.template:
+        src: files/sshd_config.jinja
+        dest: "{{ sshd_main_config_file }}"
+        owner: "{{ sshd_config_owner }}"
+        group: "{{ sshd_config_group }}"
+        mode: "{{ sshd_config_mode }}"
+        backup: "{{ sshd_backup }}"
+      notify: Restart sshd service
+
+- name: Render configuration file namespace snippet
+  ansible.builtin.blockinfile:
+    path: "{{ sshd_main_config_file }}"
+    owner: "{{ sshd_config_owner }}"
+    group: "{{ sshd_config_group }}"
+    mode: "{{ sshd_config_mode }}"
+    block: |
+      Match all
+      {{ lookup('template', 'files/sshd_config_snippet.jinja') }}
+    create: true
+    marker: "# {mark} {{ vars_common_all_ansible_managed_comment }}: sshd namespace {{ sshd_config_namespace }}"
+    backup: "{{ sshd_backup }}"
+  notify: Restart sshd service
+  when: sshd_config_namespace is not none
+
+- name: Install systemd service files
+  when: sshd_install_service | bool
+  block:
+    - name: Install service unit file
+      ansible.builtin.template:
+        src: "files/{{ sshd_service_template_service }}"
+        dest: "/etc/systemd/system/{{ sshd_service }}.service"
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart sshd service
+    - name: Install instanced service unit file
+      ansible.builtin.template:
+        src: "files/{{ sshd_service_template_at_service }}"
+        dest: "/etc/systemd/system/{{ sshd_service }}@.service"
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart sshd service
+    - name: Install socket unit file
+      ansible.builtin.template:
+        src: "files/{{ sshd_service_template_socket }}"
+        dest: "/etc/systemd/system/{{ sshd_service }}.socket"
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart sshd service
+
+- name: Service enabled and running
+  ansible.builtin.service:
+    name: "{{ sshd_service }}"
+    enabled: true
+    state: started
+  when: sshd_manage_service

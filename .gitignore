@@ -1,0 +1,30 @@
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+.history/
+ 
+# Common credential files
+**/credentials.json
+**/client_secrets.json
+**/client_secret.json
+*creds*
+*.dat
+*.httr-oauth*
+*.key
+*.pem
+*.cert
+secrets/
+secret/
+
+# Temp files
+*.bak
+*.tmp
+*.temp
+
+# Logs
+*.log
+logs/

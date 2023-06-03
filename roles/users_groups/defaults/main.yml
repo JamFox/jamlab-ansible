@@ -1,0 +1,25 @@
+users_default_shell: /bin/bash
+users_create_primary_group: true
+users_enable_sudo: true
+
+# The only mandatory parameter is the name.
+# Template example of group vars:
+
+#users:
+#  - name: ''                           # username
+#    gecos: ''                          # comment
+#    homedir: ''                        # homedir
+#    uid: ''                            # uid
+#    primary_gid: ''                    # primary group's gid
+#    primary_group: ''                  # primary group
+#    groups: []                         # other groups
+#    no_create_home: false              # If true, do not create a home directory. Defaults to true if `system: true`.
+#    shell: "{{ users_default_shell }}" # shell
+#    passwd: ''                         # A SHA512 hashed and salted password
+#    ssh_authorized_keys: []            # ssh pub keys to add to add auth_keys
+#    sudo: ''                           # sudo string
+#    system: false                      # If true, the user will be a system user. This does not affect existing users.
+
+#users_deleted:
+#        - name: ''
+#        - name: ''

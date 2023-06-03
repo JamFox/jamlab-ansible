@@ -1,0 +1,41 @@
+- name: Configure mounts
+  when: mounts is defined
+  block:
+    - name: Create mount directories
+      ansible.builtin.file:
+        path: "{{ item.mount_point }}"
+        state: directory
+        mode: "{{ item.mode }}"
+      with_items: "{{ mounts | default([]) }}"
+    - name: Add mounts to fstab
+      ansible.builtin.blockinfile:
+        block: |
+          {% for mount in mounts %}
+          {{ mount.device }} {{ mount.mount_point }} {{ mount.type }} {{ mount.options }} {{ mount.dump }} {{ mount.pass }}
+          {% endfor %}
+        dest: /etc/fstab
+        marker: "# {mark} {{ vars_common_all_ansible_managed_comment }}"
+      notify: Mount all drives
+
+- name: Configure exports
+  when: exports is defined
+  block:
+    - name: Create export directories
+      ansible.builtin.file:
+        path: "{{ item.directory }}"
+        state: directory
+        mode: "{{ item.mode }}"
+      with_items: "{{ exports | default([]) }}"
+      when: item.directory is defined
+    - name: Add exports to exports
+      ansible.builtin.blockinfile:
+        block: |
+          {% for export in exports %}
+          {{ export.directory }} {{ export.destinations }}
+          {% endfor %}
+        dest: /etc/exports
+        create: true
+        owner: root
+        mode: "0644"
+        marker: "# {mark} {{ vars_common_all_ansible_managed_comment }}"
+      notify: Export all drives

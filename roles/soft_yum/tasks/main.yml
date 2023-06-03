@@ -1,0 +1,30 @@
+- name: Install epel
+  ansible.builtin.yum:
+    name: epel-release
+    state: present
+  when: soft_epel_enabled
+
+- name: Uninstall epel
+  ansible.builtin.yum:
+    name: epel-release
+    state: absent
+  when: not soft_epel_enabled
+
+# Uninstall/Install packages block
+- name: Update soft to latest
+  ansible.builtin.yum:
+    name: "*"
+    state: latest
+  when: soft_packages_keep_latest is defined and soft_packages_keep_latest
+
+- name: Install latest software
+  ansible.builtin.yum:
+    name: "{{ soft_packages_latest }}"
+    state: latest
+  when: soft_packages_latest is defined
+
+- name: Uninstall software
+  ansible.builtin.yum:
+    name: "{{ soft_packages_absent }}"
+    state: absent
+  when: soft_packages_absent is defined

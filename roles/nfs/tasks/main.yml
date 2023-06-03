@@ -1,0 +1,24 @@
+# Install
+- name: Install nfs packages for CentOS/RedHat
+  ansible.builtin.yum:
+    name: "{{ nfs_packages_centos }}"
+    state: "{{ nfs_package_state | default(default_package_state | default('present')) }}"
+  when: ansible_os_family in ['CentOS', 'RedHat']
+
+- name: Install nfs packages for Debian
+  ansible.builtin.apt:
+    name: "{{ nfs_packages_debian }}"
+    state: "{{ nfs_package_state | default(default_package_state | default('present')) }}"
+  when: ansible_os_family == "Debian"
+
+# Services
+- name: Enable services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop:
+    - rpcbind
+    - nfs-server
+    - nfs-lock
+    - nfs-idmap

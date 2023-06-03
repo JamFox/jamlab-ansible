@@ -1,0 +1,51 @@
+# Extra sources block
+- name: Configure extra keys
+  when: soft_extra_sources is defined
+  block:
+    - name: Add repository GPG keys from URLs
+      ansible.builtin.apt_key:
+        url: "{{ item.url }}"
+        state: "{{ item.state | default('present') }}"
+      with_items: "{{ soft_extra_sources | default([]) }}"
+      when: item.url is defined
+    - name: Add repository GPG keys from keyservers
+      ansible.builtin.apt_key:
+        keyserver: "{{ item.keyserver }}"
+        id: "{{ item.id }}"
+        state: "{{ item.state | default('present') }}"
+      with_items: "{{ soft_extra_sources | default([]) }}"
+      when: item.keyserver is defined and item.id is defined
+
+- name: Add repository sources
+  ansible.builtin.apt_repository:
+    repo: "{{ item.repo }}"
+    state: "{{ item.state | default('present') }}"
+    update_cache: false
+  with_items: "{{ soft_extra_repos | default([]) }}"
+  when: soft_extra_repos is defined
+  register: r_sources
+
+# Refresh cache if repos changed
+- name: Refresh cache if sources changed
+  ansible.builtin.apt:
+    update_cache: true
+  when: r_sources is defined and r_sources.changed
+
+# Uninstall/Install packages block
+- name: Update soft to latest
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+  when: soft_packages_keep_latest is defined and soft_packages_keep_latest
+
+- name: Install latest software
+  ansible.builtin.apt:
+    name: "{{ soft_packages_latest }}"
+    state: latest
+  when: soft_packages_latest is defined
+
+- name: Uninstall software
+  ansible.builtin.apt:
+    name: "{{ soft_packages_absent }}"
+    state: absent
+  when: soft_packages_absent is defined

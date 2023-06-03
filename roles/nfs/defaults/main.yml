@@ -1,0 +1,7 @@
+# Default values, override in host or host group variables
+nfs_packages_centos:
+  - nfs-utils
+
+nfs_packages_debian:
+  - nfs-common
+  - nfs-kernel-server

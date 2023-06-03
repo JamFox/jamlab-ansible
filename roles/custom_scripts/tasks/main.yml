@@ -1,0 +1,17 @@
+#- name: Copy scripts
+#  ansible.builtin.template:
+#    dest: "{{ item.dest | default('/usr/local/bin') }}"
+#    src: "{{ item.src }}"
+#    owner: "{{ item.owner | default('root') }}"
+#    mode: "{{ item.mode | default('0700') }}"
+#  loop:
+#    - { src: files/example.sh }
+
+- name: Download scripts
+  ansible.builtin.get_url:
+    url: "{{ item }}"
+    dest: "{{ item.dest | default('/usr/local/bin/{{ item | basename }}') }}"
+    mode: "{{ item.mode | default('0774') }}"
+    owner: "{{ item.mode | default('root') }}"
+    group: "{{ item.mode | default('admin') }}"
+  loop: "{{ script_urls }}"

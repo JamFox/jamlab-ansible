@@ -1,0 +1,166 @@
+# Install
+- name: Install Firewalld if CentOS/RedHat
+  ansible.builtin.yum:
+    name: "{{ firewalld_packages }}"
+    state: "{{ firewalld_package_state | default(default_package_state | default('present')) }}"
+  when: ansible_os_family in ['CentOS', 'RedHat']
+
+- name: Install Firewalld if Debian
+  ansible.builtin.apt:
+    name: "{{ firewalld_packages }}"
+    state: "{{ firewalld_package_state | default(default_package_state | default('present')) }}"
+  when: ansible_os_family == "Debian"
+
+# Configuration
+- name: Create firewalld configuration
+  ansible.builtin.template:
+    src: files/firewalld.conf.jinja
+    dest: /etc/firewalld/firewalld.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart firewalld service
+  vars:
+    cfg: "{{ firewalld_config_defaults | combine(firewalld_config) }}"
+  when: firewalld_enabled
+
+# Service
+- name: Manage firewalld service
+  ansible.builtin.service:
+    name: firewalld
+    state: "{{ firewalld_service_state }}"
+    enabled: "{{ firewalld_enabled }}"
+
+# Ipsets using xml template
+- name: Manage firewalld ipsets
+  when: firewalld_ipsets | length > 0
+  block:
+    - name: Configure firewalld ipsets
+      ansible.builtin.template:
+        src: files/ipset_template.xml.jinja
+        dest: /etc/firewalld/ipsets/{{ item.name }}.xml
+        mode: "0644"
+      with_items: "{{ firewalld_ipsets }}"
+      notify: Reload firewalld
+      loop_control:
+        label: "{{ item.name }}"
+    - name: Get ipsets in /etc/firewalld/ipsets
+      ansible.builtin.shell: ls -1 /etc/firewalld/ipsets/ | grep -E .xml$
+      register: get_firewalld_ipsets
+      changed_when: false
+      failed_when: false
+      when: firewalld_remove_unmanaged
+    - name: Remove unmanaged ipsets in /etc/firewalld/ipsets
+      ansible.builtin.file:
+        path: "/etc/firewalld/ipsets/{{ item }}"
+        state: absent
+      with_items: "{{ get_firewalld_ipsets.stdout_lines | default(omit) }}"
+      notify: Reload firewalld
+      when:
+        - firewalld_remove_unmanaged
+        - item|replace('.xml','') not in firewalld_ipsets|map(attribute='name')|list
+
+# Services using xml template
+- name: Manage firewalld services
+  when: firewalld_services | length > 0
+  block:
+    - name: Configure firewalld services
+      ansible.builtin.template:
+        src: files/service_template.xml.jinja
+        dest: /etc/firewalld/services/{{ item.name }}.xml
+        mode: "0644"
+      with_items: "{{ firewalld_services }}"
+      notify: Reload firewalld
+      loop_control:
+        label: "{{ item.name }}"
+    - name: Get services in /etc/firewalld/services
+      ansible.builtin.shell: ls -1 /etc/firewalld/services/ | grep -E .xml$
+      register: get_firewalld_services
+      changed_when: false
+      failed_when: false
+      when: firewalld_remove_unmanaged
+    - name: Remove unmanaged services in /etc/firewalld/services
+      ansible.builtin.file:
+        path: "/etc/firewalld/services/{{ item }}"
+        state: absent
+      with_items: "{{ get_firewalld_services.stdout_lines | default(omit) }}"
+      notify: Reload firewalld
+      when:
+        - firewalld_remove_unmanaged
+        - item|replace('.xml','') not in firewalld_services|map(attribute='name')|list
+
+# Zones using xml template
+- name: Manage firewalld zones
+  when: firewalld_zones | length > 0
+  block:
+    - name: Configure firewalld zones
+      ansible.builtin.template:
+        src: files/zone_template.xml.jinja
+        dest: /etc/firewalld/zones/{{ item.name }}.xml
+        mode: "0644"
+      with_items: "{{ firewalld_zones }}"
+      notify: Reload firewalld
+      loop_control:
+        label: "{{ item.name }}"
+    - name: Get zones in /etc/firewalld/zones
+      ansible.builtin.shell: ls -1 /etc/firewalld/zones/ | grep -E .xml$
+      register: get_firewalld_zones
+      changed_when: false
+      failed_when: false
+      when: firewalld_remove_unmanaged
+    - name: Remove unmanaged zones in /etc/firewalld/zones
+      ansible.builtin.file:
+        path: "/etc/firewalld/zones/{{ item }}"
+        state: absent
+      with_items: "{{ get_firewalld_zones.stdout_lines | default(omit) }}"
+      notify: Reload firewalld
+      when:
+        - firewalld_remove_unmanaged
+        - item|replace('.xml','') not in firewalld_zones|map(attribute='name')|list
+
+# Rules using firewalld module
+- name: Manage permanent firewall rules
+  ansible.posix.firewalld:
+    icmp_block: "{{ item.icmp_block | default(omit) }}"
+    icmp_block_inversion: "{{ item.icmp_block_inversion | default(omit) }}"
+    immediate: "{{ item.immediate | default(false) }}"
+    interface: "{{ item.interface | default(omit) }}"
+    masquerade: "{{ item.masquerade | default(omit) }}"
+    permanent: "{{ item.permanent | default(true) }}"
+    port: "{{ item.port | default(omit) }}"
+    rich_rule: "{{ item.rich_rule | default(omit) }}"
+    service: "{{ item.service | default(omit) }}"
+    source: "{{ item.source | default(omit) }}"
+    state: "{{ item.state | default('enabled') }}"
+    timeout: "{{ item.timeout | default(omit) }}"
+    zone: "{{ item.zone | default(omit) }}"
+  when:
+    - firewalld_enabled
+    - firewalld_service_state != 'stopped'
+    - item.permanent | default(true)
+  loop: "{{ firewalld_rules }}"
+  notify: Restart firewalld service
+
+- name: Flush handlers to apply permarules immediately
+  ansible.builtin.meta: flush_handlers
+
+- name: Manage temporary firewall rules
+  ansible.posix.firewalld:
+    icmp_block: "{{ item.icmp_block | default(omit) }}"
+    icmp_block_inversion: "{{ item.icmp_block_inversion | default(omit) }}"
+    immediate: "{{ item.immediate | default(false) }}"
+    interface: "{{ item.interface | default(omit) }}"
+    masquerade: "{{ item.masquerade | default(omit) }}"
+    permanent: "{{ item.permanent | default(true) }}"
+    port: "{{ item.port | default(omit) }}"
+    rich_rule: "{{ item.rich_rule | default(omit) }}"
+    service: "{{ item.service | default(omit) }}"
+    source: "{{ item.source | default(omit) }}"
+    state: "{{ item.state | default('enabled') }}"
+    timeout: "{{ item.timeout | default(omit) }}"
+    zone: "{{ item.zone | default(omit) }}"
+  when:
+    - firewalld_enabled
+    - firewalld_service_state != 'stopped'
+    - not (item.permanent | default(true))
+  loop: "{{ firewalld_rules }}"

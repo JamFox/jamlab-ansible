@@ -1,0 +1,31 @@
+- name: Install netplan packages for Debian
+  ansible.builtin.apt:
+    name: "{{ netplan_packages + netplan_renderer_packages }}"
+    state: "{{ netplan_package_state | default(default_package_state | default('present')) }}"
+  when: ansible_os_family == "Debian"
+
+- name: Remove existing netplan configs that are not netplan_config_file
+  when: netplan_remove_existing
+  block:
+    - name: Find existing netplan configs
+      ansible.builtin.find:
+        paths: /etc/netplan
+        patterns: "*.yml,*.yaml"
+      register: _netplan_configs
+    - name: Remove existing netplan configs
+      ansible.builtin.file:
+        path: "{{ item['path'] }}"
+        state: absent
+      with_items: "{{ _netplan_configs['files'] }}"
+      when:
+        - item['path'] != netplan_config_file
+        - netplan_configuration != []
+
+- name: Render netplan config
+  ansible.builtin.template:
+    src: files/config.yaml.jinja
+    dest: "{{ netplan_config_file }}"
+    mode: "0644"
+    backup: true
+  when: netplan_configuration != []
+  notify: Apply netplan

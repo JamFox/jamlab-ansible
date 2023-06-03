@@ -1,0 +1,8 @@
+# Default values, override in host or host group variables
+selinux_config_selinux: enforcing
+selinux_config_selinuxtype: targeted
+selinux_booleans: []
+selinux_fcontexts: []
+selinux_restore_dirs: []
+
+restorecon_path: /usr/sbin/restorecon

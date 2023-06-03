@@ -1,0 +1,23 @@
+---
+# Exclude paths
+exclude_paths:
+  - .git/
+  - bin/
+  - .gitignore
+  - logs/
+  - temp/
+
+# Skip rules or tags listed below
+skip_list:
+  - '503'
+  - braces
+  - yaml[comments]
+  - yaml[line-length]
+  - args[module]
+  - no-free-form
+  - risky-shell-pipe
+
+# Do not fail on warnings from the rules or tags listed below
+warn_list:
+  - experimental
+  - package-latest

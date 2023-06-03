@@ -1,0 +1,8 @@
+- name: PLAYBOOK FOR GROUP 'BASTION'
+  hosts: bastion
+  vars_files:
+    - ../vars_common_all.yml
+    - ../vars_disabled_roles.yml
+
+  roles:
+    - { role: custom_scripts,             tags: [all, custom_scripts],             when: not (disabled_roles.custom_scripts | default(false))}

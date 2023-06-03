@@ -1,0 +1,11 @@
+# {{ vars_common_all_ansible_managed_comment }}
+
+{% set unique_items = [] %}
+{% for user in users %}
+{% if user.sudo is defined %}
+{% if user.sudo not in unique_items %}
+{{ user.sudo }}
+{% set _ = unique_items.append(user.sudo) %}
+{% endif %}
+{% endif %}
+{% endfor %}

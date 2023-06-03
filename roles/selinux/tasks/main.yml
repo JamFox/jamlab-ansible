@@ -1,0 +1,36 @@
+- name: Configure SELinux
+  ansible.builtin.template:
+    src: files/config.jinja
+    dest: /etc/selinux/config
+    mode: "0644"
+
+- name: Set SELinux booleans
+  ansible.posix.seboolean:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    persistent: "{{ item.persistent | default('no') }}"
+  with_items: "{{ selinux_booleans }}"
+
+- name: Set SELinux file contexts
+  community.general.sefcontext:
+    target: "{{ item.target }}"
+    setype: "{{ item.setype }}"
+    ftype: "{{ item.ftype | default('a') }}"
+    state: "{{ item.state | default('present') }}"
+    selevel: "{{ item.selevel | default(omit) }}"
+    seuser: "{{ item.seuser | default(omit) }}"
+  with_items: "{{ selinux_fcontexts }}"
+
+- name: Restore SELinux labels on filesystem tree
+  ansible.builtin.command: "{{ restorecon_path }} -R -F -v {{ item }}"
+  with_items: "{{ selinux_restore_dirs }}"
+  register: restorecon_cmd
+  changed_when: '"Relabeled" in restorecon_cmd.stdout'
+
+- name: Restore SELinux labels on filesystem tree in check mode
+  ansible.builtin.command: "{{ restorecon_path }} -R -F -v -n {{ item }}"
+  with_items: "{{ selinux_restore_dirs }}"
+  register: restorecon_cmd
+  changed_when: '"Would relabel" in restorecon_cmd.stdout'
+  check_mode: false
+  when: ansible_check_mode

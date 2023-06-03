@@ -1,0 +1,15 @@
+vars_common_all_ansible_managed_comment: "Managed by Ansible, do not edit manually - changes made here will be overwritten!"
+vars_common_all_gateway_ipv4: '192.168.10.1'
+vars_common_all_dns_ipv4: '192.168.10.53'
+
+vars_common_all_script_urls:
+  - https://raw.githubusercontent.com/JamFox/ansible-parallel/main/ansible-parallel
+  - https://raw.githubusercontent.com/JamFox/ansible-parallel/main/teams-msg
+
+vars_common_all_admin_users:
+  - name: 'jamfox'
+    primary_group: 'admin'
+    homedir: '/home/jamfox'
+    sudo: '%admin ALL=(ALL) NOPASSWD: ALL'
+    ssh_authorized_keys:
+      - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILayJ7ZP6Z6IDms4ujnz9nRnAJEIXwyto1SbSwfzjqst jamfox'

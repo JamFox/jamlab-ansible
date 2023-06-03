@@ -1,0 +1,9 @@
+collections:
+  # Ansible Posix from Ansible Galaxy
+  # https://docs.ansible.com/ansible/latest/collections/ansible/posix/
+  - name: ansible.posix
+    version: 1.5.1
+  # Community General from Ansible Galaxy
+  # https://docs.ansible.com/ansible/latest/collections/community/general/
+  - name: community.general
+    version: 6.4.0

@@ -1,0 +1,7 @@
+- name: Restart sshd service
+  ansible.builtin.service:
+    name: "{{ sshd_service }}"
+    state: reloaded
+  when:
+    - sshd_manage_service
+    - sshd_allow_reload
