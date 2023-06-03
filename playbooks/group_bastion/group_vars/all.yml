@@ -1,16 +1,1 @@
 script_urls: "{{ vars_common_all_script_urls }}"
-
-soft_packages_absent:
-  - xserver* 
-  - lightdm* 
-  - raspberrypi-ui-mods 
-  - vlc* 
-  - lxde* 
-  - chromium* 
-  - desktop* 
-  - gnome* 
-  - gstreamer* 
-  - gtk* 
-  - hicolor-icon-theme* 
-  - lx* 
-  - mesa*
