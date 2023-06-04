@@ -1,0 +1,16 @@
+- name: Install telegram-send
+  ansible.builtin.pip:
+    name: telegram-send
+    version: "{{ telegram_send_version | default(omit) }}"
+    virtualenv: "{{ telegram_send_virtualenv | default(omit) }}"
+    state: "{{ telegram_send_state | default(omit) }}"
+    extra_args: "{{ telegram_send_extra_args | default(omit) }}"
+    executable: "{{ pip_executable }}"
+
+- name: Copy telegram-send config
+  ansible.builtin.template:
+    dest: "/home/{{ vars_common_all_main_user }}/.config/"
+    src: files/telegram-send.conf
+    owner: "{{ vars_common_all_main_user }}"
+    group: "{{ vars_common_all_main_group }}"
+    mode: "0660"

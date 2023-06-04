@@ -7,3 +7,7 @@ collections:
   # https://docs.ansible.com/ansible/latest/collections/community/general/
   - name: community.general
     version: 6.4.0
+
+roles:
+  - name: pip
+    src: https://github.com/geerlingguy/ansible-role-pip

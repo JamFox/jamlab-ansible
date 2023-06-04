@@ -35,17 +35,20 @@ Ansible playbooks for configuration management in push mode.
 | soft_yum       | ✔️        | ✔️        | ✔️         |
 | soft_apt       | ✔️        | ✔️        | ✔️         |
 | sshd           | ✔️        | ✔️        | ✔️         |
+| telegram_send  | ✔️        | ✔️        | ✔️         |
 | users_groups   | ✔️        | ✔️        | ✔️         |
 
 ## Usage
 
-Before all, install collection requirements (not needed when using [ansible-parallel](https://github.com/JamFox/ansible-parallel) which already does this):
+Before all, set the Ansible Vault password in home: `vim ~/.ansible-vault-pass`
+
+Then install collection requirements (not needed when using [ansible-parallel](https://github.com/JamFox/ansible-parallel) which already does this):
 
 ```bash
 ansible-galaxy collection install -r requirements.yml
 ```
 
-Then use [ansible-parallel](https://github.com/JamFox/ansible-parallel) bash script to run playbooks. 
+Then use ansible-playbook or [ansible-parallel](https://github.com/JamFox/ansible-parallel) bash script to run playbooks.
 
 ### Host inventory / Creating group playbooks
 

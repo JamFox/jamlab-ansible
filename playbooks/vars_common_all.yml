@@ -2,15 +2,39 @@ vars_common_all_ansible_managed_comment: "Managed by Ansible, do not edit manual
 vars_common_all_gateway_ipv4: '192.168.10.1'
 vars_common_all_dns_ipv4: '192.168.10.53'
 
+vars_common_all_soft_apt_tools:
+  - vim
+  - jq
+  - curl
+  - wget
+  - vim 
+  - git
+  - keychain
+  - tmux
+  - python3
+  - net-tools
+  - build-essential
+  - procps
+  - file
+  - gpg
+  - ansible
+  - ansible-lint
+
 vars_common_all_script_urls:
   - https://raw.githubusercontent.com/JamFox/ansible-parallel/main/ansible-parallel
   - https://raw.githubusercontent.com/JamFox/ansible-parallel/main/teams-msg
+  - https://raw.githubusercontent.com/JamFox/ansible-parallel/main/telegram-msg
 
+pip_package: python3-pip
+pip_executable: "{{ 'pip3' if pip_package.startswith('python3') else 'pip' }}"
+
+vars_common_all_main_user: jamfox
+vars_common_all_main_group: admin
 users:
-  - name: 'jamfox'
-    primary_group: 'admin'
-    homedir: '/home/jamfox'
-    sudo: '%admin ALL=(ALL) NOPASSWD: ALL'
+  - name: "{{ vars_common_all_main_user }}"
+    primary_group: "{{ vars_common_all_main_group }}"
+    homedir: "/home/{{ vars_common_all_main_user }}"
+    sudo: "%{{ vars_common_all_main_group }} ALL=(ALL) NOPASSWD: ALL"
     ssh_authorized_keys:
       - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILayJ7ZP6Z6IDms4ujnz9nRnAJEIXwyto1SbSwfzjqst jamfox'
 
@@ -28,3 +52,29 @@ sshd:
   PrintMotd: "no"
   AcceptEnv: "LANG LC_*"
   Subsystem: "sftp /usr/lib/openssh/sftp-server"
+
+vars_common_all_telegram_alert_token: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  35396661313761663639633734316336633033336439313662393639346662353930393566646461
+  6339633931383764353761663939323363343735303536310a333462623762363266653138656664
+  37393461663966666337346264663030363838316164313839383430356638393039333037643937
+  3235646633666230630a666433386364643030653836316230646339626362663764646630343334
+  31393537383237636137626661396636313966333337353135336463383736376131353037663438
+  6339633066656333373731623033353733643632323132633439
+
+vars_common_all_telegram_3dp_token: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  66666463653135343035633332643235333131643266656161613335626361623934636664616536
+  6330336330323234633436636537636132333565613730640a366464663662323234396431383430
+  33393933336135363736306565326234356263643930633364333464613261393136313062653339
+  3366376236396266390a366430343461333464393530343561636234373030396263353361613863
+  30633131623938616362633636333132353065396435356262366530373434336566373736643035
+  6239663438303861303636336665303330636365633232363632
+
+vars_common_all_telegram_chatid: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  37313461613237353564613965663338343564613162373066336438326436326533373035333034
+  3939333033383930616665366163616236643263633332660a643866333334393162633936333736
+  33613463623062663038383536623466663230646361663038613031356534663038663564643566
+  6237656135336564640a623066663962306237316638353039373864346130636336373361346663
+  6331
