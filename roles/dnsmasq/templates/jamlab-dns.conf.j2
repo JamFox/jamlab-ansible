@@ -24,17 +24,12 @@ server=4.4.4.4
 # Increase the size of dnsmasq's cache
 cache-size=65536
 
-# Base host record
-address=/{{ dnsmasq_domain }}/{{ dnsmasq_base_domain_ip }}
-
 # Host records
 {% for host in groups['all'] if host != 'localhost' %}
 address=/{{ hostvars[host].inventory_hostname }}.{{ dnsmasq_domain }}/{{ hostvars[host].ansible_host }}
 {% endfor %}
 
 # Custom records
-address=/octoprint.{{ dnsmasq_domain }}/{{ hostvars['rpi0'].ansible_host }}
-address=/haproxy.{{ dnsmasq_domain }}/{{ hostvars['rpi0'].ansible_host }}
-address=/proxy.{{ dnsmasq_domain }}/{{ hostvars['rpi0'].ansible_host }}
-address=/vpn.{{ dnsmasq_domain }}/{{ hostvars['rpi0'].ansible_host }}
-address=/pve.{{ dnsmasq_domain }}/{{ hostvars['pve0'].ansible_host }}
+{% for record in dnsmasq_records %}
+address=/{{ record.name }}/{{ record.ip }}
+{% endfor %}

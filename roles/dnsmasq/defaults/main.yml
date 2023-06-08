@@ -1,3 +1,4 @@
 dnsmasq_domain_local:
 dnsmasq_domain:
 dnsmasq_base_domain_ip:
+dnsmasq_records: []
