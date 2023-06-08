@@ -1,0 +1,18 @@
+- name: Disable systemd-resolved
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: stopped
+
+- name: Install dnsmasq
+  ansible.builtin.apt:
+    name:
+      - dnsmasq
+    state: latest
+
+- name: Template dnsmasq configs
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop:
+  - { src: jamlab-dns.conf.j2, dest: /etc/dnsmasq.d/jamlab-dns.conf }
+  notify: Restart dnsmasq

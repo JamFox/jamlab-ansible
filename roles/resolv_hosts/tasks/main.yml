@@ -24,3 +24,8 @@
   ansible.builtin.hostname:
     name: "{{ hostname }}"
   when: hostname is defined
+
+- name: Set hostname as per host inventory
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+  when: hostname is not defined
