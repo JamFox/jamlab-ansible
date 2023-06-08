@@ -1,3 +1,7 @@
 script_urls: "{{ vars_common_all_script_urls }}"
 
 soft_packages_latest: "{{ vars_common_all_soft_apt_tools }}"
+
+dnsmasq_domain_local: "{{ vars_common_all_default_domain }}"
+dnsmasq_domain: "{{ vars_common_all_default_domain }}"
+dnsmasq_base_domain_ip: "{{ vars_common_all_dns_ipv4 }}"

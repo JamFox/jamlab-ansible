@@ -12,3 +12,4 @@
     - { role: telegram_send,  tags: [all, telegram_send],  when: not (disabled_roles.telegram_send | default(false)) }
     - { role: motd,           tags: [all, motd],           when: not (disabled_roles.motd | default(false))}
     - { role: sshd,           tags: [all, sshd],           when: not (disabled_roles.sshd | default(false))}
+    - { role: dnsmasq,        tags: [all, dnsmasq],        when: not (disabled_roles.dnsmasq | default(false))}

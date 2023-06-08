@@ -29,5 +29,5 @@ address=/{{ dnsmasq_domain }}/{{ dnsmasq_base_domain_ip }}
 
 # Host records
 {% for host in groups['all'] if host != 'localhost' %}
-address=/{{ hostvars[host].ansible_hostname }}.{{ dnsmasq_domain }}/{{ hostvars[host].ansible_host }}
+address=/{{ hostvars[host].inventory_hostname }}.{{ dnsmasq_domain }}/{{ hostvars[host].ansible_host }}
 {% endfor %}
