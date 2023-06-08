@@ -1,0 +1,4 @@
+- name: Remove pve enterprise sources
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/pve-enterprise.list
+    state: absent

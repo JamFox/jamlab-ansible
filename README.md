@@ -25,12 +25,13 @@ Ansible playbooks for configuration management in push mode.
 | -------------- | -------- | -------- | --------- |
 | chrony         | ✔️        | ❌        | ❌         |
 | custom_scripts | ✔️        | ✔️        | ✔️         |
-| dnsmasq        | ❌        | ❌        | ❌         |
+| dnsmasq        | ✔️        | ✔️        | ✔️         |
 | firewalld      | ✔️        | ✔️        | ❌         |
 | motd           | ✔️        | ✔️        | ✔️         |
 | mounts_exports | ✔️        | ✔️        | ❌         |
 | netplan        | ✔️        | ✔️        | ❌         |
 | nfs            | ✔️        | ❌        | ❌         |
+| proxmox        | ✔️        | ✔️        | ✔️         |
 | resolv_hosts   | ✔️        | ✔️        | ❌         |
 | selinux        | ✔️        | ✔️        | ❌         |
 | soft_yum       | ✔️        | ✔️        | ✔️         |
