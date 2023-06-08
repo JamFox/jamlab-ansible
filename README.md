@@ -32,6 +32,7 @@ Ansible playbooks for configuration management in push mode.
 | netplan        | ✔️        | ✔️        | ❌         |
 | nfs            | ✔️        | ❌        | ❌         |
 | proxmox        | ✔️        | ✔️        | ✔️         |
+| pve_provision  | ❌        | ❌        | ❌         |
 | resolv_hosts   | ✔️        | ✔️        | ❌         |
 | selinux        | ✔️        | ✔️        | ❌         |
 | soft_yum       | ✔️        | ✔️        | ✔️         |

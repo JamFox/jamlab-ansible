@@ -3,3 +3,9 @@ rpi0         ansible_host=192.168.10.53
 
 [pve]
 pve0         ansible_host=192.168.10.100
+
+[vm_svc]
+
+[vm_base]
+
+[vm_test]

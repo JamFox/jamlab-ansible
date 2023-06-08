@@ -1,7 +1,13 @@
 vars_common_all_ansible_managed_comment: "Managed by Ansible, do not edit manually - changes made here will be overwritten!"
 vars_common_all_default_domain: 'jamfox.dev'
 vars_common_all_gateway_ipv4: '192.168.10.1'
+vars_common_all_mask_ipv4: '/24'
 vars_common_all_dns_ipv4: '192.168.10.53'
+vars_common_all_pve_default_ipv4: '192.168.10.100'
+vars_common_all_pve_default_port: '8006'
+vars_common_all_vm_test_ipv4: '192.168.10.21'
+vars_common_all_vm_svc_ipv4: '192.168.10.22'
+vars_common_all_vm_base_ipv4: '192.168.10.23'
 
 vars_common_all_soft_apt_tools:
   - vim
