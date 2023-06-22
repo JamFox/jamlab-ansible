@@ -11,7 +11,7 @@
 
 - name: Template dnsmasq configs
   ansible.builtin.template:
-    src: files/"{{ item.src }}"
+    src: "files/{{ item.src }}"
     dest: "{{ item.dest }}"
   loop:
   - { src: jamlab-dns.conf.j2, dest: /etc/dnsmasq.d/jamlab-dns.conf }
