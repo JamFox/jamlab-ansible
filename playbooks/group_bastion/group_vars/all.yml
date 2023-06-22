@@ -16,3 +16,7 @@ dnsmasq_records:
     ip: "{{ hostvars['rpi0'].ansible_host }}"
   - name: "pve.{{ vars_common_all_default_domain }}"
     ip: "{{ hostvars['pve0'].ansible_host }}"
+
+ddclient_api_login: "{{ vars_common_all_dns_login }}"
+ddclient_api_key: "{{ vars_common_all_dns_key }}"
+ddclient_api_token: "{{ vars_common_all_dns_token }}"

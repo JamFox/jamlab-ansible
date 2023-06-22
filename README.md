@@ -25,6 +25,7 @@ Ansible playbooks for configuration management in push mode.
 | -------------- | -------- | -------- | --------- |
 | chrony         | ✔️        | ❌        | ❌         |
 | custom_scripts | ✔️        | ✔️        | ✔️         |
+| ddclient       | ✔️        | ✔️        | ✔️         |
 | dnsmasq        | ✔️        | ✔️        | ✔️         |
 | firewalld      | ✔️        | ✔️        | ❌         |
 | motd           | ✔️        | ✔️        | ✔️         |

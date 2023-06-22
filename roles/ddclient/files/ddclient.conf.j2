@@ -1,0 +1,12 @@
+# {{ vars_common_all_ansible_managed_comment }}
+daemon=303
+ssl=yes
+syslog=yes
+protocol=cloudflare
+use=web
+web='https://cloudflare.com/cdn-cgi/trace'
+web-skip='ip='
+login={{ ddclient_api_login }}
+password={{ ddclient_api_key }}
+zone=jamfox.dev 
+vpn.jamfox.dev

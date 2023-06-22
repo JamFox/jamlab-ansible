@@ -1,0 +1,11 @@
+- name: Install ddclient
+  ansible.builtin.apt:
+    name:
+      - ddclient
+    state: latest
+
+- name: Configure ddclient
+  ansible.builtin.template:
+    src: files/ddclient.conf.j2
+    dest: /etc/ddclient.conf
+  notify: Restart ddclient
