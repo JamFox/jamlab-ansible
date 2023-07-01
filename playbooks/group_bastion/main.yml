@@ -12,5 +12,7 @@
     - { role: telegram_send,  tags: [all, telegram_send],  when: not (disabled_roles.telegram_send | default(false)) }
     - { role: motd,           tags: [all, motd],           when: not (disabled_roles.motd | default(false))}
     - { role: sshd,           tags: [all, sshd],           when: not (disabled_roles.sshd | default(false))}
+    - { role: ipsets,         tags: [all, ipsets],         when: not (disabled_roles.ipsets | default(false))}
+    - { role: iptables,       tags: [all, iptables],       when: not (disabled_roles.iptables | default(false))}
     - { role: dnsmasq,        tags: [all, dnsmasq],        when: not (disabled_roles.dnsmasq | default(false))}
     - { role: ddclient,       tags: [all, ddclient],       when: not (disabled_roles.ddclient | default(false))}

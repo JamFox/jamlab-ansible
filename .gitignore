@@ -25,6 +25,7 @@ secret/
 *.tmp
 *.temp
 tmp/
+*.cache
 
 # Logs
 *.log

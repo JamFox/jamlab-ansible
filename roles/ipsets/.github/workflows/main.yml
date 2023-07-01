@@ -1,0 +1,70 @@
+---
+name: CI
+
+on:
+  schedule:
+    - cron: "0 2 * * 0"
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - "code linter"
+    branches:
+      - master
+    types:
+      - completed
+
+defaults:
+  run:
+    working-directory: 'ansible-ipset'
+
+jobs:
+  deb:
+    name: "${{ matrix.platform }} / ansible: ${{ matrix.ansible-version }}"
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - debian-10
+            # - debian:11
+          - ubuntu-18
+          # - ubuntu:20.04
+          # - ubuntu:22.04
+          - '6.1'
+        scenario:
+          - default
+
+    steps:
+      - name: check out the codebase.
+        uses: actions/checkout@v2
+        with:
+          path: 'ansible-ipset'
+
+      - name: set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      # - name: install requirements
+      #   run: |
+      #     pip3 install -r test-requirements.txt
+
+      - name: test with tox
+        run: |
+          molecule test --platform-name "${{ matrix.platform }}"
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          DISTRIBUTION: ${{ matrix.platform }}
+
+  publish:
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - deb
+    runs-on: ubuntu-20.04
+    steps:
+      - name: galaxy
+        uses: robertdebock/galaxy-action@1.2.1
+        with:
+          galaxy_api_key: ${{ secrets.galaxy_api_key }}
+          git_branch: master  # default

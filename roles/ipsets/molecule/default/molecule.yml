@@ -1,0 +1,31 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+platforms:
+  # - name: "ubuntu-18"
+  #   pre_build_image: true
+  #   image: quay.io/paulfantom/molecule-systemd:ubuntu-18.04
+  #   docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
+  #   privileged: true
+  #   volumes:
+  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+  - name: "debian-10"
+    pre_build_image: true
+    image: quay.io/paulfantom/molecule-systemd:debian-10
+    docker_host: "${DOCKER_HOST:-unix://var/run/docker.sock}"
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_REMOTE_TMP: /tmp
+
+verifier:
+  name: testinfra

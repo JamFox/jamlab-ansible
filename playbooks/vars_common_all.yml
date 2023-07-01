@@ -9,6 +9,93 @@ vars_common_all_vm_test_ipv4: '192.168.10.21'
 vars_common_all_vm_svc_ipv4: '192.168.10.22'
 vars_common_all_vm_base_ipv4: '192.168.10.23'
 
+vars_common_all_ipsets_allow:
+  - 'at'
+  - 'be'
+  - 'bg'
+  - 'hr'
+  - 'cy'
+  - 'ch'
+  - 'cz'
+  - 'dk'
+  - 'ee'
+  - 'fi'
+  - 'fr'
+  - 'de'
+  - 'gr'
+  - 'hu'
+  - 'ie'
+  - 'it'
+  - 'lv'
+  - 'lt'
+  - 'lu'
+  - 'mt'
+  - 'no'
+  - 'nl'
+  - 'pl'
+  - 'pt'
+  - 'ro'
+  - 'sk'
+  - 'si'
+  - 'es'
+  - 'se'
+  - 'gb'
+
+vars_common_all_iptable_default:
+  - -P INPUT ACCEPT
+  - -P OUTPUT ACCEPT
+  - -P FORWARD DROP
+vars_common_all_iptable_loopback:
+  - -A INPUT -i lo -s 127.0.0.0/8 -d 127.0.0.0/8 -j ACCEPT
+vars_common_all_iptable_ping:
+  - -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+  - -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT
+vars_common_all_iptable_whitelist:
+  - -N WHITELIST
+  - -A WHITELIST -s 127.0.0.0/8 -j ACCEPT
+  - -A WHITELIST -s 192.0.0.0/24 -j ACCEPT
+  - -A WHITELIST -s 172.16.0.0/12 -j ACCEPT
+  - -A WHITELIST -s 10.0.0.0/8 -j ACCEPT
+  - -A WHITELIST -m set --set at src -j ACCEPT
+  - -A WHITELIST -m set --set be src -j ACCEPT
+  - -A WHITELIST -m set --set bg src -j ACCEPT
+  - -A WHITELIST -m set --set hr src -j ACCEPT
+  - -A WHITELIST -m set --set cy src -j ACCEPT
+  - -A WHITELIST -m set --set ch src -j ACCEPT
+  - -A WHITELIST -m set --set cz src -j ACCEPT
+  - -A WHITELIST -m set --set dk src -j ACCEPT
+  - -A WHITELIST -m set --set ee src -j ACCEPT
+  - -A WHITELIST -m set --set fi src -j ACCEPT
+  - -A WHITELIST -m set --set fr src -j ACCEPT
+  - -A WHITELIST -m set --set de src -j ACCEPT
+  - -A WHITELIST -m set --set gr src -j ACCEPT
+  - -A WHITELIST -m set --set hu src -j ACCEPT
+  - -A WHITELIST -m set --set ie src -j ACCEPT
+  - -A WHITELIST -m set --set it src -j ACCEPT
+  - -A WHITELIST -m set --set lv src -j ACCEPT
+  - -A WHITELIST -m set --set lt src -j ACCEPT
+  - -A WHITELIST -m set --set lu src -j ACCEPT
+  - -A WHITELIST -m set --set mt src -j ACCEPT
+  - -A WHITELIST -m set --set no src -j ACCEPT
+  - -A WHITELIST -m set --set nl src -j ACCEPT
+  - -A WHITELIST -m set --set pl src -j ACCEPT
+  - -A WHITELIST -m set --set pt src -j ACCEPT
+  - -A WHITELIST -m set --set ro src -j ACCEPT
+  - -A WHITELIST -m set --set sk src -j ACCEPT
+  - -A WHITELIST -m set --set si src -j ACCEPT
+  - -A WHITELIST -m set --set es src -j ACCEPT
+  - -A WHITELIST -m set --set se src -j ACCEPT
+  - -A WHITELIST -m set --set gb src -j ACCEPT
+  - -A WHITELIST -j DROP
+vars_common_all_iptable_established_related:
+  - -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+vars_common_all_iptable_ssh:
+  - -A INPUT -p tcp --dport ssh -s 127.0.0.0/8 -j ACCEPT
+  - -A INPUT -p tcp --dport ssh -s 192.168.0.0/16 -j ACCEPT
+  - -A INPUT -p tcp --dport 22 -j DROP
+vars_common_all_iptable_dropall:
+  - -P INPUT DROP
+
 vars_common_all_soft_apt_tools:
   - vim
   - jq
