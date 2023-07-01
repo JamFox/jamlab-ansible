@@ -51,6 +51,7 @@ sshd:
   LogLevel: "INFO"
   PasswordAuthentication: "no"
   PermitRootLogin: "prohibit-password"
+  AllowAgentForwarding: "yes"
   ChallengeResponseAuthentication: "no"
   GSSAPIAuthentication: "no"
   KerberosAuthentication: "no"
