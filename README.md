@@ -23,6 +23,7 @@ Ansible playbooks for configuration management in push mode.
 
 | Role           | Complete | Dry-Test | Real-Test |
 | -------------- | -------- | -------- | --------- |
+| certbot        | ✔️        | ✔️        | ✔️         |
 | chrony         | ✔️        | ❌        | ❌         |
 | custom_scripts | ✔️        | ✔️        | ✔️         |
 | ddclient       | ✔️        | ✔️        | ✔️         |

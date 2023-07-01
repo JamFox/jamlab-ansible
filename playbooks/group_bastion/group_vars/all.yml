@@ -17,10 +17,6 @@ dnsmasq_records:
   - name: "pve.{{ vars_common_all_default_domain }}"
     ip: "{{ hostvars['pve0'].ansible_host }}"
 
-ddclient_api_login: "{{ vars_common_all_dns_login }}"
-ddclient_api_key: "{{ vars_common_all_dns_key }}"
-ddclient_api_token: "{{ vars_common_all_dns_token }}"
-
 ipset_countries: "{{ vars_common_all_ipsets_allow }}"
 firewall_v4_default_rules:
   001 default policies: "{{ vars_common_all_iptable_default }}"

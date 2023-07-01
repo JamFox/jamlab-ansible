@@ -2,6 +2,13 @@ script_urls: "{{ vars_common_all_script_urls }}"
 
 soft_packages_latest: "{{ vars_common_all_soft_apt_unattended }}"
 
+ddclient_api_login: "{{ vars_common_all_dns_login }}"
+ddclient_api_key: "{{ vars_common_all_dns_key }}"
+ddclient_api_token: "{{ vars_common_all_dns_token }}"
+
+certbot_domain: "{{ vars_common_all_default_domain }}"
+certbot_dns_token: "{{ vars_common_all_dns_token }}"
+
 ipset_countries: "{{ vars_common_all_ipsets_allow }}"
 firewall_v4_default_rules:
   001 default policies: "{{ vars_common_all_iptable_default }}"
