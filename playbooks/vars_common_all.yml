@@ -28,6 +28,10 @@ vars_common_all_soft_apt_tools:
   - ansible
   - ansible-lint
 
+vars_common_all_soft_apt_unattended:
+  - unattended-upgrades 
+  - apt-listchanges
+
 vars_common_all_script_urls:
   - https://raw.githubusercontent.com/JamFox/ansible-parallel/main/ansible-parallel
   - https://raw.githubusercontent.com/JamFox/ansible-parallel/main/teams-msg
