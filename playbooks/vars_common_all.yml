@@ -45,6 +45,7 @@ users:
     sudo: "%{{ vars_common_all_main_group }} ALL=(ALL) NOPASSWD: ALL"
     ssh_authorized_keys:
       - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILayJ7ZP6Z6IDms4ujnz9nRnAJEIXwyto1SbSwfzjqst jamfox'
+      - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM0ULeAHpFD9I+oIBImBw+UHQui4Q8V1jQThOIlYExi5 jamfox@5t'
 
 sshd:
   LogLevel: "INFO"

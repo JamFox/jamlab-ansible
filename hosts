@@ -1,11 +1,11 @@
 [bastion]
 rpi0         ansible_host=192.168.10.53
 
+[proxy]
+rpi1         ansible_host=192.168.10.80
+
 [pve]
 pve0         ansible_host=192.168.10.100
 
-[vm_svc]
-
-[vm_base]
-
-[vm_test]
+[nas]
+nas0         ansible_host=192.168.10.66
