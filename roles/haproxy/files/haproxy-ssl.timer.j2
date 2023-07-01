@@ -1,0 +1,14 @@
+# {{ vars_common_all_ansible_managed_comment }}
+[Unit]
+Description=Timer for renewing haproxy certs
+
+[Timer]
+{% for time in haproxy_calendar_times %}
+{% set minutes = (time.split(':')[1]|int + haproxy_minutes_after_certbot) %}
+{% set hours = time.split(':')[0]|int + minutes // 60 %}
+OnCalendar=*-*-* {{ '%02d:%02d'|format(hours % 24, minutes % 60) }}
+{% endfor %}
+Persistent=true
+
+[Install]
+WantedBy=timers.target

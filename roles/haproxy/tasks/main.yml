@@ -1,0 +1,39 @@
+- name: Install haproxy
+  ansible.builtin.apt:
+    name:
+      - haproxy
+    state: latest
+
+- name: Create haproxy configs
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode|default('0640') }}"
+  loop:
+  - { src: files/haproxy.cfg.j2, dest: /etc/haproxy/haproxy.cfg }
+  - { src: files/haproxy-ssl.sh.j2, dest: /etc/systemd/haproxy-ssl.sh, mode: "0755" }
+  notify: Restart haproxy
+
+- name: Read the file and extract times with OnCalendar=
+  ansible.builtin.shell: cat /etc/systemd/system/snap.certbot.renew.timer | grep -oP 'OnCalendar=\*\-\*\-\* \K\d{2}:\d{2}'
+  register: haproxy_calendar_times_r
+
+- name: Split the raw output to get individual time values
+  set_fact:
+    haproxy_calendar_times: "{{ haproxy_calendar_times_r.stdout_lines }}"
+
+- name: Configure haproxy cert renewal service some minutes after certbot
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode|default('0644') }}"
+  loop:
+  - { src: files/haproxy-ssl.service.j2, dest: /etc/systemd/system/haproxy-ssl.service }
+  - { src: files/haproxy-ssl.timer.j2, dest: /etc/systemd/system/haproxy-ssl.timer }
+
+- name: Enable haproxy cert renewal timer
+  ansible.builtin.systemd:
+    name: haproxy-ssl.timer
+    state: started
+    enabled: true
+    daemon_reload: true

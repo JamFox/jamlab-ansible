@@ -50,10 +50,17 @@ vars_common_all_iptable_loopback:
 vars_common_all_iptable_ping:
   - -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
   - -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT
+vars_common_all_iptable_locallist:
+  - -N LOCALLIST
+  - -A LOCALLIST -s 127.0.0.0/8 -j ACCEPT
+  - -A LOCALLIST -s 192.168.0.0/16 -j ACCEPT
+  - -A LOCALLIST -s 172.16.0.0/12 -j ACCEPT
+  - -A LOCALLIST -s 10.0.0.0/8 -j ACCEPT
+  - -A LOCALLIST -j DROP
 vars_common_all_iptable_whitelist:
   - -N WHITELIST
   - -A WHITELIST -s 127.0.0.0/8 -j ACCEPT
-  - -A WHITELIST -s 192.0.0.0/24 -j ACCEPT
+  - -A WHITELIST -s 192.168.0.0/16 -j ACCEPT
   - -A WHITELIST -s 172.16.0.0/12 -j ACCEPT
   - -A WHITELIST -s 10.0.0.0/8 -j ACCEPT
   - -A WHITELIST -m set --set at src -j ACCEPT

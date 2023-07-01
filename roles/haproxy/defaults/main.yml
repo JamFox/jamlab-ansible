@@ -1,0 +1,2 @@
+haproxy_domain: 
+haproxy_minutes_after_certbot: 7

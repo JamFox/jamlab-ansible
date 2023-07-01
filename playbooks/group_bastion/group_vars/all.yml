@@ -6,16 +6,30 @@ dnsmasq_domain_local: "{{ vars_common_all_default_domain }}"
 dnsmasq_domain: "{{ vars_common_all_default_domain }}"
 dnsmasq_base_domain_ip: "{{ vars_common_all_dns_ipv4 }}"
 dnsmasq_records:
-  - name: "octoprint.{{ vars_common_all_default_domain }}"
-    ip: "{{ hostvars['rpi0'].ansible_host }}"
-  - name: "proxy.{{ vars_common_all_default_domain }}"
-    ip: "{{ hostvars['rpi0'].ansible_host }}"
-  - name: "haproxy.{{ vars_common_all_default_domain }}"
-    ip: "{{ hostvars['rpi0'].ansible_host }}"
   - name: "vpn.{{ vars_common_all_default_domain }}"
     ip: "{{ hostvars['rpi0'].ansible_host }}"
-  - name: "pve.{{ vars_common_all_default_domain }}"
-    ip: "{{ hostvars['pve0'].ansible_host }}"
+  - name: "octoprint.{{ vars_common_all_default_domain }}"
+    ip: "{{ hostvars['rpi1'].ansible_host }}"
+  - name: "bastion.{{ vars_common_all_default_domain }}"
+    ip: "{{ hostvars['rpi1'].ansible_host }}"
+  - name: "haproxy.{{ vars_common_all_default_domain }}"
+    ip: "{{ hostvars['rpi1'].ansible_host }}"
+  - name: "proxy.{{ vars_common_all_default_domain }}"
+    ip: "{{ hostvars['rpi1'].ansible_host }}"
+  - name: "nas.{{ vars_common_all_default_domain }}"
+    ip: "{{ hostvars['rpi1'].ansible_host }}"
+  - name: "file.{{ vars_common_all_default_domain }}"
+    ip: "{{ hostvars['rpi1'].ansible_host }}"
+  - name: "note.{{ vars_common_all_default_domain }}"
+    ip: "{{ hostvars['rpi1'].ansible_host }}"
+  - name: "drive.{{ vars_common_all_default_domain }}"
+    ip: "{{ hostvars['rpi1'].ansible_host }}"
+  - name: "sso.{{ vars_common_all_default_domain }}"
+    ip: "{{ hostvars['rpi1'].ansible_host }}"
+  - name: "photo.{{ vars_common_all_default_domain }}"
+    ip: "{{ hostvars['rpi1'].ansible_host }}"
+  - name: "video.{{ vars_common_all_default_domain }}"
+    ip: "{{ hostvars['rpi1'].ansible_host }}"
 
 ipset_countries: "{{ vars_common_all_ipsets_allow }}"
 firewall_v4_default_rules:
@@ -23,6 +37,7 @@ firewall_v4_default_rules:
   002 allow loopback: "{{ vars_common_all_iptable_loopback }}"
   003 allow ping replies: "{{ vars_common_all_iptable_ping }}"
   010 create whitelist chain: "{{ vars_common_all_iptable_whitelist }}"
+  011 create locallist chain: "{{ vars_common_all_iptable_locallist }}"
   100 allow established related: "{{ vars_common_all_iptable_established_related }}"
   200 allow ssh: "{{ vars_common_all_iptable_ssh }}"
   300 allow wireguard:
@@ -31,4 +46,9 @@ firewall_v4_default_rules:
     - -I FORWARD 1 -i eth0 -o wg0 -j ACCEPT
     - -I FORWARD 1 -i wg0 -o eth0 -j ACCEPT
     - -I INPUT 1 -i eth0 -p udp --dport 51820 -j WHITELIST
+  500 allow dns:
+    - -A INPUT -p udp --dport 53 -s 192.168.0.0/16 -j LOCALLIST
+    - -A INPUT -p tcp --dport 53 -s 192.168.0.0/16 -j LOCALLIST
+  600 allow octoprint: 
+    - -A INPUT -p tcp -m multiport --dport 80,443,8080 -j ACCEPT
   999 drop everything: "{{ vars_common_all_iptable_dropall }}"

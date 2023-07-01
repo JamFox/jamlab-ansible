@@ -1,0 +1,7 @@
+#!/bin/bash
+# {{ vars_common_all_ansible_managed_comment }}
+
+# Script to run after certbot renewal service
+
+cat /etc/letsencrypt/live/{{ haproxy_domain }}/cert.pem /etc/letsencrypt/live/{{ haproxy_domain }}/privkey.pem > /etc/letsencrypt/live/{{ haproxy_domain }}/haproxy.pem
+systemctl restart haproxy

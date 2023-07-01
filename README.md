@@ -29,6 +29,7 @@ Ansible playbooks for configuration management in push mode.
 | ddclient       | ✔️        | ✔️        | ✔️         |
 | dnsmasq        | ✔️        | ✔️        | ✔️         |
 | firewalld      | ✔️        | ✔️        | ❌         |
+| haproxy        | ✔️        | ✔️        | ✔️         |
 | motd           | ✔️        | ✔️        | ✔️         |
 | mounts_exports | ✔️        | ✔️        | ❌         |
 | netplan        | ✔️        | ✔️        | ❌         |

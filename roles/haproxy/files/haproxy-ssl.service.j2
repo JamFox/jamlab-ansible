@@ -1,0 +1,8 @@
+# {{ vars_common_all_ansible_managed_comment }}
+[Unit]
+Description=Service for renewing haproxy certs
+After=network-online.target
+
+[Service]
+ExecStart=/etc/systemd/scripts/haproxy-ssl.sh
+Type=oneshot
