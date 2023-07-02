@@ -50,5 +50,7 @@ firewall_v4_default_rules:
     - -A INPUT -p udp --dport 53 -s 192.168.0.0/16 -j LOCALLIST
     - -A INPUT -p tcp --dport 53 -s 192.168.0.0/16 -j LOCALLIST
   600 allow octoprint: 
-    - -A INPUT -p tcp -m multiport --dport 80,443,8080 -j ACCEPT
+    - -A INPUT -p tcp -m multiport --dport 80,443,8080 -j LOCALLIST
+    - -A INPUT -p tcp -m multiport --dport 443 -s 149.154.160.0/20 -j ACCEPT # https://core.telegram.org/bots/webhooks
+    - -A INPUT -p tcp -m multiport --dport 443 -s 91.108.4.0/22 -j ACCEPT # https://core.telegram.org/bots/webhooks
   999 drop everything: "{{ vars_common_all_iptable_dropall }}"
