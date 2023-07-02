@@ -29,7 +29,5 @@ cache-size=65536
 address=/{{ hostvars[host].inventory_hostname }}.{{ dnsmasq_domain }}/{{ hostvars[host].ansible_host }}
 {% endfor %}
 
-# Custom records
-{% for record in dnsmasq_records %}
-address=/{{ record.name }}/{{ record.ip }}
-{% endfor %}
+# Custom records, to support multiple fixed IP
+addn-hosts=/etc/hosts.jamfox.dev

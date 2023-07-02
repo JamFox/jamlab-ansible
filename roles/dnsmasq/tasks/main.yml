@@ -15,4 +15,5 @@
     dest: "{{ item.dest }}"
   loop:
   - { src: jamlab-dns.conf.j2, dest: /etc/dnsmasq.d/jamlab-dns.conf }
+  - { src: hosts.jamfox.dev.j2, dest: /etc/hosts.jamfox.dev }
   notify: Restart dnsmasq

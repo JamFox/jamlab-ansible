@@ -1,0 +1,6 @@
+# {{ vars_common_all_ansible_managed_comment}}
+
+# Custom records
+{% for record in dnsmasq_records %}
+{{ record.ip }} {{ record.name }}
+{% endfor %}
