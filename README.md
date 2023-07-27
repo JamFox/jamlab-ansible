@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://jamfox.dev">
-    <img alt="JF" src="https://raw.githubusercontent.com/JamFox/JamFox/main/images/icon.png" width="60" />
+    <img alt="JF" src="https://raw.githubusercontent.com/JamFox/wired.jamfox.dev/main/src/android-chrome-192x192.png" width="60" />
   </a>
 </p>
 <h1 align="center">
