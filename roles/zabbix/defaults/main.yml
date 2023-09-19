@@ -1,3 +1,0 @@
-# Default values, override in host or host group variables
-zabbix_agent_packages:
-  - zabbix-agent

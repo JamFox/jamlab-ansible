@@ -21,28 +21,32 @@ Ansible playbooks for configuration management in push mode.
 
 **Real-Test** - role has been tested in a real environment and did not error.
 
-| Role           | Complete | Dry-Test | Real-Test |
-| -------------- | -------- | -------- | --------- |
-| certbot        | ✔️        | ✔️        | ✔️         |
-| chrony         | ✔️        | ❌        | ❌         |
-| custom_scripts | ✔️        | ✔️        | ✔️         |
-| ddclient       | ✔️        | ✔️        | ✔️         |
-| dnsmasq        | ✔️        | ✔️        | ✔️         |
-| firewalld      | ✔️        | ✔️        | ❌         |
-| haproxy        | ✔️        | ✔️        | ✔️         |
-| motd           | ✔️        | ✔️        | ✔️         |
-| mounts_exports | ✔️        | ✔️        | ❌         |
-| netplan        | ✔️        | ✔️        | ❌         |
-| nfs            | ✔️        | ❌        | ❌         |
-| proxmox        | ✔️        | ✔️        | ✔️         |
-| pve_provision  | ❌        | ❌        | ❌         |
-| resolv_hosts   | ✔️        | ✔️        | ❌         |
-| selinux        | ✔️        | ✔️        | ❌         |
-| soft_yum       | ✔️        | ✔️        | ✔️         |
-| soft_apt       | ✔️        | ✔️        | ✔️         |
-| sshd           | ✔️        | ✔️        | ✔️         |
-| telegram_send  | ✔️        | ✔️        | ✔️         |
-| users_groups   | ✔️        | ✔️        | ✔️         |
+| Role             | Complete | Dry-Test | Real-Test |
+| ---------------- | -------- | -------- | --------- |
+| ansible_parallel | ✔️        | ✔️        | ✔️         |
+| certbot          | ✔️        | ✔️        | ✔️         |
+| custom_scripts   | ✔️        | ✔️        | ✔️         |
+| ddclient         | ✔️        | ✔️        | ✔️         |
+| dnsmasq          | ✔️        | ✔️        | ✔️         |
+| firewalld        | ✔️        | ✔️        | ✔️         |
+| gitlab           | ✔️        | ✔️        | ✔️         |
+| haproxy          | ✔️        | ✔️        | ✔️         |
+| motd             | ✔️        | ✔️        | ✔️         |
+| mounts_exports   | ✔️        | ✔️        | ❌         |
+| netplan          | ✔️        | ✔️        | ✔️         |
+| nfs              | ❌        | ❌        | ❌         |
+| podman           | ✔️        | ✔️        | ✔️         |
+| proxmox          | ✔️        | ✔️        | ✔️         |
+| pve_provision    | ❌        | ❌        | ❌         |
+| resolv_hosts     | ✔️        | ✔️        | ❌         |
+| selinux          | ✔️        | ✔️        | ❌         |
+| soft_yum         | ✔️        | ✔️        | ✔️         |
+| soft_apt         | ✔️        | ✔️        | ✔️         |
+| sshd             | ✔️        | ✔️        | ✔️         |
+| telegram_send    | ✔️        | ✔️        | ✔️         |
+| users_groups     | ✔️        | ✔️        | ✔️         |
+| zabbix_agent2    | ✔️        | ✔️        | ✔️         |
+| zabbix_server    | ✔️        | ✔️        | ✔️         |
 
 ## Usage
 

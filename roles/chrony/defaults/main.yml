@@ -1,5 +1,0 @@
-# Default values, override in host or host group variables
-chrony_packages:
-  - chrony
-
-chrony_first_run: false

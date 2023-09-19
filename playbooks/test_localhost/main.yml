@@ -8,16 +8,27 @@
 # 'all' tag is used to skip all roles
 # Even when skipping, syntax errors are still checked
   roles:
-    - { role: chrony,         tags: [all, chrony],         when: not (disabled_roles.chrony | default(false))}
-    - { role: custom_scripts, tags: [all, custom_scripts], when: not (disabled_roles.custom_scripts | default(false)) }
-    - { role: firewalld,      tags: [all, firewalld],      when: not (disabled_roles.firewalld | default(false))}
-    - { role: motd,           tags: [all, motd],           when: not (disabled_roles.motd | default(false))}
-    - { role: mounts_exports, tags: [all, mounts_exports], when: not (disabled_roles.mounts_exports | default(false))}
-    - { role: netplan,        tags: [all, netplan],        when: not (disabled_roles.netplan | default(false))}
-    - { role: nfs,            tags: [all, nfs],            when: not (disabled_roles.nfs | default(false)) }
-    - { role: resolv_hosts,   tags: [all, resolv_hosts],   when: not (disabled_roles.resolv_hosts | default(false)) }
-    - { role: selinux,        tags: [all, selinux],        when: not (disabled_roles.selinux | default(false)) }
-    - { role: soft_yum,       tags: [all, soft_yum],       when: not (disabled_roles.soft_yum | default(false)) }
-    - { role: soft_apt,       tags: [all, soft_apt],       when: not (disabled_roles.soft_apt | default(false)) }
-    - { role: sshd,           tags: [all, sshd],           when: not (disabled_roles.sshd | default(false)) }
-    - { role: users_groups,   tags: [all, users_groups],   when: not (disabled_roles.users_groups | default(false)) }
+    - { role: ansible_parallel, tags: [all, ansible_parallel], when: not (disabled_roles.ansible_parallel | default(false))}
+    - { role: certbot,          tags: [all, certbot],          when: not (disabled_roles.certbot | default(false))}
+    - { role: custom_scripts,   tags: [all, custom_scripts],   when: not (disabled_roles.custom_scripts | default(false)) }
+    - { role: ddclient,         tags: [all, ddclient],         when: not (disabled_roles.ddclient | default(false)) }
+    - { role: dnsmasq,          tags: [all, dnsmasq],          when: not (disabled_roles.dnsmasq | default(false)) }
+    - { role: firewalld,        tags: [all, firewalld],        when: not (disabled_roles.firewalld | default(false))}
+    - { role: gitlab,           tags: [all, gitlab],           when: not (disabled_roles.gitlab | default(false))}
+    - { role: haproxy,          tags: [all, haproxy],          when: not (disabled_roles.haproxy | default(false))}
+    - { role: motd,             tags: [all, motd],             when: not (disabled_roles.motd | default(false))}
+    - { role: mounts_exports,   tags: [all, mounts_exports],   when: not (disabled_roles.mounts_exports | default(false))}
+    - { role: netplan,          tags: [all, netplan],          when: not (disabled_roles.netplan | default(false))}
+    - { role: nfs,              tags: [all, nfs],              when: not (disabled_roles.nfs | default(false)) }
+    - { role: podman,           tags: [all, podman],           when: not (disabled_roles.podman | default(false)) }
+    - { role: proxmox,          tags: [all, proxmox],          when: not (disabled_roles.proxmox | default(false)) }
+    - { role: pve_provision,    tags: [all, pve_provision],    when: not (disabled_roles.proxmox | default(false)) }
+    - { role: resolv_hosts,     tags: [all, resolv_hosts],     when: not (disabled_roles.resolv_hosts | default(false)) }
+    - { role: selinux,          tags: [all, selinux],          when: not (disabled_roles.selinux | default(false)) }
+    - { role: soft_yum,         tags: [all, soft_yum],         when: not (disabled_roles.soft_yum | default(false)) }
+    - { role: soft_apt,         tags: [all, soft_apt],         when: not (disabled_roles.soft_apt | default(false)) }
+    - { role: sshd,             tags: [all, sshd],             when: not (disabled_roles.sshd | default(false)) }
+    - { role: telegram_send,    tags: [all, telegram_send],    when: not (disabled_roles.sshd | default(false)) }
+    - { role: users_groups,     tags: [all, users_groups],     when: not (disabled_roles.users_groups | default(false)) }
+    - { role: zabbix_agent2,    tags: [all, zabbix_agent],     when: not (disabled_roles.zabbix_agent2 | default(false)) }
+    - { role: zabbix_server,    tags: [all, zabbix_server],    when: not (disabled_roles.zabbix_server | default(false)) }
