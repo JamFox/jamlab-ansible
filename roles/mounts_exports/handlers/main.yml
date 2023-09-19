@@ -1,9 +1,5 @@
 - name: Mount all drives
-  ansible.builtin.command: mount -a
-  args:
-    warn: false
+  ansible.builtin.command: mount -a # noqa: command-instead-of-module
 
 - name: Export all drives
-  ansible.builtin.command: exportfs -a
-  args:
-    warn: false
+  ansible.builtin.command: exportfs -a # noqa: command-instead-of-module

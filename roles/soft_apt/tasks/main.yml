@@ -49,7 +49,3 @@
     name: "{{ soft_packages_absent }}"
     state: absent
   when: soft_packages_absent is defined
-
-- name: Remove dependencies that are no longer required
-  ansible.builtin.apt:
-    autoremove: "{{ soft_packages_autoremove }}"

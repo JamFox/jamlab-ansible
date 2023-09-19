@@ -29,9 +29,23 @@ soft_packages_latest:
 
 * `soft_packages_absent`
 
-List of packages to remove. 
+List of packages to remove. Example:
 
 ```yaml
 soft_packages_absent:
   - vim
+```
+
+* `soft_extra_repos`
+
+List of extra repos to install. Example:
+
+```yaml
+soft_extra_repos:
+  - name: 'ceph'
+    file: 'ceph'
+    description: 'Ceph Quincy EL$releasever'
+    baseurl: 'https://download.ceph.com/rpm-quincy/el$releasever/$basearch'
+    gpgcheck: 'yes'
+    gpgkey: 'https://download.ceph.com/keys/release.asc'
 ```

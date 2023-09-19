@@ -1,8 +1,5 @@
 # Default values, override in host or host group variables
 soft_packages_keep_latest: true
-soft_packages_autoremove: true
-
-# Example usage, define in host or host group variables
 
 # Keeps all packages at latest version
 #soft_packages_keep_latest: true
@@ -16,7 +13,7 @@ soft_packages_autoremove: true
 #  - idk
 
 # Extra keys for extra repositories
-#soft_extra_keys:
+#soft_extra_sources:
 #  - { keyserver: keyserver.ubuntu.com, id: F60F4B3D7FA2AF80 }
 
 # Extra repositories

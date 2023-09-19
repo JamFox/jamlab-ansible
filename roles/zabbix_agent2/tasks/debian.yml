@@ -1,0 +1,30 @@
+---
+- name: Ensure keyrings dirs exist
+  ansible.builtin.file:
+    path: /etc/apt/keyrings/
+    state: directory
+    mode: "0755"
+  when:
+    - (ansible_distribution == "Ubuntu" and ansible_distribution_major_version < "22") or
+      (ansible_distribution == "Debian" and ansible_distribution_major_version < "12")
+
+- name: Configure zabbix key
+  ansible.builtin.get_url:
+    url: http://repo.zabbix.com/zabbix-official-repo.key
+    dest: "{{ zabbix_gpg_key }}"
+    mode: "0644"
+    force: true
+
+- name: Configure zabbix repo
+  ansible.builtin.apt_repository:
+    repo: "{{ item }} [signed-by={{ zabbix_gpg_key }}] https://repo.zabbix.com/zabbix/{{ zabbix_version }}/{{ ansible_distribution.lower() }}/ {{ ansible_distribution_release }} main"
+    state: present
+    filename: zabbix
+  with_items:
+    - deb
+    - deb-src
+
+- name: Install zabbix agent 2
+  ansible.builtin.apt:
+    name: ['zabbix-agent2', 'zabbix-agent2-plugin-*']
+    state: present

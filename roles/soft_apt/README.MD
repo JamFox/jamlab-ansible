@@ -32,12 +32,12 @@ soft_packages_absent:
   - vim
 ```
 
-* `soft_extra_keys`
+* `soft_extra_sources`
 
 Dict of extra keys to add to apt. Can be both by keyserver *and* id *or* just an url. Example:
 
 ```yaml
-soft_extra_keys:
+soft_extra_sources:
   - { keyserver: keyserver.ubuntu.com, id: F60F4B3D7FA2AF80 }
   - { url: https://ubuntu.com/keys/example.key }
 ```

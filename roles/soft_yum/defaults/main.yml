@@ -2,8 +2,6 @@
 soft_epel_enabled: true
 soft_packages_keep_latest: true
 
-# Example usage, define in host or host group variables
-
 # Enable epel sources
 #soft_epel_enabled: true
 
@@ -17,3 +15,12 @@ soft_packages_keep_latest: true
 # Software to keep uninstalled
 #soft_packages_absent:
 #  - idk
+
+# Extra repositories
+#soft_extra_repos:
+#  - name: 'ceph'
+#    file: 'ceph'
+#    description: 'Ceph Quincy EL$releasever'
+#    baseurl: 'https://download.ceph.com/rpm-quincy/el$releasever/$basearch'
+#    gpgcheck: 'yes'
+#    gpgkey: 'https://download.ceph.com/keys/release.asc'

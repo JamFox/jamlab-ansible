@@ -1,0 +1,35 @@
+- name: Install GitLab Runner (Debian)
+  ansible.builtin.import_tasks: install-debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Install GitLab Runner (RedHat)
+  ansible.builtin.import_tasks: install-redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- name: Install GitLab Runner (Arch)
+  ansible.builtin.import_tasks: install-arch.yml
+  when: ansible_os_family == 'Archlinux'
+
+- name: (Unix) Delete runners which were removed in GitLab
+  ansible.builtin.command: "{{ gitlab_runner_executable }} verify --delete"
+  register: verified_runners
+  changed_when: '"Updated " in verified_runners.stderr'
+  check_mode: false
+  become: "{{ gitlab_runner_system_mode }}"
+
+- name: (Unix) Register GitLab Runner
+  ansible.builtin.include_tasks: register-runner.yml
+  vars:
+    - actual_gitlab_runner_name: "{{ gitlab_runner.name | default(ansible_hostname + '-' + gitlab_runner_index | string) }}"
+  when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0
+  loop: "{{ gitlab_runner_runners }}"
+  loop_control:
+    index_var: gitlab_runner_index
+    loop_var: gitlab_runner
+
+- name: Set global options (Debian/RedHat)
+  ansible.builtin.import_tasks: global-setup.yml
+
+- name: (Unix) Configure GitLab Runner
+  ansible.builtin.include_tasks: config-runners.yml
+  when: gitlab_runner_config_update_mode == 'by_config_toml'

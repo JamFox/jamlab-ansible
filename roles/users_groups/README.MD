@@ -7,6 +7,8 @@ This role configures users and groups. Supports:
 * configuring sudoers for users
 * configuring ssh authorized_keys for users
 
+**WARNING!**: take care when running this role on users that exist before the run, existing setting WILL be overridden, make sure nothing is missing from your defined variables BEFORE running this role.
+
 ## Role variables
 
 * `users`

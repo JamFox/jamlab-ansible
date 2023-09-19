@@ -1,3 +1,9 @@
+- name: Configure resolv
+  ansible.builtin.template:
+    src: files/resolv.conf
+    dest: /etc/resolv.conf
+    mode: "0644"
+
 - name: Add hosts to hosts
   ansible.builtin.blockinfile:
     block: |
@@ -5,7 +11,7 @@
       {{ host }}
       {% endfor %}
     dest: /etc/hosts
-    marker: "# {mark} {{ vars_common_all_ansible_managed_comment }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
   when: hosts_entries is defined
 
 - name: Install hostname packages for CentOS/RedHat
@@ -24,8 +30,3 @@
   ansible.builtin.hostname:
     name: "{{ hostname }}"
   when: hostname is defined
-
-- name: Set hostname as per host inventory
-  ansible.builtin.hostname:
-    name: "{{ inventory_hostname }}"
-  when: hostname is not defined

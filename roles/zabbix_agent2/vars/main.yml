@@ -1,0 +1,60 @@
+---
+# vars file for ansible-zabbix-agent2
+
+zabbix_agent_pidfile: /var/run/zabbix/zabbix_agent2.pid
+zabbix_agent_logtype: file
+zabbix_agent_logfile: /var/log/zabbix/zabbix_agent2.log
+zabbix_agent_logfilesize: 0
+zabbix_agent_debuglevel: 3
+zabbix_agent_server: "{{ zabbix_agent_server_address }}"
+zabbix_agent_listenport: "{{ zabbix_agent_listen_port }}"
+zabbix_agent_listenip:
+zabbix_agent_statusport:
+
+##### Active checks related
+agent_ServerActive: "{{ zabbix_agent_server_active_address }}"
+zabbix_agent_hostname:
+zabbix_agent_hostnameitem: system.hostname
+zabbix_agent_hostmetadata: Linux
+zabbix_agent_hostmetadataitem: "{{ zabbix_agent_hostmetadata }}"
+zabbix_agent_hostinterface:
+zabbix_agent_hostinterfaceitem:
+zabbix_agent_refreshactivechecks: 60
+zabbix_agent_buffersend: 5
+zabbix_agent_buffersize: 100
+zabbix_agent_enablepersistentbuffer: 0
+zabbix_agent_persistentbufferperiod: 1h
+zabbix_agent_persistentbufferfile:
+
+############ ADVANCED PARAMETERS #################
+zabbix_agent_alias:
+zabbix_agent_timeout: "{{ zabbix_agent_default_timeout }}"
+zabbix_agent_include: /etc/zabbix/zabbix_agent2.d/*.conf
+zabbix_agent_plugintimeout:
+zabbix_agent_pluginsocket:
+
+####### USER-DEFINED MONITORED PARAMETERS #######
+zabbix_agent_unsafeuserparameters: 0
+zabbix_agent_userparameter:
+zabbix_agent_userparameterdir:
+zabbix_agent_controlsocket: /tmp/agent.sock
+
+####### TLS-RELATED PARAMETERS #######
+zabbix_agent_tlsconnect: unencrypted
+zabbix_agent_tlsaccept: unencrypted
+zabbix_agent_tlscafile:
+zabbix_agent_tlscrlfile:
+zabbix_agent_tlsservercertissuer:
+zabbix_agent_tlsservercertsubject:
+zabbix_agent_tlscertfile:
+zabbix_agent_tlskeyfile:
+zabbix_agent_tlspskidentity:
+zabbix_agent_tlspskfile:
+
+####### PLUGIN-SPECIFIC PARAMETERS #######
+zabbix_agent_plugins_log_maxlinespersecond: 20
+zabbix_agent_allowkey: system.run[*]
+zabbix_agent_denykey:
+zabbix_agent_plugins_systemrun_logremotecommands: "{{ zabbix_agent_logremotecommands }}"
+zabbix_agent_forceactivechecksonstart: 0
+zabbix_agent_include_plugins: ./zabbix_agent2.d/plugins.d/*.conf

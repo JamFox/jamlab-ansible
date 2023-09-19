@@ -41,7 +41,7 @@
       Match all
       {{ lookup('template', 'files/sshd_config_snippet.jinja') }}
     create: true
-    marker: "# {mark} {{ vars_common_all_ansible_managed_comment }}: sshd namespace {{ sshd_config_namespace }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: sshd namespace {{ sshd_config_namespace }}"
     backup: "{{ sshd_backup }}"
   notify: Restart sshd service
   when: sshd_config_namespace is not none

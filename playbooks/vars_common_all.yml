@@ -1,4 +1,3 @@
-vars_common_all_ansible_managed_comment: "Managed by Ansible, do not edit manually - changes made here will be overwritten!"
 vars_common_all_default_domain: 'jamfox.dev'
 vars_common_all_gateway_ipv4: '192.168.10.1'
 vars_common_all_gateway_intra_ipv4: '192.168.1.190'
@@ -127,6 +126,12 @@ vars_common_all_soft_apt_unattended:
   - unattended-upgrades 
   - apt-listchanges
 
+vars_common_all_soft_apt_hashicorp:
+  - packer
+  - terraform
+  - consul
+  - vault
+
 vars_common_all_script_urls:
   - https://raw.githubusercontent.com/JamFox/ansible-parallel/main/ansible-parallel
   - https://raw.githubusercontent.com/JamFox/ansible-parallel/main/teams-msg
@@ -145,6 +150,8 @@ users:
     ssh_authorized_keys:
       - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILayJ7ZP6Z6IDms4ujnz9nRnAJEIXwyto1SbSwfzjqst jamfox'
       - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM0ULeAHpFD9I+oIBImBw+UHQui4Q8V1jQThOIlYExi5 jamfox@5t'
+      - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICMfvfGWOQuhmQ1MRJifS0VddwvwUpFYiETPb1V5W+5Y katurv@hpcbook'
+      - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJruHSfE0z4yEY4SJW5/ZnBjgpvlz8u199+s4srW85WV jamfox@DESKTOP-6KK4JTC'
 
 sshd:
   LogLevel: "INFO"

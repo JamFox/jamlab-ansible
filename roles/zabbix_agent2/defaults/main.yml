@@ -1,0 +1,46 @@
+---
+# Values used to configure zabbix_agent.
+zabbix_agent_service: "zabbix-agent2"
+zabbix_agent_conf_dest: "/etc/zabbix/zabbix_agent2.conf"
+zabbix_version: "6.4"
+
+zabbix_agent_server_address: "127.0.0.1"
+zabbix_agent_listen_port: 10050
+zabbix_agent_server_active_address: "127.0.0.1"
+# Not mandatory, but possible to overwrite.
+# zabbix_agent_source_ip: "127.0.0.1"
+
+zabbix_agent_hostname: "{{ ansible_fqdn }}"
+zabbix_agent_hostmetadata: system.uname
+zabbix_agent_default_timeout: 3
+
+# Enable logging of remote commands by setting this value to 1.
+zabbix_agent_logremotecommands: "1"
+
+
+# Agent 2 repo defaults until zabbix_repo supports agent2
+zabbix_gpg_key: /etc/apt/keyrings/zabbix-official-repo.asc
+zabbix_repo_yum_gpgcheck: false
+zabbix_repo_yum_schema: https
+zabbix_repo_yum:
+  - name: zabbix
+    description: Zabbix Official Repository - $basearch
+    baseurl: "{{ zabbix_repo_yum_schema }}://repo.zabbix.com/zabbix/{{ zabbix_version }}/rhel/{{ ansible_distribution_major_version }}/$basearch/"
+    mode: "0644"
+    gpgcheck: "{{ zabbix_repo_yum_gpgcheck }}"
+    gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-ZABBIX
+    state: present
+  - name: zabbix-non-supported
+    description: Zabbix Official Repository non-supported - $basearch
+    baseurl: "{{ zabbix_repo_yum_schema }}://repo.zabbix.com/non-supported/rhel/{{ ansible_distribution_major_version }}/$basearch/"
+    mode: "0644"
+    gpgcheck: "{{ zabbix_repo_yum_gpgcheck }}"
+    gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-ZABBIX
+    state: present
+  - name: zabbix-agent2-plugins
+    description: Zabbix Official Repository (Agent2 Plugins) - $basearch
+    baseurl: "{{ zabbix_repo_yum_schema }}://repo.zabbix.com/zabbix-agent2-plugins/1/rhel/{{ ansible_distribution_major_version }}/$basearch/"
+    mode: "0644"
+    gpgcheck: "{{ zabbix_repo_yum_gpgcheck }}"
+    gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-ZABBIX
+    state: present

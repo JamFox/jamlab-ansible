@@ -1,0 +1,28 @@
+- name: Configure repo and install for Debian based host
+  ansible.builtin.include_tasks: debian.yml
+  when:
+    ansible_distribution_file_variety == 'Debian'
+
+- name: Configure repo and install for ReHat based host
+  ansible.builtin.include_tasks: redhat.yml
+  when: 
+    ansible_distribution_file_variety == 'RedHat'
+
+- name: Render zabbix_agent2.conf
+  ansible.builtin.template:
+    src: files/zabbix_agent2.conf.j2
+    dest: "{{ zabbix_agent_conf_dest }}"
+    mode: "0644"
+  notify: Restart zabbix-agent2
+
+- name: Stop and disable zabbix agent 1
+  ansible.builtin.service:
+    name: zabbix-agent
+    state: stopped
+    enabled: false
+
+- name: Start and enable zabbix agent
+  ansible.builtin.service:
+    name: "{{ zabbix_agent_service }}"
+    state: started
+    enabled: true

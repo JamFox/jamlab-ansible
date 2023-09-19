@@ -1,0 +1,33 @@
+---
+- name: Disable SELinux
+  ansible.posix.selinux:
+    policy: targeted
+    state: disabled
+
+- name: Ensure epel
+  ansible.builtin.stat:
+    path: /etc/yum.repos.d/epel.repo
+  register: epel_repo_file
+
+- name: Exclude zabbix from epel
+  ansible.builtin.lineinfile:
+    path: /etc/yum.repos.d/epel.repo
+    line: excludepkgs=zabbix*
+    insertafter: \[epel\]
+  when: epel_repo_file.stat.exists
+
+- name: Install zabbix repo
+  ansible.builtin.yum_repository:
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    baseurl: "{{ item.baseurl }}"
+    gpgcheck: "{{ item.gpgcheck }}"
+    gpgkey: "{{ item.gpgkey }}"
+    mode: "{{ item.mode | default('0644') }}"
+    state: "{{ item.state | default('present') }}"
+  with_items: "{{ zabbix_repo_yum }}"
+
+- name: Install Zabbix Agent 2
+  ansible.builtin.yum:
+    name: ['zabbix-agent2', 'zabbix-agent2-plugin-*']
+    state: present

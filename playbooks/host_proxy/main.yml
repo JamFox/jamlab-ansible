@@ -1,0 +1,18 @@
+- name: PLAYBOOK FOR HOST 'PROXY'
+  hosts: proxy
+  become: true
+  vars_files:
+    - ../vars_common_all.yml
+    - ../vars_disabled_roles.yml
+
+  roles:
+    - { role: users_groups,   tags: [all, users_groups],   when: not (disabled_roles.users_groups | default(false))}
+    - { role: soft_apt,       tags: [all, soft, soft_apt], when: not (disabled_roles.soft_apt | default(false)) }
+    - { role: motd,           tags: [all, motd],           when: not (disabled_roles.motd | default(false))}
+    - { role: sshd,           tags: [all, sshd],           when: not (disabled_roles.sshd | default(false))}
+    - { role: ipsets,         tags: [all, ipsets],         when: not (disabled_roles.ipsets | default(false))}
+    - { role: iptables,       tags: [all, iptables],       when: not (disabled_roles.iptables | default(false))}
+    - { role: ddclient,       tags: [all, ddclient],       when: not (disabled_roles.ddclient | default(false))}
+    - { role: certbot,        tags: [all, certbot],        when: not (disabled_roles.certbot | default(false))}
+    - { role: haproxy,        tags: [all, haproxy],        when: not (disabled_roles.haproxy | default(false))}
+    - { role: dnsmasq,        tags: [all, dnsmasq],        when: not (disabled_roles.dnsmasq | default(false))}

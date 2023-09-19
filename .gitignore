@@ -1,5 +1,6 @@
 # VSCode
 .vscode/*
+.vscode
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -24,9 +25,19 @@ secret/
 *.bak
 *.tmp
 *.temp
-tmp/
-*.cache
+.cache/
 
 # Logs
 *.log
 logs/
+
+# Sensitive Ansible files
+.ansible-vault-pass
+
+# Roles from requirements.yml
+# (because they might not adhere to our lint rules)
+roles/mysql
+roles/zabbix_repo
+roles/zabbix_agent
+roles/cron
+roles/pip

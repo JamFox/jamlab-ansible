@@ -230,7 +230,7 @@ When using `block` of tasks, define `when` condition right under the `name` remo
 
 ### Files and templates
 
-Comment Ansible-managed files with `# Managed by Ansible, do not edit manually - changes made here will be overwritten!` at the top. Use the `vars_common_all_ansible_managed_comment` variable to render the comment using jinja. Do not suffix files with `jinja` if they do not include any other logic besides including the `vars_common_all_ansible_managed_comment` variable.
+Comment Ansible-managed files with `# Managed by Ansible, do not edit manually - changes made here will be overwritten!` at the top. Use the `ansible_managed` variable to render the comment using jinja. Do not suffix files with `jinja` if they do not include any other logic besides including the comment variable.
 
 "Unhide" dot files with the prefix `dot_`. For example, `.bashrc` should be named `dot_bashrc`.
 

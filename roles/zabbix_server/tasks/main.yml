@@ -1,0 +1,70 @@
+# Install
+- name: Install zabbix packages for CentOS/RedHat
+  ansible.builtin.yum:
+    name: "{{ zabbix_packages_centos }}"
+    state: "{{ zabbix_package_state | default(default_package_state | default('present')) }}"
+  when: ansible_os_family in ['CentOS', 'RedHat']
+
+- name: Install zabbix packages for Debian
+  ansible.builtin.apt:
+    name: "{{ zabbix_packages_debian }}"
+    state: "{{ zabbix_package_state | default(default_package_state | default('present')) }}"
+  when: ansible_os_family == "Debian"
+
+# Assert database pass before continue
+- name: Assert if zabbix_server_database_password is set
+  ansible.builtin.assert:
+    that: zabbix_server_database_password is defined and zabbix_server_database_password | length > 0
+    fail_msg: "The zabbix_server_database_password variable is not set or is empty."
+
+# Config SELinux
+- name: Configure selinux
+  when:
+    - ansible_selinux.status is defined
+    - ansible_selinux.status == "enabled"
+  block:
+    - name: Set selinux settings for zabbix_server
+      ansible.posix.seboolean:
+        name: "{{ item }}"
+        state: true
+        persistent: true
+      loop:
+        - httpd_can_connect_zabbix
+        - httpd_can_network_connect_db
+        - zabbix_can_network
+
+    - name: Place selinux type enforcement
+      ansible.builtin.copy:
+        src: my-zabbixserver.te
+        dest: /etc/zabbix/my-zabbixserver.te
+        mode: "0644"
+      notify:
+        - Create selinux mod for zabbix_server
+        - Create selinux pp for zabbix_server
+        - Load selinux pp for zabbix_server
+
+# Flush
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+# Configure Zabbix
+- name: Configure zabbix_server
+  ansible.builtin.template:
+    src: files/zabbix_server.conf.j2
+    dest: /etc/zabbix/zabbix_server.conf
+    mode: "0644"
+  notify:
+    - Restart zabbix_server
+
+- name: Start and enable zabbix_server
+  ansible.builtin.service:
+    name: zabbix-server
+    state: started
+    enabled: true
+
+# Powermeter script
+- name: Copy powermeter_sync script
+  ansible.builtin.copy:
+    src: powermeter_sync.py
+    dest: /root/powermeter_sync.py
+    mode: "0774"

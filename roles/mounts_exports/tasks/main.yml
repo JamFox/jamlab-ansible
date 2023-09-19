@@ -14,7 +14,7 @@
           {{ mount.device }} {{ mount.mount_point }} {{ mount.type }} {{ mount.options }} {{ mount.dump }} {{ mount.pass }}
           {% endfor %}
         dest: /etc/fstab
-        marker: "# {mark} {{ vars_common_all_ansible_managed_comment }}"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
       notify: Mount all drives
 
 - name: Configure exports
@@ -37,5 +37,5 @@
         create: true
         owner: root
         mode: "0644"
-        marker: "# {mark} {{ vars_common_all_ansible_managed_comment }}"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
       notify: Export all drives
