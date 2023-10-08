@@ -1,0 +1,12 @@
+- name: PLAYBOOK FOR GROUP 'VS'
+  hosts: vs
+  become: true
+  vars_files:
+    - ../vars_common_all.yml
+    - ../vars_disabled_roles.yml
+
+  roles:
+    - { role: users_groups,   tags: [all, users_groups],   when: not (disabled_roles.users_groups | default(false))}
+    - { role: soft_apt,       tags: [all, soft, soft_apt], when: not (disabled_roles.soft_apt | default(false)) }
+    - { role: motd,           tags: [all, motd],           when: not (disabled_roles.motd | default(false))}
+    - { role: sshd,           tags: [all, sshd],           when: not (disabled_roles.sshd | default(false))}
