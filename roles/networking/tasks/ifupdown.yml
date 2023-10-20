@@ -1,0 +1,37 @@
+---
+- name: Install extra ifupdown2 helpers
+  ansible.builtin.apt:
+    name:
+      - resolvconf
+      - vlan
+    state: present
+
+- name: Configure ifupdown network interfaces
+  ansible.builtin.template:
+    src: files/interfaces.j2
+    dest: /etc/network/interfaces
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
+  notify:
+    - Confirm network change
+    - Restart networking
+
+- name: Create interfaces.d directory
+  ansible.builtin.file:
+    path: /etc/network/interfaces.d/
+    state: directory
+    mode: "0755"
+
+- name: Configure additional ifupdown network interfaces
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "/etc/network/interfaces.d/{{ item | basename }}"
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
+  with_items: "{{ network_custom_interfaces }}"
+  notify:
+    - Confirm network change
+    - Restart networking
+  when: network_custom_interfaces | length > 0

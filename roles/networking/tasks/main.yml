@@ -1,0 +1,36 @@
+---
+
+- name: Install bridge-utils package if bridges are configured
+  ansible.builtin.apt:
+    pkg:
+      - bridge-utils
+    state: present
+  when: "network_interfaces | selectattr('bridge_ports', 'defined') | list"
+
+#- name: Check if this device has any wireless interfaces
+#  ansible.builtin.shell: |
+#    set -eo pipefail
+#    find /sys/class/ieee80211/ -type l
+#    ip -all netns exec find /sys/class/ieee80211/ -type l | grep "/sys/class/ieee80211/"
+#  args:
+#    executable: /bin/bash
+#  register: check_for_wireless
+#  changed_when: false
+#  failed_when: false
+#
+#- name: Configure wireless devices
+#  ansible.builtin.include_tasks:
+#    file: wifi.yml
+#  when: "check_for_wireless.stdout_lines | length > 0"
+
+- name: Configure networking interfaces with ifupdown
+  ansible.builtin.include_tasks:
+    file: ifupdown.yml
+
+- name: Set networking facts
+  ansible.builtin.import_tasks: facts.yml
+
+- name: Tune network options
+  ansible.builtin.include_tasks:
+    file: tuning.yml
+  when: network_tune

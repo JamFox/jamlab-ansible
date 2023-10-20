@@ -1,0 +1,29 @@
+---
+- name: Get all network interfaces
+  ansible.builtin.set_fact:
+    network_devices: >-
+      {{ ansible_facts
+         | dict2items
+         | selectattr('value.device', 'defined')
+         | selectattr('value.device', 'in', ansible_interfaces)
+         | items2dict }}
+
+- name: Get speed of fastest active physical NIC
+  ansible.builtin.set_fact:
+    network_max_speed: >-
+      {{ network_devices
+         | dict2items
+         | selectattr('value.active', 'equalto', True)
+         | selectattr('value.type', 'equalto', 'ether')
+         | selectattr('value.pciid', 'defined')
+         | selectattr('value.speed', 'defined')
+         | map(attribute='value.speed')
+         | max
+         | default(-1) }}
+  when: network_tune_interface is not defined
+
+- name: Get speed of manually specified interface {{ network_tune_interface | default("") }}
+  ansible.builtin.set_fact:
+    network_max_speed: >-
+      {{ network_devices[network_tune_interface]['speed'] }}
+  when: network_tune_interface is defined

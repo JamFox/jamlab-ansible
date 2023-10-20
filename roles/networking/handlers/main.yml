@@ -1,0 +1,16 @@
+---
+- name: Confirm network change
+  ansible.builtin.pause:
+    prompt: Please check the network configuration changes. Press enter to apply or ctrl-c to stop
+  when: network_wait_on_change
+
+- name: Restart networking
+  ansible.builtin.service:
+    name: networking.service
+    state: restarted
+  when: network_restart_with_service
+
+- name: Restart networking
+  ansible.builtin.command:
+    cmd: ifreload -a
+  when: not network_restart_with_service

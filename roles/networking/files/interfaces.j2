@@ -1,0 +1,114 @@
+#jinja2: trim_blocks: "false", lstrip_blocks: "true"
+# {{ ansible_managed }}
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+{% set _network_interfaces = [] %}
+{% for interface in network_interfaces %}
+  {% set _ = _network_interfaces.append(interface) %}
+  {% for vlan in interface['vlans'] | default([]) %}
+    {% set _ = _network_interfaces.append({ 'name': interface['name'] + '.' + vlan['id'] | string } | combine(vlan)) %}
+  {% endfor %}
+{% endfor %}
+{% for interface in _network_interfaces %}
+  {% if interface['waitonboot'] %}
+auto {{ interface['name'] }}
+  {% endif %}
+  {% if interface['allow'] is defined %}
+allow-{{ interface['allow'] }} {{ interface['name'] }}
+  {% elif not interface['waitonboot'] %}
+allow-hotplug {{ interface['name'] }}
+  {% endif %}
+  {% for family in interface['families'] %}
+iface {{ interface['name'] }} {{ 'inet6' if family['name'] == 'ipv6' else 'inet' }} {{ family['type'] }}
+      {% if family['type'] == 'static' %}
+  address {{ family['address'] | ansible.utils.ipaddr('address') }}
+      {% if family['name'] == 'ipv4' %}
+  netmask {{ family['address'] | ansible.utils.ipaddr('netmask') }}
+      {% elif family['name'] == 'ipv6' %}
+  netmask {{ family['address'] | ansible.utils.ipaddr('prefix') }}
+      {% endif %}
+        {% if 'gateway' in family %}
+  gateway {{ family['gateway'] }}
+        {% endif %}
+      {% endif %}
+      {% if family['type'] == 'static' and family['name'] == 'ipv6' %}
+  dad-attempts {{ network_dad_attempts }}
+      {% endif %}
+    {% if family['bridge-ports'] is defined and family['bridge-ports'] | length >= 1 %}
+  bridge-ports {{ family['bridge-ports'] }}
+    {% endif %}
+    {% if family['bridge-ports'] is defined and family['bridge-ports'] | length >= 1 %}
+  bridge-stp {{ family['bridge-stp'] | default("off") }}
+    {% endif %}
+    {% if family['bridge-ports'] is defined and family['bridge-ports'] | length >= 1 %}
+  bridge-fd {{ family['bridge-fd'] | default(0) }}
+    {% endif %}
+    {% if family['ovs_type'] is defined and family['ovs_type'] | length >= 1 %}
+  ovs_type {{ family['ovs_type']  }}
+    {% endif %}
+    {% if family['ovs_bridge'] is defined and family['ovs_bridge'] | length >= 1 %}
+  ovs_bridge {{ family['ovs_bridge'] }}
+    {% endif %}
+    {% if family['ovs_ports'] is defined and family['ovs_ports'] | length >= 1 %}
+  ovs_ports {{ family['ovs_ports'] }}
+    {% endif %}
+    {% if family['ovs_options'] is defined and family['ovs_options'] | length >= 1 %}
+  ovs_options {{ family['ovs_options'] }}
+    {% endif %}
+      {% if family['type'] == 'static' %}
+        {% if interface['dns_nameservers'] is defined and interface['dns_nameservers'] | length >= 1 %}
+          {% if family['name'] == 'ipv4' %}
+            {% if interface['dns_nameservers'] | ansible.utils.ipv4 | length >= 1 %}
+  dns-nameservers {{ interface['dns_nameservers'] | ansible.utils.ipv4 | join(' ') }}
+            {% endif %}
+          {% elif family['name'] == 'ipv6' %}
+            {% if interface['dns_nameservers'] | ansible.utils.ipv6 | length >= 1 %}
+  dns-nameservers {{ interface['dns_nameservers'] | ansible.utils.ipv6 | join(' ') }}
+            {% endif %}
+          {% endif %}
+        {% endif %}
+        {% if interface['dns_search'] is defined and interface['dns_search'] | length >= 1 %}
+  dns-search {{ interface['dns_search'] | join(' ') }}
+        {% endif %}
+      {% endif %}
+      {% if loop.first %}
+        {% if 'bridge_ports' in interface %}
+  bridge_ports {{ interface["bridge_ports"] | join(' ') | default('none', true) }}
+        {% endif %}
+        {% if 'bridge_waitport' in interface %}
+  bridge_waitport {{ interface["bridge_waitport"] }}
+        {% endif %}
+        {% if 'mtu' in interface %}
+  mtu {{ interface['mtu'] }}
+        {% endif %}
+        {% if 'access_points' in interface %}
+          {% set ap = interface['access_points'].0 %}
+  wpa-ssid "{{ ap['ssid'] }}"
+          {% if 'password' in ap %}
+            {% if 'key-management' not in ap or ap['key-management'] == 'psk' %}
+  wpa-key-mgmt WPA-PSK
+  wpa-psk "{{ ap['password'] }}"
+            {% elif ap['key-management'] == 'eap' %}
+  wpa-key-mgmt WPA-EAP
+  wpa-eap {{ ap['method'] | upper }}
+              {% if 'phase2-auth' in ap %}
+  wpa-phase2 "auth={{ ap['phase2-auth'] | upper }}"
+              {% endif %}
+  wpa-identity {{ ap['identity'] }}
+  wpa-password {{ ap['password'] }}
+            {% endif %}
+          {% else %}
+  wpa-key-mgmt NONE
+          {% endif %}
+        {% endif %}
+      {% endif %}
+  {% endfor %}
+  {% if not loop.last %}
+
+  {% endif %}
+{% endfor %}

@@ -1,0 +1,16 @@
+---
+- name: Configure network tuning sysctls
+  ansible.posix.sysctl:
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+    sysctl_file: "/etc/sysctl.d/network-tuning.conf"
+  loop: "{{ speed_sysctls | default([]) }}"
+  loop_control:
+    label: "{{ item.key }}={{ item.value }}"
+  vars:
+    speed_sysctls: >-
+      {{ network_tune_sysctls
+         | sort(attribute='min_speed')
+         | selectattr('min_speed', 'le', network_max_speed | int)
+         | map(attribute='sysctls')
+         | last }}

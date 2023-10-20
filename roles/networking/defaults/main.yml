@@ -1,0 +1,54 @@
+---
+network_interfaces: []
+network_custom_interfaces: []
+network_dad_attempts: 100
+
+# Wether to ask interactive confirmation before applying changes
+network_wait_on_change: false
+
+# Wether to use service to restart networking (if not, uses ifreload command)
+network_restart_with_service: false
+
+# For more details on tuning, see: https://fasterdata.es.net/
+network_tune: false
+network_tune_sysctls:
+#  - min_speed: 1000
+#    sysctls:
+#      - key: net.ipv4.tcp_congestion_control
+#        value: "bbr"
+#      - key: net.ipv4.tcp_mtu_probing
+#        value: "1"
+#      - key: net.core.default_qdisc
+#        value: "fq"
+#  - min_speed: 10000
+#    sysctls:
+#      - key: net.core.rmem_max
+#        value: "67108864"
+#      - key: net.core.wmem_max
+#        value: "67108864"
+#      - key: net.ipv4.tcp_rmem
+#        value: "4096 87380 33554432"
+#      - key: net.ipv4.tcp_wmem
+#        value: "4096 65536 33554432"
+#      - key: net.ipv4.tcp_congestion_control
+#        value: "bbr"
+#      - key: net.ipv4.tcp_mtu_probing
+#        value: "1"
+#      - key: net.core.default_qdisc
+#        value: "fq"
+#  - min_speed: 40000
+#    sysctls:
+#      - key: net.core.rmem_max
+#        value: "2147483647"
+#      - key: net.core.wmem_max
+#        value: "2147483647"
+#      - key: net.ipv4.tcp_rmem
+#        value: "4096 87380 2147483647"
+#      - key: net.ipv4.tcp_wmem
+#        value: "4096 65536 2147483647"
+#      - key: net.ipv4.tcp_congestion_control
+#        value: "bbr"
+#      - key: net.ipv4.tcp_mtu_probing
+#        value: "1"
+#      - key: net.core.default_qdisc
+#        value: "fq"
