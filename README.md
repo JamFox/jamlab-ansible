@@ -34,10 +34,10 @@ Ansible playbooks for configuration management in push mode.
 | motd             | ✔️        | ✔️        | ✔️         |
 | mounts_exports   | ✔️        | ✔️        | ❌         |
 | netplan          | ✔️        | ✔️        | ✔️         |
+| networking       | ✔️        | ✔️        | ❌         |
 | nfs              | ❌        | ❌        | ❌         |
 | podman           | ✔️        | ✔️        | ✔️         |
 | proxmox          | ✔️        | ✔️        | ✔️         |
-| pve_provision    | ❌        | ❌        | ❌         |
 | resolv_hosts     | ✔️        | ✔️        | ❌         |
 | selinux          | ✔️        | ✔️        | ❌         |
 | soft_yum         | ✔️        | ✔️        | ✔️         |
