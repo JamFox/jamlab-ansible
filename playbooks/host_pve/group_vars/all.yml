@@ -7,6 +7,8 @@ soft_extra_sources:
 
 soft_packages_latest: "{{ vars_common_all_soft_apt_unattended + vars_common_all_soft_apt_tools + vars_common_all_soft_apt_hashicorp }}"
 
+sshd: "{{ vars_common_all_default_sshd }}"
+
 provision_vm_default_target_node: "{{ groups['pve'][0] }}"
 provision_vm_gateway: "{{ vars_common_all_gateway_ipv4 }}"
 provision_vm_cidr: "{{ vars_common_all_mask_ipv4 }}"

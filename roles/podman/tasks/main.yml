@@ -95,9 +95,10 @@
       changed_when: false
       with_dict: "{{ podman_users }}"
       check_mode: false
+      ignore_errors: true
     - name: Enable user lingering for podman_users
       become: true
-      ansible.builtin.command: loginctl enable-linger "{{ item.key }}"
+      ansible.builtin.command: loginctl enable-linger "{{ item.item.key }}"
       when: item.rc != 0
       loop: "{{ linger_check.results }}"
     - name: Enable and start podman.socket

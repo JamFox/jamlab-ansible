@@ -144,7 +144,7 @@ pip_executable: "{{ 'pip3' if pip_package.startswith('python3') else 'pip' }}"
 
 vars_common_all_main_user: jamfox
 vars_common_all_main_group: admin
-users:
+vars_common_all_main_users:
   - name: "{{ vars_common_all_main_user }}"
     primary_group: "{{ vars_common_all_main_group }}"
     homedir: "/home/{{ vars_common_all_main_user }}"
@@ -155,7 +155,7 @@ users:
       - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICMfvfGWOQuhmQ1MRJifS0VddwvwUpFYiETPb1V5W+5Y katurv@hpcbook'
       - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJruHSfE0z4yEY4SJW5/ZnBjgpvlz8u199+s4srW85WV jamfox@DESKTOP-6KK4JTC'
 
-sshd:
+vars_common_all_default_sshd:
   LogLevel: "INFO"
   PasswordAuthentication: "no"
   PermitRootLogin: "prohibit-password"

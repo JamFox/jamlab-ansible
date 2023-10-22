@@ -2,6 +2,10 @@ script_urls: "{{ vars_common_all_script_urls }}"
 
 soft_packages_latest: "{{ vars_common_all_soft_apt_unattended }}"
 
+users: "{{ vars_common_all_main_users }}"
+
+sshd: "{{ vars_common_all_default_sshd }}"
+
 ddclient_api_login: "{{ vars_common_all_dns_login }}"
 ddclient_api_key: "{{ vars_common_all_dns_key }}"
 ddclient_api_token: "{{ vars_common_all_dns_token }}"

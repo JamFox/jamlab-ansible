@@ -1,5 +1,30 @@
 soft_packages_latest: "{{ vars_common_all_soft_apt_tools + vars_common_all_soft_apt_unattended }}"
 
+podman_system_users:
+  - name: 'podman'
+    primary_group: 'podman'
+    groups:
+      - "{{ nomad_group }}"
+    homedir: '/home/podman'
+  - name: "{{ nomad_user }}"
+    primary_group: "{{ nomad_group }}"
+    comment: "Nomad user"
+    system: true
+podman_enabled: true
+podman_manual_mapping: true
+podman_enable_user_socket: true
+# Set uid:gid, according to https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
+podman_users:
+  podman: '231072:65537'
+  nomad: '296609:65537'
+podman_registries: 
+  - 'docker.io'
+  - 'quay.io'
+
+users: "{{ vars_common_all_main_users + podman_system_users }}"
+
+sshd: "{{ vars_common_all_default_sshd }}"
+
 step_ca_certs_dir: "{{ vars_common_all_certs_path }}"
 step_ca_certs_key: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
 step_ca_certs_crt: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
@@ -7,13 +32,14 @@ step_ca_certs_jwk_pass: "{{ vars_common_all_step_ca_jwk_password }}"
 step_ca_certs_pass_dir: "{{ vars_common_all_certs_path }}"
 step_ca_certs:
   - name: "{{ ansible_hostname }}.{{ vars_common_all_default_domain }}"
-    crt_path: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
-    key_path: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
+    crt_path: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
+    key_path: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
     san:
-      - "{{ consul_node_role }}.dc1.consul"
-      - "{{ nomad_node_role }}.dc1.nomad"
-      - "{{ ansible_hostname }}.dc1.nomad"
-      - "{{ ansible_hostname }}.dc1.consul"
+      - "{{ consul_node_role }}.{{ consul_datacenter }}.consul"
+      - "{{ ansible_hostname }}.{{ consul_datacenter }}.consul"
+      - "{{ nomad_node_role }}.{{ consul_datacenter }}.nomad"
+      - "{{ ansible_hostname }}.{{ consul_datacenter }}.nomad"
+      - "{{ nomad_node_role }}.global.nomad"
       - localhost
       - 127.0.0.1
 
@@ -26,37 +52,44 @@ consul_version: 1.16.2-1
 consul_install_from_repo: true
 consul_os_repo_prerequisites: false
 # Consul config
-#consul_iface: "eth0"
+consul_iface: "{{ ansible_default_ipv4.interface }}"
+consul_bind_address: "{{ ansible_host }}"
 consul_user: "consul"
 consul_manage_user: true
-consul_group: "consul"
+consul_group: "hashistack"
 consul_manage_group: true
+consul_raft_protocol: 3
 consul_bootstrap_expect: true
 #consul_recursors
 #consul_iptables_enable
+consul_ports_https: 8501
+consul_ports_grpc_tls: 8502
 consul_tls_enable: true
+consul_tls_dir: "/etc/hashistack"
 consul_tls_ca_crt: "{{ vars_common_all_certs_ca_path }}"
 consul_tls_server_crt: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
 consul_tls_server_key: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
 consul_tls_files_remote_src: true
 consul_encrypt_enable: true
-consul_tls_verify_incoming: false # CHANGE ME FOR PROD
+consul_tls_verify_incoming: true
 consul_tls_verify_outgoing: true
 consul_tls_verify_server_hostname: true
 auto_encrypt:
   enabled: true
 consul_ui: false
 consul_raw_key: "{{ vars_common_all_consul_raw_key }}"
+consul_syslog_enable: false
 
 # Nomad server
 nomad_node_role: "client"
 nomad_group_name: "vs"
+nomad_datacenter: "{{ consul_datacenter }}"
 # Nomad install
 nomad_version: 1.6.2
 # Nomad config
 nomad_user: "nomad"
 nomad_manage_user: true
-nomad_group: "nomad"
+nomad_group: "hashistack"
 nomad_manage_group: true
 nomad_retry_join: true
 nomad_encrypt_enable: true
@@ -66,14 +99,22 @@ nomad_host_volumes:
     owner: root
     group: "{{ nomad_group }}"
     read_only: false
+nomad_raft_protocol: 3
 nomad_podman_enable: true
 nomad_cni_enable: true
 nomad_use_consul: true
 nomad_consul_ssl: true
-nomad_consul_address: localhost:8500
-nomad_consul_ca_file: "{{ consul_tls_dir }}/{{ consul_tls_ca_crt }}"
-nomad_consul_cert_file: "{{ consul_tls_dir }}/{{ consul_tls_server_crt }}"
-nomad_consul_key_file: "{{ consul_tls_dir }}/{{ consul_tls_server_key }}"
+nomad_consul_address: localhost:8501
+nomad_tls_dir: "/etc/hashistack"
+nomad_ca_file: "{{ consul_tls_ca_crt }}"
+nomad_cert_file: "{{ consul_tls_server_crt }}"
+nomad_key_file: "{{ consul_tls_server_key }}"
+nomad_consul_ca_file: "{{ consul_tls_dir }}/{{ consul_tls_ca_crt | basename }}"
+nomad_consul_cert_file: "{{ consul_tls_dir }}/{{ consul_tls_server_crt | basename }}"
+nomad_consul_key_file: "{{ consul_tls_dir }}/{{ consul_tls_server_key | basename }}"
+nomad_tls_copy_keys: true
+nomad_tls_files_remote_src: true
 nomad_tls_enable: true
 nomad_verify_server_hostname: true
-nomad_verify_https_client: false # CHANGE ME FOR PROD
+nomad_verify_https_client: true
+nomad_syslog_enable: false

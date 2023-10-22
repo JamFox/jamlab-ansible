@@ -1,6 +1,7 @@
 - name: PLAYBOOK FOR GROUP 'VS'
   hosts: vs
   become: true
+  gather_facts: true
   vars_files:
     - ../vars_common_all.yml
     - ../vars_disabled_roles.yml
@@ -20,3 +21,4 @@
     - { role: step_ca_certs,  tags: [all, step_ca_certs, step_ca, ca], when: not (disabled_roles.consul | default(false))}
     - { role: consul,         tags: [all, consul],                     when: not (disabled_roles.consul | default(false))}
     - { role: nomad,          tags: [all, nomad],                      when: not (disabled_roles.nomad | default(false))}
+    - { role: podman,         tags: [all, podman],                     when: not (disabled_roles.podman | default(false))}
