@@ -1,0 +1,20 @@
+- name: PLAYBOOK FOR HOST 'HEAD'
+  hosts: head
+  become: true
+  vars_files:
+    - ../vars_common_all.yml
+    - ../vars_disabled_roles.yml
+
+  roles:
+    - { role: users_groups,   tags: [all, users_groups],   when: not (disabled_roles.users_groups | default(false))}
+    - { role: custom_scripts, tags: [all, custom_scripts], when: not (disabled_roles.custom_scripts | default(false))}
+    - { role: soft_apt,       tags: [all, soft, soft_apt], when: not (disabled_roles.soft_apt | default(false)) }
+    - { role: motd,           tags: [all, motd],           when: not (disabled_roles.motd | default(false))}
+    - { role: sshd,           tags: [all, sshd],           when: not (disabled_roles.sshd | default(false))}
+    - { role: ipsets,         tags: [all, ipsets],         when: not (disabled_roles.ipsets | default(false))}
+    - { role: iptables,       tags: [all, iptables],       when: not (disabled_roles.iptables | default(false))}
+    # Might need manual steps: 
+    # step-cli certificate install /etc/step-ca/certs/root_ca.crt
+    # sudo step-cli ca provisioner add jwk --create --ca-url=https://head.jamfox.dev --root=/etc/step-ca/certs/root_ca.crt --ca-config /etc/step-ca/config/ca.json
+    # sudo systemctl restart step-ca
+    - { role: maxhoesel.smallstep.step_ca, tags: [all, ca, step_ca]}

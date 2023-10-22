@@ -1,0 +1,17 @@
+tls {
+  defaults {
+    ca_file = "{{ consul.config_dir }}/{{ consul.tls.ca_file }}"
+    verify_incoming = true
+    verify_outgoing = true
+  }
+
+  internal_rpc {
+    verify_server_hostname = true
+  }
+}
+
+auto_encrypt {
+  tls = true
+}
+
+server = false

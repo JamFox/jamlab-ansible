@@ -1,0 +1,33 @@
+- name: Create certs dir
+  ansible.builtin.file:
+    path: "{{ step_ca_certs_dir }}"
+    state: directory
+    mode: "0775"
+
+- name: Create jwk pass
+  ansible.builtin.copy:
+    content: "{{ step_ca_certs_jwk_pass }}"
+    dest: "{{ step_ca_certs_pass_dir }}/jwk.pass"
+    mode: "0700"
+
+- name: Request a new certificate for a given domain
+  maxhoesel.smallstep.step_ca_certificate:
+    crt_file: "{{ item.crt_path }}"
+    key_file: "{{ item.key_path }}"
+    provisioner: jwk
+    provisioner_password_file: "{{ step_ca_certs_pass_dir }}/jwk.pass"
+    name: "{{ item.name }}"
+    san: "{{ item.san }}"
+    force: true
+  loop: "{{ step_ca_certs }}"
+  when: step_ca_certs is defined and step_ca_certs | length > 0
+
+- name: Renew a certificate
+  maxhoesel.smallstep.step_ca_renew:
+    crt_file: "{{ item.crt_path }}"
+    key_file: "{{ item.key_path }}"
+    ca_url: "{{ step_bootstrap_ca_url }}"
+    password_file: "{{ step_ca_certs_pass_dir }}/jwk.pass"
+    force: true
+  loop: "{{ step_ca_certs }}"
+  when: step_ca_certs is defined and step_ca_certs | length > 0

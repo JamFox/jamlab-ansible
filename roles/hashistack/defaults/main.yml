@@ -1,0 +1,30 @@
+consul:
+  gossip_key: !vault |
+            $ANSIBLE_VAULT;1.1;AES256
+            39666565346432396665396339393363363634663830326561363165383339363134336462386230
+            6338336333626535643733626136323261356138313362640a313061346336656232383765383634
+            31356633646239383662616234306439336434343931303462633233363631656438366132663963
+            3563383163633062330a383666333933386130383336316363616538643233646536666664323638
+            63636666303336663565646139363330393335613936336433373862326338643866343232303566
+            6535393761666130663330323065643534376365666335663537
+  config_dir: /etc/consul.d
+  data_dir: /opt/consul
+  local_addr: 127.0.0.1:8500
+  local_ssl: "false"
+  api_endpoint: v1
+  tls:
+    ca_file: "consul-agent-ca.pem"
+    cert_file: "dc1-server-consul-{{ ansible_hostname[-1] }}.pem"
+    key_file: "dc1-server-consul-{{ ansible_hostname[-1] }}-key.pem"
+  cli:
+    cert_file: "dc1-cli-consul-0.pem"
+    key_file: "dc1-cli-consul-0-key.pem"
+
+nomad:
+  config_dir: /etc/nomad.d
+  data_dir: /opt/nomad
+  local_addr: https://127.0.0.1:4646
+  tls:
+    ca_file: "nomad-ca.pem"
+    cert_file: "nomad-{{ hashistack }}.pem"
+    key_file: "nomad-{{ hashistack }}-key.pem"

@@ -1,0 +1,40 @@
+# Managed by jamlab-ansible
+datacenter = "dc1"
+data_dir = "{{ nomad.data_dir }}"
+
+{% if hashistack is defined %}
+    {%- if hashistack == 'server' %}
+        {%- include 'nomad_server.hcl.j2' %}
+    {%- elif hashistack == 'client' %}
+        {%- include 'nomad_client.hcl.j2' %}
+    {% endif %}
+{% endif %}
+
+telemetry {
+  prometheus_metrics         = true
+  disable_hostname           = true
+  publish_allocation_metrics = true
+  publish_node_metrics       = true
+  collection_interval        = "1s"
+}
+
+tls {
+  http = true
+  rpc  = true
+
+  ca_file   = "{{ nomad.config_dir }}/{{ nomad.tls.ca_file }}"
+  key_file  = "{{ nomad.config_dir }}/{{ nomad.tls.key_file }}"
+  cert_file = "{{ nomad.config_dir }}/{{ nomad.tls.cert_file }}"
+
+  verify_server_hostname = true
+  verify_https_client    = true
+}
+
+consul {
+  address             = "{{ consul.local_addr }}"
+  server_service_name = "nomad"
+  client_service_name = "nomad-client"
+  auto_advertise      = true
+  server_auto_join    = true
+  client_auto_join    = true
+}

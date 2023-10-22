@@ -31,6 +31,7 @@ Ansible playbooks for configuration management in push mode.
 | firewalld        | ✔️        | ✔️        | ✔️         |
 | gitlab           | ✔️        | ✔️        | ✔️         |
 | haproxy          | ✔️        | ✔️        | ✔️         |
+| hashistack       | ✔️        | ✔️        | ✔️         |
 | motd             | ✔️        | ✔️        | ✔️         |
 | mounts_exports   | ✔️        | ✔️        | ❌         |
 | netplan          | ✔️        | ✔️        | ✔️         |
@@ -43,6 +44,7 @@ Ansible playbooks for configuration management in push mode.
 | soft_yum         | ✔️        | ✔️        | ✔️         |
 | soft_apt         | ✔️        | ✔️        | ✔️         |
 | sshd             | ✔️        | ✔️        | ✔️         |
+| step_ca_certs    | ✔️        | ✔️        | ✔️         |
 | telegram_send    | ✔️        | ✔️        | ✔️         |
 | users_groups     | ✔️        | ✔️        | ✔️         |
 | zabbix_agent2    | ✔️        | ✔️        | ✔️         |

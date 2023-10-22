@@ -1,0 +1,43 @@
+script_urls: "{{ vars_common_all_script_urls }}"
+
+soft_packages_latest: "{{ vars_common_all_soft_apt_tools + vars_common_all_soft_apt_unattended }}"
+
+ipset_countries: "{{ vars_common_all_ipsets_allow }}"
+firewall_v4_default_rules:
+  001 default policies: "{{ vars_common_all_iptable_default }}"
+  002 allow loopback: "{{ vars_common_all_iptable_loopback }}"
+  003 allow ping replies: "{{ vars_common_all_iptable_ping }}"
+  010 create whitelist chain: "{{ vars_common_all_iptable_whitelist }}"
+  011 create locallist chain: "{{ vars_common_all_iptable_locallist }}"
+  100 allow established related: "{{ vars_common_all_iptable_established_related }}"
+  200 allow ssh: "{{ vars_common_all_iptable_ssh }}"
+  300 allow wireguard:
+    - -t nat -I POSTROUTING -j MASQUERADE -o eth0
+    - -I INPUT 1 -i wg0 -j ACCEPT
+    - -I FORWARD 1 -i eth0 -o wg0 -j ACCEPT
+    - -I FORWARD 1 -i wg0 -o eth0 -j ACCEPT
+    - -I INPUT 1 -i eth0 -p udp --dport 51820 -j WHITELIST
+  500 allow dns:
+    - -A INPUT -p udp --dport 53 -s 192.168.0.0/16 -j LOCALLIST
+    - -A INPUT -p tcp --dport 53 -s 192.168.0.0/16 -j LOCALLIST
+  600 allow octoprint: 
+    - -A INPUT -p tcp -m multiport --dport 80,443,8080 -j LOCALLIST
+    - -A INPUT -p tcp -m multiport --dport 443 -s 149.154.160.0/20 -j ACCEPT # https://core.telegram.org/bots/webhooks
+    - -A INPUT -p tcp -m multiport --dport 443 -s 91.108.4.0/22 -j ACCEPT # https://core.telegram.org/bots/webhooks
+  999 drop everything: "{{ vars_common_all_iptable_dropall }}"
+
+step_ca_name: JamLab CA
+step_ca_root_password: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  37333631376534316166353661616163633635393835383937366532653366373164626564636265
+  6162643536636265306561643234393432633566643362380a303164353661353430646436383132
+  32616432353031333439393833613266616531653436383565353133356162396134303139653263
+  6635653166323866310a303534303364306333663139376336633563323737343136396131316433
+  3536
+step_ca_intermediate_password: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  61313863616639323832376662396533393637613065306234303233633039383833646631326535
+  6530363132313133356534666235353835373933393363650a356135623130623563373837646465
+  30316435386133653236346565626237623664363466373034393136663430383066663732666539
+  6637626537343635610a633162326430326566353063626461653738663931653565323866613363
+  3835

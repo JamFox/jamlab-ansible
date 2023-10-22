@@ -3,6 +3,7 @@
     src: files/resolv.conf
     dest: /etc/resolv.conf
     mode: "0644"
+  when: manage_resolv
 
 - name: Add hosts to hosts
   ansible.builtin.blockinfile:
@@ -12,21 +13,26 @@
       {% endfor %}
     dest: /etc/hosts
     marker: "# {mark} ANSIBLE MANAGED BLOCK"
-  when: hosts_entries is defined
+  when: 
+    - hosts_entries is defined and hosts_entries | length >= 1
+    - manage_hosts
 
-- name: Install hostname packages for CentOS/RedHat
-  ansible.builtin.yum:
-    name: "{{ hostname_packages }}"
-    state: "{{ hostname_package_state | default(default_package_state | default('present')) }}"
-  when: ansible_os_family in ['CentOS', 'RedHat']
+- name: Manage hostname
+  when: manage_hostname
+  block:
+    - name: Install hostname packages for CentOS/RedHat
+      ansible.builtin.yum:
+        name: "{{ hostname_packages }}"
+        state: "{{ hostname_package_state | default(default_package_state | default('present')) }}"
+      when: ansible_os_family in ['CentOS', 'RedHat']
 
-- name: Install hostname packages for Debian
-  ansible.builtin.apt:
-    name: "{{ hostname_packages }}"
-    state: "{{ hostname_package_state | default(default_package_state | default('present')) }}"
-  when: ansible_os_family == "Debian"
+    - name: Install hostname packages for Debian
+      ansible.builtin.apt:
+        name: "{{ hostname_packages }}"
+        state: "{{ hostname_package_state | default(default_package_state | default('present')) }}"
+      when: ansible_os_family == "Debian"
 
-- name: Set hostname
-  ansible.builtin.hostname:
-    name: "{{ hostname }}"
-  when: hostname is defined
+    - name: Set hostname
+      ansible.builtin.hostname:
+        name: "{{ hostname }}"
+      when: hostname is defined

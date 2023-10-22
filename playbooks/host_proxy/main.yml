@@ -15,4 +15,3 @@
     - { role: ddclient,       tags: [all, ddclient],       when: not (disabled_roles.ddclient | default(false))}
     - { role: certbot,        tags: [all, certbot],        when: not (disabled_roles.certbot | default(false))}
     - { role: haproxy,        tags: [all, haproxy],        when: not (disabled_roles.haproxy | default(false))}
-    - { role: dnsmasq,        tags: [all, dnsmasq],        when: not (disabled_roles.dnsmasq | default(false))}

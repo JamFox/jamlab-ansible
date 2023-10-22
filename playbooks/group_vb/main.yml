@@ -4,9 +4,19 @@
   vars_files:
     - ../vars_common_all.yml
     - ../vars_disabled_roles.yml
+  
+  pre_tasks:
+    - name: Add host to consul group
+      ansible.builtin.add_host:
+        hostname: "{{ ansible_hostname }}"
+        group: consul_instances
 
   roles:
-    - { role: users_groups,   tags: [all, users_groups],   when: not (disabled_roles.users_groups | default(false))}
-    - { role: soft_apt,       tags: [all, soft, soft_apt], when: not (disabled_roles.soft_apt | default(false)) }
-    - { role: motd,           tags: [all, motd],           when: not (disabled_roles.motd | default(false))}
-    - { role: sshd,           tags: [all, sshd],           when: not (disabled_roles.sshd | default(false))}
+    - { role: users_groups,   tags: [all, users_groups],               when: not (disabled_roles.users_groups | default(false))}
+    - { role: soft_apt,       tags: [all, soft, soft_apt],             when: not (disabled_roles.soft_apt | default(false)) }
+    - { role: motd,           tags: [all, motd],                       when: not (disabled_roles.motd | default(false))}
+    - { role: sshd,           tags: [all, sshd],                       when: not (disabled_roles.sshd | default(false))}
+    - { role: maxhoesel.smallstep.step_bootstrap_host, tags: [all, step_ca, ca, step_bootstrap_host]}
+    - { role: step_ca_certs,  tags: [all, step_ca_certs, step_ca, ca], when: not (disabled_roles.consul | default(false))}
+    - { role: consul,         tags: [all, consul],                     when: not (disabled_roles.consul | default(false))}
+    - { role: nomad,          tags: [all, nomad],                      when: not (disabled_roles.nomad | default(false))}

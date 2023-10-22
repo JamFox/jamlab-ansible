@@ -1,0 +1,211 @@
+# HASHISTACK ALL
+
+- name: Create groups for hashistack
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  loop: 
+    - nomad
+    - nomad-access
+    - consul
+    - consul-access
+
+- name: Create nomad user
+  ansible.builtin.user:
+    name: nomad
+    groups:
+      - nomad
+      - consul-access
+    system: true
+    state: present
+
+- name: Create consul user
+  ansible.builtin.user:
+    name: consul
+    groups:
+      - consul
+      - consul-access
+    system: true
+    state: present
+
+- name: Create consul dirs
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.group|default(item.owner) }}"
+    mode: "{{ item.mode|default('0750') }}"
+  loop:
+  - { path: "{{ consul.config_dir }}/", owner: consul, group: consul-access }
+  - { path: "{{ consul.data_dir }}/", owner: consul, group: consul-access }
+
+- name: Create nomad dirs
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.group|default(item.owner) }}"
+    mode: "{{ item.mode|default('0750') }}"
+  loop:
+  - { path: "{{ nomad.config_dir }}/", owner: nomad, group: nomad-access }
+  - { path: "{{ nomad.data_dir }}/", owner: nomad, group: nomad-access }
+
+- name: Create consul configs
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group|default(item.owner) }}"
+    mode: "{{ item.mode|default('0640') }}"
+  loop:
+  - { src: consul.hcl.j2, dest: /etc/consul.d/consul.hcl, owner: consul }
+  notify: restart consul
+
+- name: Create nomad configs
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group|default(item.owner) }}"
+    mode: "{{ item.mode|default('0640') }}"
+  loop:
+  - { src: nomad.hcl.j2, dest: /etc/nomad.d/nomad.hcl, owner: nomad }
+  notify: restart nomad
+
+# HASHISTACK SERVER
+
+- name: Configure Hashistack Server
+  block:
+
+  - name: Copy consul server files
+    ansible.builtin.copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      mode: "{{ item.mode|default('0640') }}"
+      owner: "{{ item.owner }}"
+      group: "{{ item.group|default(item.owner) }}"
+    loop:
+    - { src: "dc1-server-consul-{{ ansible_hostname[-1] }}-key.pem.enc", dest: "{{ consul.config_dir }}/{{ consul.tls.key_file }}", owner: consul }
+    - { src: "dc1-server-consul-{{ ansible_hostname[-1] }}.pem.enc", dest: "{{ consul.config_dir }}/{{ consul.tls.cert_file }}", owner: consul }
+    notify: restart consul
+
+  when: (hashistack is defined) and (hashistack == "server")
+
+# HASHISTACK CLIENT
+
+- name: Configure Hashistack Client
+  block:
+
+  # CNI 
+
+  - name: Create cni bridge directory
+    ansible.builtin.file:
+      path: /proc/sys/net/bridge
+      state: directory
+
+  - name: Enable cni bridge files
+    ansible.builtin.copy:
+      dest: /etc/mine.conf
+      content: '1'
+    loop:
+    - { dest: /proc/sys/net/bridge/bridge-nf-call-arptables }
+    - { dest: /proc/sys/net/bridge/bridge-nf-call-ip6tables }
+    - { dest: /proc/sys/net/bridge/bridge-nf-call-iptables }
+
+  - name: Create cni.conf
+    ansible.builtin.copy:
+      dest: /etc/sysctl.d/cni.conf
+      content: |
+        net.bridge.bridge-nf-call-arptables = 1
+        net.bridge.bridge-nf-call-ip6tables = 1
+        net.bridge.bridge-nf-call-iptables = 1
+
+  - name: Check if cni exists
+    ansible.builtin.stat:
+      path: /opt/cni/bin/bridge
+    register: r_cni
+
+  - name: Check if newer cni exists
+    ansible.builtin.shell: |
+      latest_tag=$(curl -s https://api.github.com/repos/containernetworking/plugins/releases/latest | jq -r ".tag_name")
+      current_ver=$(/opt/cni/bin/bridge 2>&1 | cut -d " " -f 4)
+      case "$current_ver" in ${latest_tag} ) echo "latest";; *) echo "outdated";; esac
+    register: r_cni_ver
+    when: r_cni.stat.exists
+
+  - name: Get latest cni
+    ansible.builtin.shell: |
+      latest_tag=$(curl -s https://api.github.com/repos/containernetworking/plugins/releases/latest | jq -r ".tag_name")
+      latest_url=https://github.com/containernetworking/plugins/releases/download/${latest_tag}/cni-plugins-linux-amd64-${latest_tag}.tgz
+      wget -P /tmp $latest_url
+      mkdir -p /opt/cni/bin
+      tar -C /opt/cni/bin -xzf /tmp/"${latest_url##*/}"
+      rm /tmp/"${latest_url##*/}"
+    when: not r_cni.stat.exists or r_cni_ver.stdout != "latest"
+
+  when: (hashistack is defined) and (hashistack == "client")
+
+# HASHISTACK ALL CONTINUED
+
+- name: Copy hashistack files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode|default('0640') }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group|default(item.owner) }}"
+  loop:
+  - { src: consul-agent-ca.pem.enc, dest: "{{ consul.config_dir }}/{{ consul.tls.ca_file }}", owner: consul, group: consul-access }
+  - { src: dc1-cli-consul-0-key.pem.enc, dest: "{{ consul.config_dir }}/{{ consul.cli.key_file }}", owner: consul, group: consul-access }
+  - { src: dc1-cli-consul-0.pem.enc, dest: "{{ consul.config_dir }}/{{ consul.cli.cert_file }}", owner: consul, group: consul-access }
+  - { src: nomad-ca.pem.enc, dest: "{{ nomad.config_dir }}/{{ nomad.tls.ca_file }}", owner: nomad }
+  - { src: "nomad-{{ hashistack }}.pem.enc", dest: "{{ nomad.config_dir }}/{{ nomad.tls.cert_file }}", owner: nomad }
+  - { src: "nomad-{{ hashistack }}-key.pem.enc", dest: "{{ nomad.config_dir }}/{{ nomad.tls.key_file }}", owner: nomad }
+  notify: restart nomad
+
+- name: Set consul env
+  ansible.builtin.copy:
+    dest: /etc/profile.d/consul-env.sh
+    mode: "0644"
+    content: |
+      export CONSUL_HTTP_SSL={{ consul.local_ssl }}
+      export CONSUL_HTTP_ADDR={{ consul.local_addr }}
+      export CONSUL_CACERT={{ consul.config_dir }}/{{ consul.tls.ca_file }}
+      export CONSUL_CLIENT_CERT={{ consul.config_dir }}/{{ consul.cli.cert_file }}
+      export CONSUL_CLIENT_KEY={{ consul.config_dir }}/{{ consul.cli.key_file }}
+
+- name: Set nomad env
+  ansible.builtin.copy:
+    dest: /etc/profile.d/nomad-env.sh
+    mode: "0644"
+    content: |
+      export NOMAD_ADDR={{ nomad.local_addr }}
+      export NOMAD_CACERT={{ nomad.config_dir }}/{{ nomad.tls.ca_file }}
+      export NOMAD_CLIENT_CERT={{ nomad.config_dir }}/{{ nomad.tls.cert_file }}
+      export NOMAD_CLIENT_KEY={{ nomad.config_dir }}/{{ nomad.tls.key_file }}
+
+- name: Copy consul service
+  ansible.builtin.copy:
+    src: consul.service
+    dest: /etc/systemd/system/
+  notify: restart consul
+
+- name: Copy nomad service
+  ansible.builtin.template:
+    src: nomad.service.j2
+    dest: /etc/systemd/system/nomad.service
+  notify: restart nomad
+
+- name: Enable and start consul
+  ansible.builtin.systemd:
+    name: consul.service
+    state: started
+    enabled: true
+    daemon_reload: true
+
+- name: Enable and start nomad
+  ansible.builtin.systemd:
+    name: nomad.service
+    state: started
+    enabled: true
+    daemon_reload: true

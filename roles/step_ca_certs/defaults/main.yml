@@ -1,0 +1,6 @@
+step_ca_certs_dir:
+step_ca_certs_key:
+step_ca_certs_crt:
+step_ca_certs_jwk_pass:
+step_ca_certs_pass_dir:
+step_ca_certs: []
