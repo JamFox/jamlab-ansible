@@ -83,7 +83,7 @@ else
 fi
 
 # used swap memory
-swap_usage="$(free -m | awk '($1=="Swap:"){swapTotal=$2; swapUsed=$3} END{printf "%.1f%%", swapUsed/swapTotal * 100}')"
+swap_usage="$(free -m | awk '($1=="Swap:"){swapTotal=$2; swapUsed=$3; if (swapTotal > 0) printf "%.1f%%", swapUsed/swapTotal * 100; else printf "N/A"}')"
 
 printf "${green}$HOSTNAME on ${date}\n"
 printf "================================================================================\n"
