@@ -22,3 +22,7 @@ vb2          ansible_host=192.168.10.122
 vs0          ansible_host=192.168.10.130
 vs1          ansible_host=192.168.10.131
 vs2          ansible_host=192.168.10.132
+
+[hashistack:children]
+vb
+vs

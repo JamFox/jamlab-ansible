@@ -60,6 +60,12 @@ iface {{ interface['name'] }} {{ 'inet6' if family['name'] == 'ipv6' else 'inet'
     {% if family['ovs_options'] is defined and family['ovs_options'] | length >= 1 %}
   ovs_options {{ family['ovs_options'] }}
     {% endif %}
+    {% if family['vlan-id'] is defined and family['vlan-id'] | length >= 1 %}
+  vlan-id {{ family['vlan-id'] }}
+    {% endif %}
+    {% if family['vlan-raw-device'] is defined and family['vlan-raw-device'] | length >= 1 %}
+  vlan-raw-device {{ family['vlan-raw-device'] }}
+    {% endif %}
       {% if family['type'] == 'static' %}
         {% if interface['dns_nameservers'] is defined and interface['dns_nameservers'] | length >= 1 %}
           {% if family['name'] == 'ipv4' %}

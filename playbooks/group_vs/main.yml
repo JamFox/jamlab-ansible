@@ -5,12 +5,7 @@
   vars_files:
     - ../vars_common_all.yml
     - ../vars_disabled_roles.yml
-
-  pre_tasks:
-    - name: Add host to consul group
-      ansible.builtin.add_host:
-        hostname: "{{ ansible_hostname }}"
-        group: consul_instances
+    - ../vars_common_hashistack.yml
 
   roles:
     - { role: users_groups,   tags: [all, users_groups],               when: not (disabled_roles.users_groups | default(false))}
