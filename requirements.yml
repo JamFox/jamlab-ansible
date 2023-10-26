@@ -7,6 +7,7 @@ collections:
   # https://docs.ansible.com/ansible/latest/collections/community/general/
   - name: community.general
     version: 6.4.0
+  # Smallstep collection for step-ca
   - name: maxhoesel.smallstep
     version: 0.24.5
 
