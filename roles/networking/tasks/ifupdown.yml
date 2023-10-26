@@ -1,11 +1,4 @@
 ---
-- name: Install extra ifupdown2 helpers
-  ansible.builtin.apt:
-    name:
-      - resolvconf
-      - vlan
-    state: present
-
 - name: Configure ifupdown network interfaces
   ansible.builtin.template:
     src: files/interfaces.j2
