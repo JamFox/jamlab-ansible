@@ -20,6 +20,8 @@
     name: zabbix-agent
     state: stopped
     enabled: false
+  ignore_errors: true
+  failed_when: false
 
 - name: Start and enable zabbix agent
   ansible.builtin.service:
