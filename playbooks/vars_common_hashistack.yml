@@ -84,6 +84,7 @@ consul_raw_key: "{{ vars_common_all_consul_raw_key }}"
 consul_syslog_enable: false
 consul_autopilot_enable: true
 consul_autopilot_cleanup_dead_Servers: true
+consul_connect_enabled: true
 
 # Nomad general
 nomad_group_name: "hashistack"
