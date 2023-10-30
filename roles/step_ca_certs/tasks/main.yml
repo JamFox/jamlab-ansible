@@ -19,6 +19,7 @@
     name: "{{ item.name }}"
     san: "{{ item.san }}"
     force: true
+    not_after: "{{ item.not_after | default(omit) }}"
   loop: "{{ step_ca_certs }}"
   when: step_ca_certs is defined and step_ca_certs | length > 0
 
@@ -29,5 +30,6 @@
     ca_url: "{{ step_bootstrap_ca_url }}"
     password_file: "{{ step_ca_certs_pass_dir }}/jwk.pass"
     force: true
-  loop: "{{ step_ca_certs }}"
-  when: step_ca_certs is defined and step_ca_certs | length > 0
+    expires_in: "{{ item.renew_after | default(omit) }}"
+  loop: "{{ step_ca_certs_renew }}"
+  when: step_ca_certs_renew is defined and step_ca_certs_renew | length > 0

@@ -34,6 +34,8 @@ step_ca_certs:
   - name: "{{ ansible_hostname }}.{{ vars_common_all_default_domain }}"
     crt_path: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
     key_path: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
+    not_after: 720h
+    renew_after: 20h
     san:
       - "{{ consul_node_role }}.{{ consul_datacenter }}.consul"
       - "{{ ansible_hostname }}.{{ consul_datacenter }}.consul"
@@ -43,6 +45,10 @@ step_ca_certs:
       - localhost
       - 127.0.0.1
       - "{{ ansible_host }}"
+#step_ca_certs_renew:
+#    crt_path: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
+#    key_path: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
+#    renew_after: 20h
 
 # Consul general
 consul_group_name: "vb"
