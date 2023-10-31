@@ -40,7 +40,7 @@ Ansible playbooks for configuration management in push mode.
 | podman           | ✔️        | ✔️        | ✔️         |
 | proxmox          | ✔️        | ✔️        | ✔️         |
 | resolv_hosts     | ✔️        | ✔️        | ❌         |
-| selinux          | ✔️        | ✔️        | ❌         |
+| selinux          | ✔️        | ✔️        | ✔️         |
 | soft_yum         | ✔️        | ✔️        | ✔️         |
 | soft_apt         | ✔️        | ✔️        | ✔️         |
 | sshd             | ✔️        | ✔️        | ✔️         |
