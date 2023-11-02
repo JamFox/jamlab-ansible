@@ -17,3 +17,4 @@
     - { role: consul,         tags: [all, consul],                     when: not (disabled_roles.consul | default(false))}
     - { role: nomad,          tags: [all, nomad],                      when: not (disabled_roles.nomad | default(false))}
     - { role: podman,         tags: [all, podman],                     when: not (disabled_roles.podman | default(false))}
+    - { role: nomad_jobs,     tags: [all, nomad_jobs ],                when: not (disabled_roles.nomad_jobs | default(false)) }

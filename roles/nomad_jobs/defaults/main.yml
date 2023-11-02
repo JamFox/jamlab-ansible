@@ -1,0 +1,10 @@
+nomad_jobs_user:
+nomad_jobs_group:
+
+nomad_jobs_nomad_config_dir:
+nomad_jobs_nomad_cert_file:
+nomad_jobs_nomad_key_file:
+nomad_jobs_nomad_ca_file:
+
+nomad_jobs_consul_addr: "http://127.0.0.1:8500"
+nomad_jobs_consul_api_endpoint: "v1"

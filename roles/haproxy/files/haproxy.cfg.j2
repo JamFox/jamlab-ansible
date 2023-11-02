@@ -35,6 +35,10 @@ defaults
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
 
+resolvers jamlab-dns
+    nameserver dns0 {{ vars_common_all_dns_ipv4 }}:{{ vars_common_all_dns_default_port }}
+    accepted_payload_size 8192
+
 frontend stats
    bind *:1936
    mode http
@@ -85,10 +89,21 @@ frontend https-in
     acl video-acl hdr(host) -i video.jamfox.dev
     use_backend video if video-acl
 
-    default_backend haproxy-stats
+    acl fabio hdr(host) -i fabio.jamfox.dev
+    use_backend fabio-hosts if fabio
+
+    default_backend nomad-lbs
 
 backend haproxy-stats
     server haproxy-stats 127.0.0.1:1936
+
+backend fabio-hosts
+    balance leastconn
+    server-template fabio {{ groups['vs'] | length }} fabio.service.consul:9998 check resolvers jamlab-dns init-addr none
+
+backend nomad-lbs
+    balance roundrobin
+    server-template web {{ groups['vs'] | length }} fabio.service.consul:9999 check resolvers jamlab-dns init-addr none
 
 backend octoprint
     server octoprint 192.168.10.53:443 check ssl verify none

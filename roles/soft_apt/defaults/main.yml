@@ -1,5 +1,5 @@
 # Default values, override in host or host group variables
-soft_packages_keep_latest: true
+soft_packages_keep_latest: false
 
 # Keeps all packages at latest version
 #soft_packages_keep_latest: true

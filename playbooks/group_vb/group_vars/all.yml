@@ -1,8 +1,12 @@
+soft_packages_latest: "{{ vars_common_all_soft_apt_tools + vars_common_all_soft_apt_unattended }}"
+
 # Consul server
 consul_node_role: "server"
 # Consul config
 consul_iface: "{{ ansible_default_ipv4.interface }}"
 consul_bind_address: "{{ ansible_host }}"
+consul_addresses_dns: "{{ ansible_host }}"
+consul_addresses_http: 127.0.0.1
 
 # Nomad server
 nomad_node_role: "server"

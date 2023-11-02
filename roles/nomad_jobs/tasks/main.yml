@@ -1,0 +1,35 @@
+- name: Create nomad job dirs
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.group|default(item.owner) }}"
+    mode: "{{ item.mode|default('0750') }}"
+  loop:
+  - { path: /opt/nomad-jobs/, owner: "{{ nomad_jobs_user }}", group: "{{ nomad_jobs_group }}" }
+
+- name: Template nomad jobs
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: /opt/nomad-jobs/{{ item | basename | regex_replace('\.j2$', '') }}
+    mode: "{{ item.mode|default('0664') }}"
+    owner: "{{ nomad_jobs_user }}"
+    group: "{{ nomad_jobs_group }}"
+  with_fileglob:
+    - ../templates/*.j2
+
+- name: Update all nomad jobs from /opt/nomad-jobs/
+  ansible.builtin.shell: find /opt/nomad-jobs/ -maxdepth 1 -name "*.nomad" -type f -exec /usr/bin/nomad job run -detach {} \;
+
+# FABIO
+
+- name: Change fabio noroute page
+  ansible.builtin.uri:
+    url: "{{ nomad_jobs_consul_addr }}/{{ nomad_jobs_consul_api_endpoint }}/kv/fabio/noroute.html"
+    method: PUT
+    body: "<html><body><h1>Fabio: No route found for this request!</h1></body></html>"
+    client_cert: "{{ nomad_jobs_nomad_config_dir }}/{{ consul_tls_server_crt | basename }}"
+    client_key: "{{ nomad_jobs_nomad_config_dir }}/{{ consul_tls_server_key | basename }}"
+    ca_path: "{{ nomad_jobs_nomad_config_dir }}/{{ nomad_jobs_nomad_ca_file }}"
+    status_code: 200
+  ignore_errors: true

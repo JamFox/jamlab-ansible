@@ -1,0 +1,54 @@
+job "fabio" {
+  datacenters = ["dc1"]
+  type = "system"
+
+  group "fabio" {
+    network {
+      port "lb" {
+        static = 9999
+      }
+      port "ui" {
+        static = 9998
+      }
+    }
+    task "fabio" {
+      driver = "podman"
+      config {
+        image = "fabiolb/fabio"
+        network_mode = "host"
+        ports = ["lb","ui"]
+        volumes = [
+          "{{ nomad_jobs_nomad_config_dir }}:{{ nomad_jobs_nomad_config_dir }}",
+          "custom/fabio.properties:/etc/fabio/fabio.properties"
+        ]
+      }
+
+      template {
+        data = <<EOH
+          # ref: https://github.com/fabiolb/fabio/blob/master/fabio.properties
+          proxy.addr = :9999 
+          #;proto=https;cs=lb;tlsmin=tls12
+          #proxy.cs = cs=lb;type=file;cert={{ nomad_jobs_nomad_config_dir }}/{{ nomad_jobs_nomad_cert_file }};key={{ nomad_jobs_nomad_config_dir }}/{{ nomad_jobs_nomad_key_file }}
+          ui.access = ro
+          log.access.target = stdout
+          log.level = INFO
+          proxy.maxconn = 10000
+          registry.consul.addr = {{ nomad_jobs_consul_addr }}
+          registry.consul.tls.keyfile = {{ nomad_jobs_nomad_config_dir }}/{{ nomad_jobs_nomad_key_file }}
+          registry.consul.tls.certfile = {{ nomad_jobs_nomad_config_dir }}/{{ nomad_jobs_nomad_cert_file }}
+          registry.consul.tls.cafile = {{ nomad_jobs_nomad_config_dir }}/{{ nomad_jobs_nomad_ca_file }}
+          registry.consul.tls.insecureskipverify = false
+          ui.color = "pink lighten-3"
+          ui.title = "JamLab L7 Load Balancer"
+        EOH
+
+        destination = "custom/fabio.properties"
+      }
+
+      resources {
+        cpu    = 500
+        memory = 1024
+      }
+    }
+  }
+}
