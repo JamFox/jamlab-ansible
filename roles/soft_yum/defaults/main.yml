@@ -1,6 +1,7 @@
 # Default values, override in host or host group variables
 soft_epel_enabled: true
 soft_packages_keep_latest: true
+soft_packages_keep_latest_exclude: []
 
 # Enable epel sources
 #soft_epel_enabled: true

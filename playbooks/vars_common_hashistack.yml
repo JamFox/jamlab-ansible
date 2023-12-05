@@ -1,4 +1,8 @@
 soft_packages_latest: "{{ vars_common_all_soft_apt_tools + vars_common_all_soft_apt_unattended }}"
+soft_packages_keep_latest_exclude: 
+  - vault
+  - nomad
+  - consul
 
 podman_system_users:
   - name: 'podman'

@@ -31,6 +31,14 @@
     update_cache: true
   when: r_sources is defined and r_sources.changed
 
+# Hold packages to not upgrade them automatically
+- name: Prevent specified packages from being upgraded
+  ansible.builtin.dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop: "{{ soft_packages_keep_latest_exclude | default([]) }}"
+  when: soft_packages_keep_latest_exclude | length > 0
+
 # Uninstall/Install packages block
 - name: Update soft to latest
   ansible.builtin.apt:

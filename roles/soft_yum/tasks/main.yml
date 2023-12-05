@@ -79,6 +79,7 @@
     name: "*"
     state: latest
     update_cache: true
+    exclude: "{{ soft_packages_keep_latest_exclude | default([]) }}"
   when: soft_packages_keep_latest is defined and soft_packages_keep_latest
 
 - name: Install latest software
