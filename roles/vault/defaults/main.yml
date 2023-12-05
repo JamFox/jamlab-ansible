@@ -5,6 +5,8 @@
 # Core variables
 # ---------------------------------------------------------------------------
 
+vault_client_only: false
+
 # Package variables
 vault_version: "{{ lookup('env', 'VAULT_VERSION') | default('1.5.5', true) }}{{ '+prem' if vault_enterprise_premium else '' }}{{ '.hsm' if vault_enterprise_premium_hsm else '' }}"
 vault_architecture_map:

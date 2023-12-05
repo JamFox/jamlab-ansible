@@ -1,0 +1,26 @@
+- name: Get Vault SSH CA public key
+  ansible.builtin.get_url:
+    url: "https://{{ vault_auth_address }}:443/v1/ssh-client-signer/public_key"
+    dest: "{{ vault_auth_vault_ca_dest }}"
+    validate_certs: false
+  when: not ansible_check_mode
+
+- name: Create auth principals directory
+  ansible.builtin.file:
+    path: "{{ vault_auth_principals_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Populate auth principals files
+  ansible.builtin.copy:
+    content: |
+      {% for principal in item.vault_principals %}
+      {{ principal }}
+      {% endfor %}
+    dest: "{{ vault_auth_principals_path }}/{{ item.name }}"
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ vault_auth_principals }}"

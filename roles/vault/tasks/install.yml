@@ -51,6 +51,7 @@
   run_once: true
   tags: installation
   delegate_to: 127.0.0.1
+  when: not ansible_check_mode
 
 - name: Install Vault
   become: true
@@ -60,6 +61,7 @@
     owner: "{{ vault_user }}"
     group: "{{ vault_group }}"
     mode: "0755"
+  when: not ansible_check_mode
   notify: Restart vault
   tags: installation
 

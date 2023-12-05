@@ -1,0 +1,11 @@
+vault_auth_address: 
+vault_auth_port: "8200"
+vault_auth_vault_ca_dest: "/etc/ssh/vault_ca.pem"
+vault_auth_principals: []
+# Example:
+# vault_auth_principals:
+#  - name: "example"
+#    vault_principals:
+#      - infra_admin_user1
+#      - infra_admin2
+vault_auth_principals_path: "/etc/ssh/auth_principals"

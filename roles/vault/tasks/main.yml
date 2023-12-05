@@ -118,6 +118,7 @@
       mode: "0750"
     - path: "{{ vault_run_path }}"
       mode: "0750"
+  when: not vault_client_only
 
 - name: Enable logrotate for vault
   become: true
@@ -131,11 +132,11 @@
 
 - name: TLS configuration
   ansible.builtin.include_tasks: ../tasks/tls.yml
-  when: vault_tls_disable == 0
+  when: vault_tls_disable == 0 and not vault_client_only
 
 - name: Backend storage TLS configuration
   ansible.builtin.include_tasks: ../tasks/backend_tls.yml
-  when: vault_tls_gossip == 1
+  when: vault_tls_gossip == 1 and not vault_client_only
 
 - name: "Get content of GCP Credentials from file"
   ansible.builtin.set_fact:
@@ -179,6 +180,7 @@
   notify:
     - Restart vault
     - Reload vault
+  when: not vault_client_only
 
 - name: Vault transit seal configuration
   become: true
@@ -254,6 +256,7 @@
     - not ansible_os_family == "Debian"
     - not ansible_os_family == "FreeBSD"
     - not ansible_os_family == "Solaris"
+    - not vault_client_only
 
 - name: Debian init script
   ansible.builtin.template:
@@ -267,6 +270,7 @@
     - ansible_os_family == "Debian"
     - not ansible_os_family == "FreeBSD"
     - not ansible_os_family == "Solaris"
+    - not vault_client_only
 
 - name: Extract systemd version
   ansible.builtin.shell: |
@@ -281,6 +285,7 @@
     - ansible_service_mgr == "systemd"
     - not ansible_os_family == "FreeBSD"
     - not ansible_os_family == "Solaris"
+    - not vault_client_only
   tags: skip_ansible_lint
 
 - name: Systemd unit
@@ -298,6 +303,7 @@
     - not ansible_os_family == "FreeBSD"
     - not ansible_os_family == "Solaris"
     - systemd_version is defined
+    - not vault_client_only
 
 - name: Reload systemd
   become: true
@@ -310,6 +316,7 @@
     - not ansible_os_family == "Solaris"
     - systemd_version is defined
     - systemd_unit is changed
+    - not vault_client_only
 
 - name: Start Vault
   become: true
@@ -318,6 +325,7 @@
     state: started
     enabled: true
   register: start_vault
+  when: not vault_client_only
 
 - name: Pause to let Vault startup correctly
   ansible.builtin.pause:
@@ -416,3 +424,4 @@
     - check_vault
   when:
     - not vault_disable_api_health_check | bool
+    - not ansible_check_mode
