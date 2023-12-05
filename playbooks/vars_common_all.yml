@@ -16,6 +16,40 @@ nameservers:
   - "{{ vars_common_all_dns_ipv4 }}"
 searchdomain: "{{ vars_common_all_default_domain }}"
 
+# Scripts
+vars_common_all_scripts_admin:
+  - name: "ansible-parallel"
+    url: "https://raw.githubusercontent.com/JamFox/ansible-parallel/main/ansible-parallel"
+    dest: "/usr/local/bin/"
+    mode: "0774"
+    owner: "{{ vars_common_all_main_user }}"
+    group: "{{ vars_common_all_main_group }}"
+  - name: "teams-msg"
+    url: "https://raw.githubusercontent.com/JamFox/ansible-parallel/main/teams-msg"
+    mode: "0774"
+    owner: "{{ vars_common_all_main_user }}"
+    group: "{{ vars_common_all_main_group }}"
+  - name: "telegram-msg"
+    url: "https://raw.githubusercontent.com/JamFox/ansible-parallel/main/telegram-msg"
+    mode: "0774"
+    owner: "{{ vars_common_all_main_user }}"
+    group: "{{ vars_common_all_main_group }}"
+vars_common_all_scripts_vault_client:
+  - name: "vault-login"
+    link: "/usr/local/bin/vl"
+    local: "files/vault-login.sh"
+    dest: "/usr/local/bin"
+    mode: "0755"
+    owner: "{{ vars_common_all_main_user }}"
+    group: "{{ vars_common_all_main_group }}"
+  - name: "vault-ssh"
+    link: "/usr/local/bin/vssh"
+    local: "files/vault-ssh.sh"
+    dest: "/usr/local/bin"
+    mode: "0755"
+    owner: "{{ vars_common_all_main_user }}"
+    group: "{{ vars_common_all_main_group }}"
+
 vars_common_all_ipsets_allow:
   - 'at'
   - 'be'
@@ -138,11 +172,6 @@ vars_common_all_soft_apt_hashicorp:
   - terraform
   - consul
   - vault
-
-vars_common_all_script_urls:
-  - https://raw.githubusercontent.com/JamFox/ansible-parallel/main/ansible-parallel
-  - https://raw.githubusercontent.com/JamFox/ansible-parallel/main/teams-msg
-  - https://raw.githubusercontent.com/JamFox/ansible-parallel/main/telegram-msg
 
 pip_package: python3-pip
 pip_executable: "{{ 'pip3' if pip_package.startswith('python3') else 'pip' }}"

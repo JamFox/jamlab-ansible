@@ -1,2 +1,15 @@
-# Default values, override in host or host group variables
-script_urls: []
+custom_scripts: []
+# Example
+#custom_scripts:
+#  - name: adduser
+#    local: files/adduser.sh
+#    dest: /usr/local/bin
+#    owner: root
+#    group: root
+#    mode: "0700"
+#  - name: example
+#    url: https://raw.githubusercontent.com/example/example.sh
+#    dest: /usr/local/bin
+#    owner: example
+#    group: admin
+#    mode: "0707"

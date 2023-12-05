@@ -1,17 +1,29 @@
-#- name: Copy scripts
-#  ansible.builtin.template:
-#    dest: "{{ item.dest | default('/usr/local/bin') }}"
-#    src: "{{ item.src }}"
-#    owner: "{{ item.owner | default('root') }}"
-#    mode: "{{ item.mode | default('0700') }}"
-#  loop:
-#    - { src: files/example.sh }
+- name: Template local scripts
+  ansible.builtin.template:
+    src: "{{ item.local }}"
+    dest: "{{ item.dest | default('/usr/local/bin') }}/{{ item.name }}"
+    mode: "{{ item.mode | default('0700') }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+  when: item.local is defined
+  with_items: "{{ custom_scripts | default([]) }}"
 
-- name: Download scripts
+- name: Download external scripts
   ansible.builtin.get_url:
-    url: "{{ item }}"
-    dest: "{{ item.dest | default('/usr/local/bin/') }}"
-    mode: "{{ item.mode | default('0774') }}"
+    url: "{{ item.url }}"
+    dest: "{{ item.dest | default('/usr/local/bin') }}/{{ item.name }}"
+    mode: "{{ item.mode | default('0700') }}"
     owner: "{{ item.mode | default('root') }}"
-    group: "{{ item.mode | default('admin') }}"
-  loop: "{{ script_urls }}"
+    group: "{{ item.mode | default('root') }}"
+  when: item.url is defined
+  with_items: "{{ custom_scripts | default([]) }}"
+
+- name: Create alternatives for scripts
+  community.general.alternatives:
+    name: "{{ item.name }}"
+    link: "{{ item.link }}"
+    path: "{{ item.dest | default('/usr/local/bin') }}/{{ item.name }}"
+  when: 
+    - item.link is defined
+    - not ansible_check_mode
+  with_items: "{{ custom_scripts | default([]) }}"

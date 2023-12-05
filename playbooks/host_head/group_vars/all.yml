@@ -1,4 +1,4 @@
-script_urls: "{{ vars_common_all_script_urls }}"
+custom_scripts: "{{ vars_common_all_scripts_admin }}"
 
 soft_packages_latest: "{{ vars_common_all_soft_apt_tools + vars_common_all_soft_apt_unattended }}"
 
