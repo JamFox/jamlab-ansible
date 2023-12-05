@@ -36,8 +36,8 @@ logs/
 
 # Roles from requirements.yml
 # (because they might not adhere to our lint rules)
-roles/mysql
-roles/zabbix_repo
-roles/zabbix_agent
-roles/cron
 roles/pip
+roles/iptables
+roles/ipsets
+roles/consul
+roles/nomad

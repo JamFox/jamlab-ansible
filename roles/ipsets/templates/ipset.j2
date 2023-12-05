@@ -1,8 +1,0 @@
-{{ ansible_managed | comment }}
-# on {{ ansible_facts['distribution'] }}
-{% for country in ipset_countries %}
-create {{ country }} hash:net maxelem 65536
-{%   for network in ipset_country.get(country, []) %}
-       add {{ country }} {{ network }}
-{%   endfor %}
-{% endfor %}
