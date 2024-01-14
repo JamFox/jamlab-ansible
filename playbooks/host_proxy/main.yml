@@ -1,5 +1,6 @@
 - name: PLAYBOOK FOR HOST 'PROXY'
   hosts: proxy
+  remote_user: jamfox
   become: true
   vars_files:
     - ../vars_common_all.yml

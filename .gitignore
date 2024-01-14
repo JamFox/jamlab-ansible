@@ -29,8 +29,8 @@ secret/
 *.zip
 
 # Logs
+logs/*
 *.log
-logs/
 
 # Sensitive Ansible files
 .ansible-vault-pass
@@ -42,3 +42,4 @@ roles/iptables
 roles/ipsets
 roles/consul
 roles/nomad
+roles/logrotate

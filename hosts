@@ -1,6 +1,9 @@
 [head]
 head         ansible_host=192.168.10.10
 
+[observe]
+logmon       ansible_host=192.168.10.50
+
 [bastion]
 rpi0         ansible_host=192.168.10.53
 

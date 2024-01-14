@@ -25,13 +25,7 @@ podman_registries:
   - 'docker.io'
   - 'quay.io'
 
-vars_common_hashistack_users:
-  - name: "ali"
-    primary_group: "{{ vars_common_all_main_group }}"
-    homedir: "/home/ali"
-    ssh_authorized_keys:
-      - 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCnNmdXibMQWwyQrCfSUIp0GXeXnTvqNfYkmCYtDVkwFHqAfZ2FCgYcpTANtAjqdIgDt4x0k49vZTTbc1+g1BigDG5a/CwUKJj0oI9DYrblmJxdGNvaQVH00O1udgffIFh1EJjlxLWphmh2juGDw+iFGyfKDqmyE52n2qO84DnMpnjfhaCy2Uz/Ml/h6ekQDcud6Uv2hB05UhvqmTyrvFvS11cnr1epS7SHFqhgsRXSkaLGNt18pQj4a4VxFAVy6d3eXe7+4ofMhwmm7X4Jf+gUCYm0sqeZn9b2Q5jYnj+Z46dPCW/KPchLnNLxt+ChiUnG68z3/hwE048mTGdSP/SEbcKYGoYisTZZg6+x/ePsX+QwD2HoKoovUdKWUQ//Po1ZGLFyOaDyPI7WLxqNxAn9W4btfEtrpXvlq/GzDE2ILta0OUDreNUw7JLeBMAoaTu+t4duRQYcrJGg0VzE6CtODcVwzl5AjtTLtZKD1gcybwW5oyN/oLnsP5R6nus+UQk= ali@Alis-MacBook-Air-M2.local'
-users: "{{ vars_common_all_main_users + vars_common_hashistack_users + podman_system_users }}"
+users: "{{ vars_common_all_main_users + podman_system_users }}"
 
 sshd: "{{ vars_common_all_default_sshd }}"
 
@@ -66,7 +60,7 @@ consul_servers: "{{ groups['vb'] }}"
 consul_bootstrap_expect_value: "{{ groups['vb'] | length }}"
 consul_datacenter: "dc1"
 # Consul install
-consul_version: 1.16.2-1
+consul_version: 1.17.1-1
 consul_install_from_repo: true
 consul_os_repo_prerequisites: false
 # Consul config
@@ -97,17 +91,20 @@ consul_tls_verify_incoming_https: true
 #  enabled: true
 consul_ui: false
 consul_raw_key: "{{ vars_common_all_consul_raw_key }}"
-consul_syslog_enable: false
+consul_syslog_enable: true
 consul_autopilot_enable: true
 consul_autopilot_cleanup_dead_Servers: true
 consul_connect_enabled: true
+# Custom
+#consul_config_custom:
+#  log_json: true
 
 # Nomad general
 nomad_group_name: "hashistack"
 nomad_datacenter: "{{ consul_datacenter }}"
 nomad_bootstrap_expect: "{{ consul_bootstrap_expect_value }}"
 # Nomad install
-nomad_version: 1.6.2
+nomad_version: 1.7.2
 # Nomad config
 nomad_user: "nomad"
 nomad_manage_user: true
@@ -135,12 +132,13 @@ nomad_key_file: "{{ consul_tls_server_key }}"
 nomad_consul_ca_file: "{{ nomad_tls_dir }}/{{ nomad_ca_file | basename }}"
 nomad_consul_cert_file: "{{ nomad_tls_dir }}/{{ nomad_cert_file | basename }}"
 nomad_consul_key_file: "{{ nomad_tls_dir }}/{{ nomad_key_file | basename }}"
+nomad_consul_tags: "nomad"
 nomad_tls_copy_keys: true
 nomad_tls_files_remote_src: true
 nomad_tls_enable: true
 nomad_verify_server_hostname: true
 nomad_verify_https_client: true
-nomad_syslog_enable: false
+nomad_syslog_enable: true
 nomad_autopilot: true
 nomad_autopilot_cleanup_dead_servers: true
 
@@ -154,3 +152,9 @@ nomad_jobs_nomad_ca_file: "{{ nomad_ca_file | basename }}"
 
 nomad_jobs_consul_addr: "https://127.0.0.1:{{ consul_ports_https }}"
 nomad_jobs_consul_api_endpoint: "v1"
+
+# Custom
+nomad_allow_purge_config: true
+#nomad_config_custom:
+#    log_file: "/var/log/nomad/nomad.log"
+#  log_json: true

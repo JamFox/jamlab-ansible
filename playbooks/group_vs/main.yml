@@ -1,5 +1,6 @@
 - name: PLAYBOOK FOR GROUP 'VS'
   hosts: vs
+  remote_user: jamfox
   become: true
   gather_facts: true
   vars_files:

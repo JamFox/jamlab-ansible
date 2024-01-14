@@ -188,6 +188,11 @@ vars_common_all_main_users:
       - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM0ULeAHpFD9I+oIBImBw+UHQui4Q8V1jQThOIlYExi5 jamfox@5t'
       - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICMfvfGWOQuhmQ1MRJifS0VddwvwUpFYiETPb1V5W+5Y katurv@hpcbook'
       - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJruHSfE0z4yEY4SJW5/ZnBjgpvlz8u199+s4srW85WV jamfox@DESKTOP-6KK4JTC'
+  - name: "ali"
+    primary_group: "{{ vars_common_all_main_group }}"
+    homedir: "/home/ali"
+    ssh_authorized_keys:
+      - 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCnNmdXibMQWwyQrCfSUIp0GXeXnTvqNfYkmCYtDVkwFHqAfZ2FCgYcpTANtAjqdIgDt4x0k49vZTTbc1+g1BigDG5a/CwUKJj0oI9DYrblmJxdGNvaQVH00O1udgffIFh1EJjlxLWphmh2juGDw+iFGyfKDqmyE52n2qO84DnMpnjfhaCy2Uz/Ml/h6ekQDcud6Uv2hB05UhvqmTyrvFvS11cnr1epS7SHFqhgsRXSkaLGNt18pQj4a4VxFAVy6d3eXe7+4ofMhwmm7X4Jf+gUCYm0sqeZn9b2Q5jYnj+Z46dPCW/KPchLnNLxt+ChiUnG68z3/hwE048mTGdSP/SEbcKYGoYisTZZg6+x/ePsX+QwD2HoKoovUdKWUQ//Po1ZGLFyOaDyPI7WLxqNxAn9W4btfEtrpXvlq/GzDE2ILta0OUDreNUw7JLeBMAoaTu+t4duRQYcrJGg0VzE6CtODcVwzl5AjtTLtZKD1gcybwW5oyN/oLnsP5R6nus+UQk= ali@Alis-MacBook-Air-M2.local'
 
 vars_common_all_default_sshd:
   LogLevel: "INFO"

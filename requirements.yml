@@ -9,7 +9,7 @@ collections:
     version: 6.4.0
   # Smallstep collection for step-ca
   - name: maxhoesel.smallstep
-    version: 0.24.5
+    version: ">=0.24.5,<0.26"
 
 roles:
   - name: pip
@@ -22,3 +22,5 @@ roles:
     src: https://github.com/ansible-community/ansible-consul
   - name: nomad
     src: https://github.com/ansible-community/ansible-nomad
+  - name: logrotate
+    src: https://github.com/robertdebock/ansible-role-logrotate

@@ -6,7 +6,9 @@ soft_extra_repos:
 soft_extra_sources:
   - { url: https://apt.releases.hashicorp.com/gpg }
 
-soft_packages_latest: "{{ vars_common_all_soft_apt_unattended + vars_common_all_soft_apt_tools + vars_common_all_soft_apt_hashicorp }}"
+soft_packages_latest_pve:
+  - sudo
+soft_packages_latest: "{{ vars_common_all_soft_apt_unattended + vars_common_all_soft_apt_tools + vars_common_all_soft_apt_hashicorp + soft_packages_latest_pve }}"
 
 sshd: "{{ vars_common_all_default_sshd }}"
 

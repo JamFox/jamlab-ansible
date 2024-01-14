@@ -1,0 +1,132 @@
+{{ ansible_managed | comment }}
+# /etc/rsyslog.conf configuration file for rsyslog
+#
+# For more information install rsyslog-doc and see
+# /usr/share/doc/rsyslog-doc/html/configuration/index.html
+
+###########################
+#### GLOBAL DIRECTIVES ####
+###########################
+
+#
+# Use traditional timestamp format.
+# To enable high precision timestamps, comment out the following line.
+#
+{% if rsyslog_traditional_file_format %}
+module(load="builtin:omfile" Template="RSYSLOG_TraditionalFileFormat")
+{% endif %}
+
+#
+# Set the default permissions for all log files.
+#
+{% if rsyslog_user is defined %}
+$FileOwner {{ rsyslog_user }}
+{% endif %}
+{% if rsyslog_group is defined %}
+$FileGroup {{ rsyslog_group }}
+{% endif %}
+$FileCreateMode {{ rsyslog_filecreatemode }}
+$DirCreateMode {{ rsyslog_dircreatemode }}
+{% if rsyslog_umask is defined %}
+$Umask {{ rsyslog_umask }}
+{% endif %}
+
+global(
+  # Where to place spool and state files
+  workDirectory="{{ rsyslog_work_directory }}"
+  # Certificates for TLS
+  DefaultNetstreamDriverCAFile="{{ rsyslog_tls_certs_path }}/{{ rsyslog_tls_ca_file | basename }}"
+  DefaultNetstreamDriverCertFile="{{ rsyslog_tls_certs_path }}/{{ rsyslog_tls_cert_file | basename }}"
+  DefaultNetstreamDriverKeyFile="{{ rsyslog_tls_private_path }}/{{ rsyslog_tls_key_file | basename }}"
+)
+
+{% if rsyslog_preservefqdn %}
+#
+# Use FQDN (usefull when sending logs to another system)
+#
+$PreserveFQDN on
+{% endif %}
+
+#
+# Include all config files in /etc/rsyslog.d/
+#
+include(file="/etc/rsyslog.d/*.conf" mode="optional")
+
+#################
+#### MODULES ####
+#################
+
+# Provides support for local system logging (e.g. via logger command)
+# And turns off message reception via local log socket;
+# Local messages are retrieved through imjournal now.
+{{ '' if 'imuxsock' in rsyslog_mods else '#' }}module(load="imuxsock"{{ ' SysSock.Use="off"' if not rsyslog_imuxsock_syssock else '' }})
+
+# Provides access to the systemd journal
+# And provides file to store the position in the journal
+{{ '' if 'imjournal' in rsyslog_mods else '#' }}module(load="imjournal" StateFile="imjournal.state"{{ ' WorkAroundJournalBug="on"' if rsyslog_workaroundjournalbug else '' }})
+
+# provides kernel logging support
+{{ '' if 'imklog' in rsyslog_mods else '#' }}module(load="imklog")
+
+# provides --MARK-- message capability
+{{ '' if 'immark' in rsyslog_mods else '#' }}module(load="immark")
+
+# provides access to specific log file
+{{ '' if 'imfile' in rsyslog_mods else '#' }}module(load="imfile")
+
+# provides UDP syslog reception
+#{{ '' if rsyslog_receiver else '#' }}module(load="imudp") # needs to be done just once
+#{{ '' if rsyslog_receiver else '#' }}input(type="imudp" port="10514")
+
+# provides TCP syslog reception
+{{ '' if rsyslog_receiver else '#' }}module(
+{{ '' if rsyslog_receiver else '#' }}  load="imtcp"
+{{ '' if rsyslog_receiver else '#' }}  StreamDriver.Mode="1"
+{{ '' if rsyslog_receiver else '#' }}  StreamDriver.Name="gtls"
+{{ '' if rsyslog_receiver else '#' }}  StreamDriver.AuthMode="x509/name"
+{{ '' if rsyslog_receiver else '#' }}  PermittedPeer=[
+{{ '' if rsyslog_receiver else '#' }}   "*.hpclocal",
+{{ '' if rsyslog_receiver else '#' }}   "*.intra.ttu.ee",
+{{ '' if rsyslog_receiver else '#' }}   "*.hpc.taltech.ee"
+{{ '' if rsyslog_receiver else '#' }}  ]
+{{ '' if rsyslog_receiver else '#' }})
+{{ '' if rsyslog_receiver else '#' }}input(type="imtcp" port="10514")
+
+# each host in separate directory
+{{ '' if rsyslog_receiver else '#' }}$template DynaFile,"/var/log/remote/%HOSTNAME%/%PROGRAMNAME%.log"
+{{ '' if rsyslog_receiver else '#' }}*.* -?DynaFile
+
+###############
+#### RULES ####
+###############
+
+{% if rsyslog_default_rules is defined %}
+{% for item in rsyslog_default_rules %}
+{{ item.rule }} {{ item.logpath }}
+{% endfor %}
+{% endif %}
+
+{% if rsyslog_remote is defined %}
+#########################
+#### FORWARDING RULE ####
+#########################
+
+action(
+  type="omfwd"
+  StreamDriver="gtls"
+  StreamDriverMode="1"
+  StreamDriverPermittedPeers="{{ rsyslog_remote }},*.hpclocal,*.intra.ttu.ee,*.hpc.taltech.ee"
+  # On-disk queue options for this action. If the remote host is
+  # down, messages are spooled to disk and sent when it is up again.
+  #queue.filename="fwdRule1"       # unique name prefix for spool files
+  #queue.maxdiskspace="500m"       # 500m space limit (use as much as possible)
+  #queue.saveonshutdown="on"       # save messages to disk on shutdown
+  #queue.type="LinkedList"         # run asynchronously
+  #action.resumeRetryCount="-1"    # infinite retries if host is down
+  # Remote Logging (we use TCP for reliable delivery)
+  # remote_host is: name/ip, e.g. 192.168.0.1, port optional e.g. 10514
+  #Target="remote_host" Port="XXX" Protocol="tcp"
+  Target="{{ rsyslog_remote }}" Port="{{ rsyslog_remote_port }}" Protocol="{{ 'tcp' if rsyslog_remote_tcp else 'udp' }}"
+)
+### end of the forwarding rule ###
+{% endif %}

@@ -1,5 +1,6 @@
 - name: PLAYBOOK FOR HOST 'PVE'
   hosts: pve
+  remote_user: root
   become: true
   vars_files:
     - ../vars_common_all.yml

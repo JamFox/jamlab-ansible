@@ -43,6 +43,7 @@
           if users_create_primary_group else omit }}"
         mode: "0700"
       loop: "{{ users }}"
+      when: item.homedir is defined and item.homedir is not none and item.homedir | length > 0
     - name: Create authorized_keys file for user
       ansible.builtin.copy:
         content: |
@@ -57,6 +58,7 @@
           if users_create_primary_group else omit }}"
         mode: "0600"
       loop: "{{ users }}"
+      when: item.homedir is defined and item.homedir is not none and item.homedir | length > 0
 
 # Delete users
 - name: Delete users

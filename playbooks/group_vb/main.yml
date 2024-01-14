@@ -1,5 +1,6 @@
 - name: PLAYBOOK FOR GROUP 'VB'
   hosts: vb
+  remote_user: jamfox
   become: true
   gather_facts: true
   vars_files:
