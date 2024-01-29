@@ -103,8 +103,9 @@ consul_connect_enabled: true
 nomad_group_name: "hashistack"
 nomad_datacenter: "{{ consul_datacenter }}"
 nomad_bootstrap_expect: "{{ consul_bootstrap_expect_value }}"
+nomad_no_host_uuid: true
 # Nomad install
-nomad_version: 1.7.2
+nomad_version: 1.7.3
 # Nomad config
 nomad_user: "nomad"
 nomad_manage_user: true
