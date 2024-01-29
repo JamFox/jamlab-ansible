@@ -10,6 +10,14 @@ collections:
   # Smallstep collection for step-ca
   - name: maxhoesel.smallstep
     version: ">=0.24.5,<0.26"
+  # Grafana collection
+  # https://docs.ansible.com/ansible/latest/collections/grafana/grafana/index.html
+  - name: grafana.grafana
+    version: 2.2.3
+  # Prometheus collection
+  # https://prometheus-community.github.io/ansible/branch/main/
+  - name: prometheus.prometheus
+    version: 0.11.2
 
 roles:
   - name: pip
