@@ -12,4 +12,9 @@
     - { role: soft_apt,       tags: [all, soft, soft_apt], when: not (disabled_roles.soft_apt | default(false)) }
     - { role: motd,           tags: [all, motd],           when: not (disabled_roles.motd | default(false))}
     - { role: sshd,           tags: [all, sshd],           when: not (disabled_roles.sshd | default(false))}
-    - { role: rsyslog,        tags: [rsyslog],             when: not (disabled_roles.rsyslog | default(false)) }
+    - { role: maxhoesel.smallstep.step_bootstrap_host, tags: [all, step_ca, ca, step_bootstrap_host]}
+    - { role: step_ca_certs,  tags: [all, step_ca_certs, step_ca, ca], when: not (disabled_roles.consul | default(false))}
+    - { role: rsyslog,        tags: [all, rsyslog],             when: not (disabled_roles.rsyslog | default(false)) }
+    - { role: prometheus.prometheus.prometheus, tags: [all, prometheus, monitor]}
+    #- { role: grafana.grafana.grafana, tags: [all, grafana, monitor]}
+    #- { role: prometheus.prometheus.alertmanager, tags: [all, prometheus, monitor]}
