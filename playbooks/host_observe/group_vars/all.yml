@@ -48,7 +48,8 @@ prometheus_web_config:
     #cert_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
     #key_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
   http_server_config: {}
-  basic_auth_users: {}
+  basic_auth_users:
+    monitor: $2y$10$8j6jJyH4GSYhdoRyCxU8Pe8NCVSRcQ94ZyuzWwnRVBbK7DLsNrmFW
 # Prometheus alert settings
 prometheus_alertmanager_config: []
 # prometheus_alertmanager_config:
@@ -230,12 +231,29 @@ alertmanager_version: latest
 #  receiver: slack
 
 # Grafana
+grafana_security:
+  admin_user: monitor
+  admin_password: !vault |
+    $ANSIBLE_VAULT;1.1;AES256
+    66646362303333643737373931353834646238336161396362393730653133636433373864326465
+    6133653833633333623861616534346265646637653566630a306234376361646237653966303261
+    61646438636538656366613864333135336236306236653164626432363530613461633033666662
+    3233663431306161630a656136353130353165306666616236626535353864373930316438333663
+    6566
 grafana_datasources:
   - name: prometheus
     type: prometheus
     access: proxy
     url: 'http://localhost:9090'
-    basicAuth: false
+    basicAuth: true
+    basicAuthUser: "monitor"
+    basicAuthPassword: !vault |
+      $ANSIBLE_VAULT;1.1;AES256
+      66646362303333643737373931353834646238336161396362393730653133636433373864326465
+      6133653833633333623861616534346265646637653566630a306234376361646237653966303261
+      61646438636538656366613864333135336236306236653164626432363530613461633033666662
+      3233663431306161630a656136353130353165306666616236626535353864373930316438333663
+      6566
 #grafana_dashboards:
 #  - dashboard_id: 111
 #    revision_id: 1
