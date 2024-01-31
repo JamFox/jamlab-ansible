@@ -1,0 +1,7 @@
+# ATTENTION: PBS needs alternative sources without enterprise license as the default sources require it
+- name: Remove PBS enterprise sources
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /etc/apt/sources.list.d/pbs-enterprise.list
