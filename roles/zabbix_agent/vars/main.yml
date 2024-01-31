@@ -1,0 +1,5 @@
+---
+# vars file for zabbix_agent
+
+zabbix_agent_service: zabbix-agent
+zabbix_log_directory: /var/log/zabbix
