@@ -75,7 +75,8 @@ consul_bootstrap_expect: true
 consul_ports_http: 8500
 consul_ports_https: 8501
 consul_ports_grpc_tls: 8502
-consul_tls_verify_incoming_rpc: true
+consul_addresses_https: "0.0.0.0"
+consul_addresses_dns: "0.0.0.0"
 consul_tls_enable: true
 consul_tls_dir: "/etc/hashistack_consul"
 consul_tls_ca_crt: "{{ vars_common_all_certs_ca_path }}"
@@ -83,10 +84,13 @@ consul_tls_server_crt: "{{ vars_common_all_certs_path }}/{{ vars_common_all_cert
 consul_tls_server_key: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
 consul_tls_files_remote_src: true
 consul_encrypt_enable: true
-consul_tls_verify_incoming: true
+# Allow clients to not present their own cert
+consul_tls_verify_incoming: false
+consul_tls_verify_incoming_https: false
+# Still require it on RPC
+consul_tls_verify_incoming_rpc: true
 consul_tls_verify_outgoing: true
 consul_tls_verify_server_hostname: true
-consul_tls_verify_incoming_https: true
 #auto_encrypt:
 #  enabled: true
 consul_ui: false
@@ -96,8 +100,11 @@ consul_autopilot_enable: true
 consul_autopilot_cleanup_dead_Servers: true
 consul_connect_enabled: true
 # Custom
-#consul_config_custom:
-#  log_json: true
+consul_config_custom:
+  telemetry:
+    disable_hostname: true
+    enable_host_metrics: true
+    prometheus_retention_time: "4h"
 
 # Nomad general
 nomad_group_name: "hashistack"
@@ -138,10 +145,18 @@ nomad_tls_copy_keys: true
 nomad_tls_files_remote_src: true
 nomad_tls_enable: true
 nomad_verify_server_hostname: true
-nomad_verify_https_client: true
+# Allow clients to not present their own cert
+nomad_verify_https_client: false
 nomad_syslog_enable: true
 nomad_autopilot: true
 nomad_autopilot_cleanup_dead_servers: true
+# Nomad Telemetry
+nomad_telemetry: true
+nomad_telemetry_prometheus_metrics: true
+nomad_telemetry_disable_hostname: true
+nomad_telemetry_publish_allocation_metrics: true
+nomad_telemetry_publish_node_metrics: true
+nomad_telemetry_collection_interval: "5s"
 
 nomad_jobs_user: "{{ nomad_user }}"
 nomad_jobs_group: "{{ nomad_group }}"

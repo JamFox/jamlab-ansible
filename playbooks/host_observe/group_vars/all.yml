@@ -3,6 +3,13 @@ custom_scripts: "{{ vars_common_all_scripts_admin }}"
 soft_packages_latest: "{{ vars_common_all_soft_apt_tools + vars_common_all_soft_apt_unattended }}"
 
 users: "{{ vars_common_all_main_users }}"
+logging_admin_pass: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  36383434656461633863323939333336313534643332396364663830636366323065313233366635
+  3530646562613761653664326564636166643361656462330a626665383165373233303766333034
+  30643565326339383036383931386364396334356265306637623338636437656636333433626638
+  3431336137656432360a363236393663376530656233663734353131633439616537333131333661
+  3038
 
 sshd: "{{ vars_common_all_default_sshd }}"
 
@@ -202,18 +209,83 @@ prometheus_config_flags_extra: {}
 #   storage.tsdb.retention: 15d
 #   alertmanager.timeout: 10s
 # Prometheus targets
-prometheus_targets:
-  node:
-    - targets:
-        - localhost:9090
-      labels:
-        env: monitor
-#prometheus_scrape_configs:
-#  - job_name: "prometheus"    # Custom scrape job, here using `static_config`
-#    metrics_path: "/metrics"
-#    static_configs:
-#      - targets:
-#          - "localhost:9090"
+#prometheus_targets:
+#  node:
+#    - targets:
+#        - localhost:9090
+#      labels:
+#        env: monitor
+prometheus_scrape_configs:
+  - job_name: "prometheus"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets:
+          - "127.0.0.1:9090"
+    basic_auth:
+      username: "monitor"
+      password: "{{ logging_admin_pass }}"
+  - job_name: "consul-sd"
+    consul_sd_configs:
+      - server: "192.168.10.120:8501"
+    relabel_configs:
+      - source_labels: [__meta_consul_tags]
+        regex: .*,prometheus,.*
+        action: keep
+      - source_labels: [__meta_consul_service]
+        target_label: job
+  - job_name: 'nomad_metrics'
+    consul_sd_configs:
+      - server: '192.168.10.120:8501'
+        services: ['nomad-client', 'nomad']
+    relabel_configs:
+      - source_labels: ['__meta_consul_tags']
+        regex: '(.*)http(.*)'
+        action: keep
+    metrics_path: /v1/metrics
+    params:
+      format: ['prometheus']
+  - job_name: "consul"
+    honor_timestamps: true
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    metrics_path: "/v1/agent/metrics"
+    scheme: https
+    params: 
+      format: ["prometheus"]
+    tls_config:
+      cert_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
+      key_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
+      ca_file: "{{ vars_common_all_certs_ca_path }}"
+    static_configs:
+      - targets:
+        - "192.168.10.120:8501"
+        - "192.168.10.121:8501"
+        - "192.168.10.122:8501"
+        - "192.168.10.130:8501"
+        - "192.168.10.131:8501"
+        - "192.168.10.132:8501"
+  - job_name: "nomad"
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    metrics_path: "/v1/metrics"
+    scheme: https
+    params:
+      format: ['prometheus']
+    relabel_configs:
+      - replacement: 'jamlab-nomad'
+        target_label: instance
+    tls_config:
+      cert_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
+      key_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
+      ca_file: "{{ vars_common_all_certs_ca_path }}"
+    static_configs:
+      - targets: 
+        - "192.168.10.120:4646"
+        - "192.168.10.121:4646"
+        - "192.168.10.122:4646"
+        - "192.168.10.130:4646"
+        - "192.168.10.131:4646"
+        - "192.168.10.132:4646"
 
 # Prometheus Alertmanager
 alertmanager_version: latest
@@ -233,13 +305,7 @@ alertmanager_version: latest
 # Grafana
 grafana_security:
   admin_user: monitor
-  admin_password: !vault |
-    $ANSIBLE_VAULT;1.1;AES256
-    66646362303333643737373931353834646238336161396362393730653133636433373864326465
-    6133653833633333623861616534346265646637653566630a306234376361646237653966303261
-    61646438636538656366613864333135336236306236653164626432363530613461633033666662
-    3233663431306161630a656136353130353165306666616236626535353864373930316438333663
-    6566
+  admin_password: "{{ logging_admin_pass }}"
 grafana_datasources:
   - name: prometheus
     type: prometheus
@@ -247,17 +313,36 @@ grafana_datasources:
     url: 'http://localhost:9090'
     basicAuth: true
     basicAuthUser: "monitor"
-    basicAuthPassword: !vault |
-      $ANSIBLE_VAULT;1.1;AES256
-      66646362303333643737373931353834646238336161396362393730653133636433373864326465
-      6133653833633333623861616534346265646637653566630a306234376361646237653966303261
-      61646438636538656366613864333135336236306236653164626432363530613461633033666662
-      3233663431306161630a656136353130353165306666616236626535353864373930316438333663
-      6566
-#grafana_dashboards:
-#  - dashboard_id: 111
-#    revision_id: 1
-#    datasource: prometheus
+    secureJsonData:
+      basicAuthPassword: "{{ logging_admin_pass }}"
+grafana_dashboards:
+  - dashboard_id: 3662
+    revision_id: 2
+    datasource: prometheus
+  - dashboard_id: 17549
+    revision_id: 2
+    datasource: prometheus
+  - dashboard_id: 6278
+    revision_id: 1
+    datasource: prometheus
+  - dashboard_id: 6281
+    revision_id: 1
+    datasource: prometheus
+  - dashboard_id: 6281
+    revision_id: 1
+    datasource: prometheus
+  - dashboard_id: 10642
+    revision_id: 1
+    datasource: prometheus
+  - dashboard_id: 2351
+    revision_id: 1
+    datasource: prometheus
+  - dashboard_id: 13396
+    revision_id: 3
+    datasource: prometheus
+  - dashboard_id: 15859
+    revision_id: 2
+    datasource: prometheus
 #grafana_alert_notifications:
 #  notifiers:
 #    - name: Channel 1

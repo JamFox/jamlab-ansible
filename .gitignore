@@ -40,6 +40,6 @@ logs/*
 roles/pip
 roles/iptables
 roles/ipsets
-roles/consul
-roles/nomad
+#roles/consul
+#roles/nomad
 roles/logrotate
