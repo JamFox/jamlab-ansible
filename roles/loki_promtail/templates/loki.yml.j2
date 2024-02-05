@@ -1,0 +1,112 @@
+{{ ansible_managed | comment }}
+
+auth_enabled: {{ loki_config_auth }}
+
+server:
+  http_listen_address: {{ loki_config_http_address }}
+  http_listen_port: {{ loki_config_http_port }}
+  http_server_read_timeout: 600s
+  http_server_write_timeout: 600s
+  grpc_listen_address: 127.0.0.1
+  grpc_listen_port: {{ loki_config_grpc_port }}
+  grpc_server_max_recv_msg_size: 20388078
+  grpc_server_max_send_msg_size: 20388078
+  log_level: {{ loki_config_log_level }}
+
+ingester:
+  lifecycler:
+    address: 127.0.0.1
+    ring:
+      kvstore:
+        store: inmemory
+      replication_factor: 1
+    final_sleep: 0s
+  chunk_idle_period: 1h       # Any chunk not receiving new logs in this time will be flushed
+  max_chunk_age: 1h           # All chunks will be flushed when they hit this age, default is 1h
+  chunk_target_size: 1048576  # Loki will attempt to build chunks up to 1.5MB, flushing first if chunk_idle_period or max_chunk_age is reached first
+  chunk_retain_period: 20m    # Must be greater than index read cache TTL if using an index cache (Default index read cache TTL is 5m)
+  max_transfer_retries: 0     # Chunk transfers disabled
+
+schema_config:
+  configs:
+  - from: 2020-10-24
+    store: boltdb
+    object_store: filesystem
+    schema: v11
+    index:
+      prefix: index_
+      period: {{ loki_config_period }}
+    chunks:
+      prefix: chunk_
+      period: {{ loki_config_period }}
+
+storage_config:
+  boltdb:
+    directory: {{ loki_config_store }}/index
+
+  filesystem:
+    directory: {{ loki_config_store }}/chunks
+
+limits_config:
+  enforce_metric_name: false
+  reject_old_samples: true
+  reject_old_samples_max_age: {{ loki_config_period }}
+  max_query_series: 100000
+  max_query_parallelism: 64
+  max_streams_per_user: 500000
+  ingestion_rate_mb: 16
+  ingestion_burst_size_mb: 24
+  max_concurrent_tail_requests: 1000
+  retention_period: 31d
+  per_stream_rate_limit: 16MB
+  per_stream_rate_limit_burst: 64MB
+  split_queries_by_interval: 15m
+
+chunk_store_config:
+  max_look_back_period: {{ loki_config_period }}
+  cache_lookups_older_than: 24h
+  chunk_cache_config:
+    enable_fifocache: true
+    fifocache:
+      max_size_bytes: 2048000000
+
+table_manager:
+  index_tables_provisioning:
+    enable_ondemand_throughput_mode: true
+    enable_inactive_throughput_on_demand_mode: true
+  retention_deletes_enabled: true
+  retention_period: {{ loki_config_retention }}
+
+ruler:
+  storage:
+    type: local
+    local:
+      directory: {{ loki_config_store }}/rules
+  rule_path: {{ loki_config_store }}/rules-temp
+  alertmanager_url: {{ loki_alertmanager_url }}
+  ring:
+    kvstore:
+      store: inmemory
+  enable_api: true
+  enable_alertmanager_v2: true
+
+query_range:
+  parallelise_shardable_queries: true
+
+querier:
+  max_concurrent: 4096
+  query_timeout: 5m
+  extra_query_delay: 30s
+  engine:
+    timeout: 5m
+    max_look_back_period: {{ loki_config_period }}
+  query_ingesters_within: 3h
+
+query_scheduler:
+  max_outstanding_requests_per_tenant: 4096
+
+frontend:
+  address: 127.0.0.1
+  log_queries_longer_than: 5s
+  compress_responses: true
+  max_outstanding_per_tenant: 4096

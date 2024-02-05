@@ -1,0 +1,24 @@
+promtail_install: true
+promtail_config_server_listen: 0.0.0.0
+promtail_config_client_loki_address: 192.168.10.50
+#promtail_config_scrape_configs:
+#  - job_name: syslog
+#    syslog:
+#      listen_address: 0.0.0.0:1514
+#      listen_protocol: tcp
+#      label_structured_data: yes
+#      labels:
+#        job: "syslog"
+#    relabel_configs:
+#      - source_labels: ["__syslog_message_hostname"]
+#        target_label: "host"
+#      - source_labels: ["__syslog_message_hostname"]
+#        target_label: "hostname"
+#      - source_labels: ["__syslog_message_severity"]
+#        target_label: "level"
+#      - source_labels: ["__syslog_message_app_name"]
+#        target_label: "application"
+#      - source_labels: ["__syslog_message_facility"]
+#        target_label: "facility"
+#      - source_labels: ["__syslog_connection_hostname"]
+#        target_label: "connection_hostname"

@@ -55,10 +55,12 @@ $DirCreateMode {{ rsyslog_dircreatemode }}
 $Umask {{ rsyslog_umask }}
 {% endif %}
 
+{% if rsyslog_tls_enable %}
 # Certificates for TLS
 $DefaultNetstreamDriverCAFile {{ rsyslog_tls_certs_path }}/{{ rsyslog_tls_ca_file | basename }}
 $DefaultNetstreamDriverCertFile {{ rsyslog_tls_certs_path }}/{{ rsyslog_tls_cert_file | basename }}
 $DefaultNetstreamDriverKeyFile {{ rsyslog_tls_private_path }}/{{ rsyslog_tls_key_file | basename }}
+{% endif %}
 
 #
 # Where to place spool and state files

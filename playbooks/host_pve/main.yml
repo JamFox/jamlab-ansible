@@ -5,10 +5,14 @@
   vars_files:
     - ../vars_common_all.yml
     - ../vars_disabled_roles.yml
+    - ../vars_common_promtail.yml
+    - ../vars_common_rsyslog_client.yml
 
   roles:
     - { role: proxmox,        tags: [all, proxmox],        when: not (disabled_roles.proxmox | default(false))}
     - { role: soft_apt,       tags: [all, soft, soft_apt], when: not (disabled_roles.soft_apt | default(false)) }
     - { role: motd,           tags: [all, motd],           when: not (disabled_roles.motd | default(false))}
     - { role: sshd,           tags: [all, sshd],           when: not (disabled_roles.sshd | default(false))}
+    - { role: rsyslog,        tags: [all, rsyslog],        when: not (disabled_roles.rsyslog | default(false)) }
     - { role: prometheus.prometheus.node_exporter, tags: [all, exporter, monitor] }
+    - { role: loki_promtail, tags: [all, loki_promtail, monitor] }

@@ -1,0 +1,17 @@
+[Unit]
+Description=Promtail Loki Agent
+Documentation=https://github.com/grafana/loki
+After=loki.service
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/local/bin/promtail -config.file {{ promtail_config_directory }}/promtail.yml -config.expand-env=true
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+Environment=SYSTEMD_LOG_LEVEL=debug HOSTNAME={{ inventory_hostname }}
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,6 @@
+# Import this variables file and use the 'rsyslog' role to install and configure rsyslog client
+rsyslog_user: root
+rsyslog_group: admin
+rsyslog_remote: 192.168.10.50
+rsyslog_tls_enable: false
+rsyslog_loki: true

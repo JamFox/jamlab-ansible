@@ -24,40 +24,44 @@
   loop: "{{ rsyslog_features }}"
 
 # TLS
-- name: Create TLS directory
-  become: true
-  ansible.builtin.file:
-    dest: "{{ item }}"
-    state: directory
-    owner: "{{ rsyslog_user }}"
-    group: "{{ rsyslog_group }}"
-    mode: 0750
-  with_items:
-    - "{{ rsyslog_tls_certs_path }}"
-    - "{{ rsyslog_tls_private_path }}"
-  when: rsyslog_tls_copy_keys | bool
-
-- name: Rsyslog SSL Certificate and Key
-  become: true
-  ansible.builtin.copy:
-    remote_src: "{{ rsyslog_tls_files_remote_src }}"
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    owner: "{{ rsyslog_user }}"
-    group: "{{ rsyslog_group }}"
-    mode: "{{ item.mode }}"
-  with_items:
-    - src: "{{ rsyslog_tls_ca_file }}"
-      dest: "{{ rsyslog_tls_certs_path }}/{{ rsyslog_tls_ca_file | basename }}"
-      mode: "0644"
-    - src: "{{ rsyslog_tls_cert_file }}"
-      dest: "{{ rsyslog_tls_certs_path }}/{{ rsyslog_tls_cert_file | basename }}"
-      mode: "0644"
-    - src: "{{ rsyslog_tls_key_file }}"
-      dest: "{{ rsyslog_tls_private_path }}/{{ rsyslog_tls_key_file | basename }}"
-      mode: "0600"
-  when: rsyslog_tls_copy_keys | bool
-  notify: Restart rsyslog
+- name: Configure Rsyslog TLS
+  when: rsyslog_tls_enable | bool
+  block: 
+    - name: Create TLS directory
+      become: true
+      ansible.builtin.file:
+        dest: "{{ item }}"
+        state: directory
+        owner: "{{ rsyslog_user }}"
+        group: "{{ rsyslog_group }}"
+        mode: 0750
+      with_items:
+        - "{{ rsyslog_tls_certs_path }}"
+        - "{{ rsyslog_tls_private_path }}"
+      when:
+        - rsyslog_tls_copy_keys | bool
+    - name: Rsyslog SSL Certificate and Key
+      become: true
+      ansible.builtin.copy:
+        remote_src: "{{ rsyslog_tls_files_remote_src }}"
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: "{{ rsyslog_user }}"
+        group: "{{ rsyslog_group }}"
+        mode: "{{ item.mode }}"
+      with_items:
+        - src: "{{ rsyslog_tls_ca_file }}"
+          dest: "{{ rsyslog_tls_certs_path }}/{{ rsyslog_tls_ca_file | basename }}"
+          mode: "0644"
+        - src: "{{ rsyslog_tls_cert_file }}"
+          dest: "{{ rsyslog_tls_certs_path }}/{{ rsyslog_tls_cert_file | basename }}"
+          mode: "0644"
+        - src: "{{ rsyslog_tls_key_file }}"
+          dest: "{{ rsyslog_tls_private_path }}/{{ rsyslog_tls_key_file | basename }}"
+          mode: "0600"
+      when: 
+        - rsyslog_tls_copy_keys | bool
+      notify: Restart rsyslog
 
 # Configure
 - name: Configuring default rsyslog

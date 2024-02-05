@@ -26,9 +26,11 @@ roles:
     src: https://github.com/mikegleasonjr/ansible-role-firewall
   - name: ipsets
     src: https://github.com/sv0/ansible-ipset
-  - name: consul
-    src: https://github.com/ansible-community/ansible-consul
-  - name: nomad
-    src: https://github.com/ansible-community/ansible-nomad
+  #- name: consul
+  #  src: https://github.com/ansible-community/ansible-consul
+  #- name: nomad
+  #  src: https://github.com/ansible-community/ansible-nomad
   - name: logrotate
     src: https://github.com/robertdebock/ansible-role-logrotate
+  #- name: loki_promtail
+  #  src: https://github.com/rezizter/ansible_loki

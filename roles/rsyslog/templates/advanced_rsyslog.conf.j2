@@ -34,10 +34,12 @@ $Umask {{ rsyslog_umask }}
 global(
   # Where to place spool and state files
   workDirectory="{{ rsyslog_work_directory }}"
+  {% if rsyslog_tls_enable %}
   # Certificates for TLS
   DefaultNetstreamDriverCAFile="{{ rsyslog_tls_certs_path }}/{{ rsyslog_tls_ca_file | basename }}"
   DefaultNetstreamDriverCertFile="{{ rsyslog_tls_certs_path }}/{{ rsyslog_tls_cert_file | basename }}"
   DefaultNetstreamDriverKeyFile="{{ rsyslog_tls_private_path }}/{{ rsyslog_tls_key_file | basename }}"
+  {% endif %}
 )
 
 {% if rsyslog_preservefqdn %}
@@ -81,6 +83,7 @@ include(file="/etc/rsyslog.d/*.conf" mode="optional")
 # provides TCP syslog reception
 {{ '' if rsyslog_receiver else '#' }}module(
 {{ '' if rsyslog_receiver else '#' }}  load="imtcp"
+{% if rsyslog_tls_enable %}
 {{ '' if rsyslog_receiver else '#' }}  StreamDriver.Mode="1"
 {{ '' if rsyslog_receiver else '#' }}  StreamDriver.Name="gtls"
 {{ '' if rsyslog_receiver else '#' }}  StreamDriver.AuthMode="x509/name"
@@ -89,6 +92,7 @@ include(file="/etc/rsyslog.d/*.conf" mode="optional")
 {{ '' if rsyslog_receiver else '#' }}   "*.intra.ttu.ee",
 {{ '' if rsyslog_receiver else '#' }}   "*.hpc.taltech.ee"
 {{ '' if rsyslog_receiver else '#' }}  ]
+{% endif %}
 {{ '' if rsyslog_receiver else '#' }})
 {{ '' if rsyslog_receiver else '#' }}input(type="imtcp" port="10514")
 
@@ -113,9 +117,11 @@ include(file="/etc/rsyslog.d/*.conf" mode="optional")
 
 action(
   type="omfwd"
+  {% if rsyslog_tls_enable %}
   StreamDriver="gtls"
   StreamDriverMode="1"
   StreamDriverPermittedPeers="{{ rsyslog_remote }},*.hpclocal,*.intra.ttu.ee,*.hpc.taltech.ee"
+  {% endif %}
   # On-disk queue options for this action. If the remote host is
   # down, messages are spooled to disk and sent when it is up again.
   #queue.filename="fwdRule1"       # unique name prefix for spool files
@@ -129,4 +135,11 @@ action(
   Target="{{ rsyslog_remote }}" Port="{{ rsyslog_remote_port }}" Protocol="{{ 'tcp' if rsyslog_remote_tcp else 'udp' }}"
 )
 ### end of the forwarding rule ###
+{% endif %}
+
+{% if rsyslog_loki %}
+# Logging for Loki
+# https://www.rsyslog.com/doc/v8-stable/configuration/modules/omfwd.html
+# https://grafana.com/docs/loki/latest/clients/promtail/scraping/#rsyslog-output-configuration
+action(type="omfwd" Target="127.0.0.1" Port="1514" Protocol="tcp" Template="RSYSLOG_SyslogProtocol23Format" TCP_Framing="octet-counted" KeepAlive="on")
 {% endif %}

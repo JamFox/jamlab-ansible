@@ -96,6 +96,7 @@ consul_tls_verify_server_hostname: true
 consul_ui: false
 consul_raw_key: "{{ vars_common_all_consul_raw_key }}"
 consul_syslog_enable: true
+consul_log_level: INFO
 consul_autopilot_enable: true
 consul_autopilot_cleanup_dead_Servers: true
 consul_connect_enabled: true
@@ -148,6 +149,7 @@ nomad_verify_server_hostname: true
 # Allow clients to not present their own cert
 nomad_verify_https_client: false
 nomad_syslog_enable: true
+nomad_log_level: INFO
 nomad_autopilot: true
 nomad_autopilot_cleanup_dead_servers: true
 # Nomad Telemetry

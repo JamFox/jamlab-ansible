@@ -1,0 +1,26 @@
+---
+- import_tasks: preflight.yml
+
+- name: fqdn | Configure Debian
+  include: debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: fqdn | Configure Redhat
+  include: redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- name: Install loki
+  include_tasks: loki.yml
+  when: __install_loki
+
+- name: Install promtail
+  include_tasks: promtail.yml
+  when:
+    - __install_promtail
+    - not promtail_use_docker
+
+- name: Install promtail [Docker]
+  include_tasks: promtail-docker.yml
+  when:
+    - __install_promtail
+    - promtail_use_docker

@@ -5,6 +5,8 @@
   vars_files:
     - ../vars_common_all.yml
     - ../vars_disabled_roles.yml
+    - ../vars_common_promtail.yml
+    - ../vars_common_rsyslog_client.yml
 
   roles:
     - { role: users_groups,   tags: [all, users_groups],   when: not (disabled_roles.users_groups | default(false))}
@@ -16,4 +18,6 @@
     - { role: ddclient,       tags: [all, ddclient],       when: not (disabled_roles.ddclient | default(false))}
     - { role: certbot,        tags: [all, certbot],        when: not (disabled_roles.certbot | default(false))}
     - { role: haproxy,        tags: [all, haproxy],        when: not (disabled_roles.haproxy | default(false))}
+    - { role: rsyslog,        tags: [all, rsyslog],        when: not (disabled_roles.rsyslog | default(false)) }
     - { role: prometheus.prometheus.node_exporter, tags: [all, exporter, monitor] }
+    - { role: loki_promtail, tags: [all, loki_promtail, monitor] }

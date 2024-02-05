@@ -4,6 +4,9 @@
 # To configure a server to receive logs, set rsyslog_receiver to yes.
 rsyslog_receiver: false
 
+# Loki
+rsyslog_loki: false
+
 # To forward logs to another server, set rsyslog_remote to the hostname or
 # the ipaddress of the receiving rsyslog server.
 # Not setting this variable will not forward logs.
@@ -103,6 +106,7 @@ rsyslog_traditional_file_format: true
 rsyslog_user: root
 rsyslog_group: admin
 
+rsyslog_tls_enable: false
 # TLS example
 #rsyslog_tls_copy_keys: true
 #rsyslog_tls_files_remote_src: true

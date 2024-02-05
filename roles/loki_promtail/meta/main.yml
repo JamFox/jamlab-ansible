@@ -1,0 +1,30 @@
+galaxy_info:
+  role_name: rezizter.ansible_loki
+  description: Install Grafana Loki
+  license: BSD-2-Clause
+
+  min_ansible_version: 2.8
+
+  platforms:
+    - name: el
+      versions:
+        - 7
+        - 8
+    - name: Amazon Linux
+      versions:
+        - 2023
+    - name: FreeBSD
+      versions:
+        - all
+    - name: Ubuntu
+      verions:
+        - bionic
+        - focal
+        - jammy
+
+  galaxy_tags:
+    - promtail
+    - loki
+    - grafana
+    - logging
+dependencies: []

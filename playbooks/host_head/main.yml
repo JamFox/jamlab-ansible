@@ -5,6 +5,8 @@
   vars_files:
     - ../vars_common_all.yml
     - ../vars_disabled_roles.yml
+    - ../vars_common_promtail.yml
+    - ../vars_common_rsyslog_client.yml
 
   roles:
     - { role: users_groups,   tags: [all, users_groups],   when: not (disabled_roles.users_groups | default(false))}
@@ -14,6 +16,7 @@
     - { role: sshd,           tags: [all, sshd],           when: not (disabled_roles.sshd | default(false))}
     - { role: ipsets,         tags: [all, ipsets],         when: not (disabled_roles.ipsets | default(false))}
     - { role: iptables,       tags: [all, iptables],       when: not (disabled_roles.iptables | default(false))}
+    - { role: rsyslog,        tags: [all, rsyslog],        when: not (disabled_roles.rsyslog | default(false)) }
     # Might need manual steps: 
     # step-cli certificate install /etc/step-ca/certs/root_ca.crt
     # sudo step-cli ca provisioner add jwk --create --ca-url=https://head.jamfox.dev --root=/etc/step-ca/certs/root_ca.crt --ca-config /etc/step-ca/config/ca.json
@@ -21,3 +24,4 @@
     # Commented out for the time being: waiting for ansible collection to catch up with version
     #- { role: maxhoesel.smallstep.step_ca, tags: [all, ca, step_ca]}
     - { role: prometheus.prometheus.node_exporter, tags: [all, exporter, monitor] }
+    - { role: loki_promtail, tags: [all, loki_promtail, monitor] }

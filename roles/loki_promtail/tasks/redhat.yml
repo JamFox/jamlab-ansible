@@ -1,0 +1,5 @@
+---
+- name: Redhat | Install unzip
+  yum:
+    name: unzip
+    state: present
