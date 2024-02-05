@@ -11,3 +11,4 @@
     - { role: soft_apt,       tags: [all, soft, soft_apt], when: not (disabled_roles.soft_apt | default(false)) }
     - { role: motd,           tags: [all, motd],           when: not (disabled_roles.motd | default(false))}
     - { role: sshd,           tags: [all, sshd],           when: not (disabled_roles.sshd | default(false))}
+    - { role: prometheus.prometheus.node_exporter, tags: [all, exporter, monitor] }

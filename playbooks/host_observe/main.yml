@@ -5,6 +5,7 @@
   vars_files:
     - ../vars_common_all.yml
     - ../vars_disabled_roles.yml
+    #- ../vars_common_nodeexporter.yml
 
   roles:
     - { role: users_groups,   tags: [all, users_groups],   when: not (disabled_roles.users_groups | default(false))}
@@ -18,3 +19,4 @@
     - { role: prometheus.prometheus.prometheus, tags: [all, prometheus, monitor]}
     #- { role: prometheus.prometheus.alertmanager, tags: [all, prometheus, monitor]}
     - { role: grafana.grafana.grafana, tags: [all, grafana, monitor]}
+    - { role: prometheus.prometheus.node_exporter, tags: [all, exporter, monitor] }

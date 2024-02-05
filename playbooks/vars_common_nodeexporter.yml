@@ -1,0 +1,5 @@
+node_exporter_tls_server_config:
+  cert_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
+  key_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
+#node_exporter_basic_auth_users:
+#  randomuser: examplepassword

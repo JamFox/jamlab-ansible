@@ -20,3 +20,4 @@
     # sudo systemctl restart step-ca
     # Commented out for the time being: waiting for ansible collection to catch up with version
     #- { role: maxhoesel.smallstep.step_ca, tags: [all, ca, step_ca]}
+    - { role: prometheus.prometheus.node_exporter, tags: [all, exporter, monitor] }
