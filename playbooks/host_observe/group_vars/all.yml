@@ -51,6 +51,7 @@ rsyslog_loki: true
 # Prometheus web settings
 prometheus_web_listen_address: "0.0.0.0:9090"
 prometheus_web_external_url: ""
+prometheus_storage_retention: "90d"
 prometheus_metrics_path: "/{{ (prometheus_web_external_url + '/metrics') | regex_replace('^(.*://)?(.*?)/') }}"
 # See https://github.com/prometheus/exporter-toolkit/blob/master/docs/web-configuration.md
 prometheus_web_config:
@@ -429,3 +430,5 @@ grafana_dashboards:
 loki_version: 2.9.1
 loki_install: true
 loki_config_http_address: 0.0.0.0
+loki_config_retention: 2160h
+loki_config_period: 1080h
