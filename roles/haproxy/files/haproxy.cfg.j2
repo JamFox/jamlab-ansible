@@ -46,6 +46,12 @@ frontend stats
    stats show-legends
    no log
 
+frontend prometheus
+  bind :8405
+  mode http
+  http-request use-service prometheus-exporter
+  no log
+
 frontend http-in
     bind *:80
     redirect scheme https code 301 if !{ ssl_fc }

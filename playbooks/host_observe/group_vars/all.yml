@@ -87,6 +87,11 @@ prometheus_config_flags_extra: {}
 #      labels:
 #        env: monitor
 prometheus_scrape_configs:
+  - job_name: "haproxy"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets:
+          - "192.168.10.80:8405"
   - job_name: "alertmanager"
     metrics_path: "/metrics"
     static_configs:
@@ -560,14 +565,14 @@ prometheus_alert_rules: # noqa yaml[line-length]  # noqa line-length
       summary: "{% raw %}Host out of inodes (instance {{ $labels.instance }}){% endraw %}"
       description: "{% raw %}Disk is almost running out of available inodes (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
 
-  - alert: HostFilesystemDeviceError
-    expr: node_filesystem_device_error == 1
-    for: 0m
-    labels:
-      severity: critical
-    annotations:
-      summary: "{% raw %}Host filesystem device error (instance {{ $labels.instance }}){% endraw %}"
-      description: "{% raw %}{{ $labels.instance }}: Device error with the {{ $labels.mountpoint }} filesystem\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+  #- alert: HostFilesystemDeviceError
+  #  expr: node_filesystem_device_error == 1
+  #  for: 0m
+  #  labels:
+  #    severity: critical
+  #  annotations:
+  #    summary: "{% raw %}Host filesystem device error (instance {{ $labels.instance }}){% endraw %}"
+  #    description: "{% raw %}{{ $labels.instance }}: Device error with the {{ $labels.mountpoint }} filesystem\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
 
   - alert: HostInodesWillFillIn24Hours
     expr: (node_filesystem_files_free / node_filesystem_files * 100 < 10 and predict_linear(node_filesystem_files_free[1h], 24 * 3600) < 0 and ON (instance, device, mountpoint) node_filesystem_readonly == 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
