@@ -1,6 +1,8 @@
 users_default_shell: /bin/bash
 users_create_primary_group: true
 users_enable_sudo: true
+# Wether to save auth keys in /etc/AuthorizedKeys
+users_auth_keys_etc: false
 
 # The only mandatory parameter is the name.
 # Template example of group vars:

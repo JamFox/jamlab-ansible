@@ -44,6 +44,14 @@
         mode: "0700"
       loop: "{{ users }}"
       when: item.homedir is defined and item.homedir is not none and item.homedir | length > 0
+    - name: Ensure /etc/AuthorizedKeys directory exists
+      ansible.builtin.file:
+        path: "/etc/AuthorizedKeys"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+      when: users_auth_keys_etc
     - name: Create authorized_keys file for user
       ansible.builtin.copy:
         content: |
@@ -52,7 +60,7 @@
           {{ key }}
           {% endfor %}
           {% endif %}
-        dest: "{{ item.homedir }}/.ssh/authorized_keys"
+        dest: "{{ ' /etc/AuthorizedKeys/' + item.name if users_auth_keys_etc else item.homedir + '/.ssh/authorized_keys' }}"
         owner: "{{ item.name }}"
         group: "{{ item.primary_group | default(omit)
           if users_create_primary_group else omit }}"
