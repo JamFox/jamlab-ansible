@@ -1,16 +1,16 @@
 ---
 - name: Install systemd-unit
-  template:
+  ansible.builtin.template:
     src: "systemd-loki.j2"
     dest: "/etc/systemd/system/loki.service"
     mode: '0644'
   register: unit_tpl
   notify:
-    - reload systemd loki
+    - Reload systemd loki
   when: "__loki_go_os == 'linux'"
 
 - name: Create config directories for loki
-  file:
+  ansible.builtin.file:
     mode: '0755'
     path: "{{ item }}"
     state: directory
@@ -19,17 +19,18 @@
     - "{{ loki_config_store }}"
 
 - name: Setup configuration
-  template:
+  ansible.builtin.template:
     src: "loki.yml.j2"
     dest: "/etc/loki/loki.yml"
     mode: '0644'
   register: conf_tpl
   notify:
-    - restart systemd loki
+    - Restart systemd loki
 
-- block:
+- name: Install loki
+  block:
     - name: Download loki release
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ __loki_download }}"
         dest: "/tmp/{{ __loki_archive }}"
         mode: '0644'
@@ -39,7 +40,7 @@
       delay: 2
 
     - name: Unpack loki release
-      unarchive:
+      ansible.builtin.unarchive:
         src: "/tmp/{{ __loki_archive }}"
         dest: "/tmp"
         creates: "/tmp/loki-{{ __loki_go_os }}-{{ __loki_go_arch }}"
@@ -47,20 +48,20 @@
         mode: '0644'
 
     - name: Copy loki to /usr/local/bin
-      copy:
+      ansible.builtin.copy:
         src: "/tmp/loki-{{ __loki_go_os }}-{{ __loki_go_arch }}"
         dest: "/usr/local/bin/loki"
         mode: 0755
         owner: root
         group: root
         remote_src: true
-      notify: restart systemd loki
+      notify: Restart systemd loki
   check_mode: false
   when:
     - __loki_version != loki_version
 
 - name: Clean-up
-  file:
+  ansible.builtin.file:
     path: "/tmp/{{ item }}"
     state: absent
   loop:

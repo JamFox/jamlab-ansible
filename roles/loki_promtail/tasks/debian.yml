@@ -1,5 +1,5 @@
 ---
 - name: Debian | Install unzip
-  apt:
+  ansible.builtin.apt:
     name: unzip
     state: present

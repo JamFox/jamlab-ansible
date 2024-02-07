@@ -1,19 +1,20 @@
 ---
 - name: Install systemd-unit
-  template:
+  ansible.builtin.template:
     src: "systemd-promtail.j2"
     dest: "/etc/systemd/system/promtail.service"
     mode: '0644'
   notify:
-    - reload systemd promtail
+    - Reload systemd promtail
   when: "__loki_go_os == 'linux'"
 
 - name: Configure
-  import_tasks: promtail-config.yml
+  ansible.builtin.import_tasks: promtail-config.yml
 
-- block:
+- name: Install promtail
+  block:
     - name: Download promtail release
-      get_url:
+      ansible.builtin.get_url:
         url: "{{ __promtail_download }}"
         dest: "/tmp/{{ __promtail_archive }}"
         checksum: "sha256:{{ __loki_download_github }}/v{{ loki_version }}/SHA256SUMS"
@@ -24,7 +25,7 @@
       delay: 2
 
     - name: Unpack promtail release
-      unarchive:
+      ansible.builtin.unarchive:
         src: "/tmp/{{ __promtail_archive }}"
         dest: "/tmp"
         creates: "/tmp/promtail-{{ __loki_go_os }}-{{ __loki_go_arch }}"
@@ -32,20 +33,20 @@
         remote_src: true
 
     - name: Copy promtail to /usr/local/bin
-      copy:
+      ansible.builtin.copy:
         src: "/tmp/promtail-{{ __loki_go_os }}-{{ __loki_go_arch }}"
         dest: "/usr/local/bin/promtail"
         mode: 0755
         owner: root
         group: root
         remote_src: true
-      notify: restart systemd promtail
+      notify: Restart systemd promtail
   check_mode: false
   when:
     - (__promtail_version != loki_version)
 
 - name: Clean-up
-  file:
+  ansible.builtin.file:
     path: "/tmp/{{ item }}"
     state: absent
   when:

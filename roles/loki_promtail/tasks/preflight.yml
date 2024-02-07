@@ -1,32 +1,32 @@
 ---
 - name: Check targets
-  assert:
+  ansible.builtin.assert:
     that: __install_loki or __install_promtail
 
 - name: Check version
-  assert:
+  ansible.builtin.assert:
     that: not loki_version.startswith('v')
     fail_msg: "loki_version must be '{{ loki_version }}', and not 'v{{ loki_version }}'"
 
 - name: "Preflight: loki"
-  include_tasks: preflight-loki.yml
+  ansible.builtin.include_tasks: preflight-loki.yml
   when: __install_loki
 
 - name: Empty loki version
-  set_fact:
+  ansible.builtin.set_fact:
     __loki_version: ""
   when:
     - __install_loki
     - __loki_version is not defined
 
 - name: "Preflight: promtail"
-  include_tasks: preflight-promtail.yml
+  ansible.builtin.include_tasks: preflight-promtail.yml
   when:
     - __install_promtail
     - __promtail_version is not defined
 
 - name: Empty promtail version
-  set_fact:
+  ansible.builtin.set_fact:
     __promtail_version: ""
   when:
     - __install_promtail

@@ -1,5 +1,5 @@
 ---
 - name: Redhat | Install unzip
-  yum:
+  ansible.builtin.yum:
     name: unzip
     state: present
