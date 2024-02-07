@@ -63,16 +63,14 @@ prometheus_web_config:
   basic_auth_users:
     monitor: $2y$10$8j6jJyH4GSYhdoRyCxU8Pe8NCVSRcQ94ZyuzWwnRVBbK7DLsNrmFW
 # Prometheus alert settings
-prometheus_alertmanager_config: []
-# prometheus_alertmanager_config:
-#   - scheme: https
-#     path_prefix: alertmanager/
-#     basic_auth:
-#       username: user
-#       password: pass
-#     static_configs:
-#       - targets: ["127.0.0.1:9093"]
-#     proxy_url: "127.0.0.2"
+prometheus_alertmanager_config:
+  - scheme: http
+    path_prefix: alertmanager/
+    #    basic_auth:
+    #      username: user
+    #      password: pass
+    static_configs:
+      - targets: ["127.0.0.1:9093"]
 prometheus_alert_relabel_configs: []
 # prometheus_alert_relabel_configs:
 #   - action: labeldrop
@@ -221,6 +219,11 @@ prometheus_config_flags_extra: {}
 #      labels:
 #        env: monitor
 prometheus_scrape_configs:
+  - job_name: "alertmanager"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets:
+          - "192.168.10.10:9093"
   - job_name: "head"
     metrics_path: "/metrics"
     static_configs:
@@ -348,7 +351,10 @@ prometheus_scrape_configs:
           - "192.168.10.132:4646"
 
 # Prometheus Alertmanager
-alertmanager_version: latest
+alertmanager_version: 0.26.0
+alertmanager_config_flags_extra:
+  data.retention: 45d
+# Default example:
 #alertmanager_slack_api_url: "http://example.com"
 #alertmanager_receivers:
 #  - name: slack
@@ -361,6 +367,32 @@ alertmanager_version: latest
 #  group_interval: 5m
 #  repeat_interval: 3h
 #  receiver: slack
+alertmanager_route:
+  group_by: ["alertname", "cluster", "service", "job"]
+  group_wait: 5s
+  group_interval: 5m
+  repeat_interval: 3h
+  receiver: "Teams"
+  routes:
+    - receiver: "Teams"
+      #match_re:
+      #  severity: critical|warning
+      continue: true
+    - receiver: "Telegram"
+      #match_re:
+      #  severity: critical|warning
+      continue: true
+alertmanager_receivers:
+  - name: "Teams"
+    msteams_configs:
+      - webhook_url: "{{ vars_common_all_jamlab_teams_webhook }}"
+        send_resolved: true
+  - name: "Telegram"
+    telegram_configs:
+      - bot_token: "{{ vars_common_all_telegram_alert_token }}"
+        chat_id: "{{ vars_common_all_telegram_chatid | replace(\"'\", '') }}"
+        disable_notifications: false
+        send_resolved: true
 
 # Grafana
 grafana_security:

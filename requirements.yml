@@ -26,6 +26,7 @@ roles:
     src: https://github.com/mikegleasonjr/ansible-role-firewall
   - name: ipsets
     src: https://github.com/sv0/ansible-ipset
+  # Freeze consul, nomad and loki_promtail in place for the thesis
   #- name: consul
   #  src: https://github.com/ansible-community/ansible-consul
   #- name: nomad
