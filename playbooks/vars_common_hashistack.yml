@@ -103,7 +103,7 @@ consul_connect_enabled: true
 # Custom
 consul_config_custom:
   telemetry:
-    disable_hostname: false
+    disable_hostname: true
     enable_host_metrics: true
     prometheus_retention_time: "4h"
 
@@ -155,7 +155,7 @@ nomad_autopilot_cleanup_dead_servers: true
 # Nomad Telemetry
 nomad_telemetry: true
 nomad_telemetry_prometheus_metrics: true
-nomad_telemetry_disable_hostname: false
+nomad_telemetry_disable_hostname: true
 nomad_telemetry_publish_allocation_metrics: true
 nomad_telemetry_publish_node_metrics: true
 nomad_telemetry_collection_interval: "5s"

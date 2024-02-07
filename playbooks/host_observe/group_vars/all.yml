@@ -64,144 +64,12 @@ prometheus_web_config:
     monitor: $2y$10$8j6jJyH4GSYhdoRyCxU8Pe8NCVSRcQ94ZyuzWwnRVBbK7DLsNrmFW
 # Prometheus alert settings
 prometheus_alertmanager_config:
-  - scheme: http
-    path_prefix: alertmanager/
-    #    basic_auth:
-    #      username: user
-    #      password: pass
-    static_configs:
+  - static_configs:
       - targets: ["127.0.0.1:9093"]
 prometheus_alert_relabel_configs: []
 # prometheus_alert_relabel_configs:
 #   - action: labeldrop
 #     regex: replica
-prometheus_alert_rules: # noqa yaml[line-length]  # noqa line-length
-  - alert: Watchdog
-    expr: vector(1)
-    for: 10m
-    labels:
-      severity: warning
-    annotations:
-      description: "This is an alert meant to ensure that the entire alerting pipeline is functional.\nThis alert is always firing, therefore it should always be firing in Alertmanager\nand always fire against a receiver. There are integrations with various notification\nmechanisms that send a notification when this alert is not firing. For example the\n\"DeadMansSnitch\" integration in PagerDuty."
-      summary: "Ensure entire alerting pipeline is functional"
-  - alert: InstanceDown
-    expr: "up == 0"
-    for: 5m
-    labels:
-      severity: critical
-    annotations:
-      description: "{% raw %}{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes.{% endraw %}"
-      summary: "{% raw %}Instance {{ $labels.instance }} down{% endraw %}"
-  - alert: RebootRequired
-    expr: "node_reboot_required > 0"
-    labels:
-      severity: warning
-    annotations:
-      description: "{% raw %}{{ $labels.instance }} requires a reboot.{% endraw %}"
-      summary: "{% raw %}Instance {{ $labels.instance }} - reboot required{% endraw %}"
-  - alert: NodeFilesystemSpaceFillingUp
-    annotations:
-      description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left and is filling up.{% endraw %}'
-      summary: "Filesystem is predicted to run out of space within the next 24 hours."
-    expr: "(\n  node_filesystem_avail_bytes{job=\"node\",fstype!=\"\"} / node_filesystem_size_bytes{job=\"node\",fstype!=\"\"} * 100 < 40\nand\n  predict_linear(node_filesystem_avail_bytes{job=\"node\",fstype!=\"\"}[6h], 24*60*60) < 0\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\"} == 0\n)\n"
-    for: 1h
-    labels:
-      severity: warning
-  - alert: NodeFilesystemSpaceFillingUp
-    annotations:
-      description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left and is filling up fast.{% endraw %}'
-      summary: "Filesystem is predicted to run out of space within the next 4 hours."
-    expr: "(\n  node_filesystem_avail_bytes{job=\"node\",fstype!=\"\"} / node_filesystem_size_bytes{job=\"node\",fstype!=\"\"} * 100 < 20\nand\n  predict_linear(node_filesystem_avail_bytes{job=\"node\",fstype!=\"\"}[6h], 4*60*60) < 0\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\"} == 0\n)\n"
-    for: 1h
-    labels:
-      severity: critical
-  - alert: NodeFilesystemAlmostOutOfSpace
-    annotations:
-      description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left.{% endraw %}'
-      summary: "Filesystem has less than 5% space left."
-    expr: "(\n  node_filesystem_avail_bytes{job=\"node\",fstype!=\"\"} / node_filesystem_size_bytes{job=\"node\",fstype!=\"\"} * 100 < 5\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\"} == 0\n)\n"
-    for: 1h
-    labels:
-      severity: warning
-  - alert: NodeFilesystemAlmostOutOfSpace
-    annotations:
-      description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left.{% endraw %}'
-      summary: "Filesystem has less than 3% space left."
-    expr: "(\n  node_filesystem_avail_bytes{job=\"node\",fstype!=\"\"} / node_filesystem_size_bytes{job=\"node\",fstype!=\"\"} * 100 < 3\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\"} == 0\n)\n"
-    for: 1h
-    labels:
-      severity: critical
-  - alert: NodeFilesystemFilesFillingUp
-    annotations:
-      description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available inodes left and is filling up.{% endraw %}'
-      summary: "Filesystem is predicted to run out of inodes within the next 24 hours."
-    expr: "(\n  node_filesystem_files_free{job=\"node\",fstype!=\"\"} / node_filesystem_files{job=\"node\",fstype!=\"\"} * 100 < 40\nand\n  predict_linear(node_filesystem_files_free{job=\"node\",fstype!=\"\"}[6h], 24*60*60) < 0\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\"} == 0\n)\n"
-    for: 1h
-    labels:
-      severity: warning
-  - alert: NodeFilesystemFilesFillingUp
-    annotations:
-      description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available inodes left and is filling up fast.{% endraw %}'
-      summary: "Filesystem is predicted to run out of inodes within the next 4 hours."
-    expr: "(\n  node_filesystem_files_free{job=\"node\",fstype!=\"\"} / node_filesystem_files{job=\"node\",fstype!=\"\"} * 100 < 20\nand\n  predict_linear(node_filesystem_files_free{job=\"node\",fstype!=\"\"}[6h], 4*60*60) < 0\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\"} == 0\n)\n"
-    for: 1h
-    labels:
-      severity: critical
-  - alert: NodeFilesystemAlmostOutOfFiles
-    annotations:
-      description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available inodes left.{% endraw %}'
-      summary: "Filesystem has less than 5% inodes left."
-    expr: "(\n  node_filesystem_files_free{job=\"node\",fstype!=\"\"} / node_filesystem_files{job=\"node\",fstype!=\"\"} * 100 < 5\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\"} == 0\n)\n"
-    for: 1h
-    labels:
-      severity: warning
-  - alert: NodeFilesystemAlmostOutOfFiles
-    annotations:
-      description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available inodes left.{% endraw %}'
-      summary: "Filesystem has less than 3% inodes left."
-    expr: "(\n  node_filesystem_files_free{job=\"node\",fstype!=\"\"} / node_filesystem_files{job=\"node\",fstype!=\"\"} * 100 < 3\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\"} == 0\n)\n"
-    for: 1h
-    labels:
-      severity: critical
-  - alert: NodeNetworkReceiveErrs
-    annotations:
-      description: '{% raw %}{{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf "%.0f" $value }} receive errors in the last two minutes.{% endraw %}'
-      summary: "Network interface is reporting many receive errors."
-    expr: "increase(node_network_receive_errs_total[2m]) > 10\n"
-    for: 1h
-    labels:
-      severity: warning
-  - alert: NodeNetworkTransmitErrs
-    annotations:
-      description: '{% raw %}{{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf "%.0f" $value }} transmit errors in the last two minutes.{% endraw %}'
-      summary: "Network interface is reporting many transmit errors."
-    expr: "increase(node_network_transmit_errs_total[2m]) > 10\n"
-    for: 1h
-    labels:
-      severity: warning
-  - alert: NodeHighNumberConntrackEntriesUsed
-    annotations:
-      description: "{% raw %}{{ $value | humanizePercentage }} of conntrack entries are used{% endraw %}"
-      summary: "Number of conntrack are getting close to the limit"
-    expr: "(node_nf_conntrack_entries / node_nf_conntrack_entries_limit) > 0.75\n"
-    labels:
-      severity: warning
-  - alert: NodeClockSkewDetected
-    annotations:
-      message: "{% raw %}Clock on {{ $labels.instance }} is out of sync by more than 300s. Ensure NTP is configured correctly on this host.{% endraw %}"
-      summary: "Clock skew detected."
-    expr: "(\n  node_timex_offset_seconds > 0.05\nand\n  deriv(node_timex_offset_seconds[5m]) >= 0\n)\nor\n(\n  node_timex_offset_seconds < -0.05\nand\n  deriv(node_timex_offset_seconds[5m]) <= 0\n)\n"
-    for: 10m
-    labels:
-      severity: warning
-  - alert: NodeClockNotSynchronising
-    annotations:
-      message: "{% raw %}Clock on {{ $labels.instance }} is not synchronising. Ensure NTP is configured on this host.{% endraw %}"
-      summary: "Clock not synchronising."
-    expr: "min_over_time(node_timex_sync_status[5m]) == 0\n"
-    for: 10m
-    labels:
-      severity: warning
 # Prometheus extra settings
 prometheus_global:
   scrape_interval: 15s
@@ -223,7 +91,7 @@ prometheus_scrape_configs:
     metrics_path: "/metrics"
     static_configs:
       - targets:
-          - "192.168.10.10:9093"
+          - "127.0.0.1:9093"
   - job_name: "head"
     metrics_path: "/metrics"
     static_configs:
@@ -368,7 +236,7 @@ alertmanager_config_flags_extra:
 #  repeat_interval: 3h
 #  receiver: slack
 alertmanager_route:
-  group_by: ["alertname", "cluster", "service", "job"]
+  group_by: ['alertname', 'cluster', 'service']
   group_wait: 5s
   group_interval: 5m
   repeat_interval: 3h
@@ -390,7 +258,7 @@ alertmanager_receivers:
   - name: "Telegram"
     telegram_configs:
       - bot_token: "{{ vars_common_all_telegram_alert_token }}"
-        chat_id: "{{ vars_common_all_telegram_chatid | replace(\"'\", '') }}"
+        chat_id: '{{ vars_common_all_telegram_chatid | replace("''", '''') }}'
         disable_notifications: false
         send_resolved: true
 
@@ -464,3 +332,765 @@ loki_install: true
 loki_config_http_address: 0.0.0.0
 loki_config_retention: 2160h
 loki_config_period: 1080h
+
+# Some from: https://samber.github.io/awesome-prometheus-alerts/
+prometheus_alert_rules: # noqa yaml[line-length]  # noqa line-length
+  # Default alerts
+  - alert: Watchdog
+    expr: vector(1)
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      description: "This is an alert meant to ensure that the entire alerting pipeline is functional.\nThis alert is always firing, therefore it should always be firing in Alertmanager\nand always fire against a receiver. There are integrations with various notification\nmechanisms that send a notification when this alert is not firing. For example the\n\"DeadMansSnitch\" integration in PagerDuty."
+      summary: "Ensure entire alerting pipeline is functional"
+  - alert: InstanceDown
+    expr: "up == 0"
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      description: "{% raw %}{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes.{% endraw %}"
+      summary: "{% raw %}Instance {{ $labels.instance }} down{% endraw %}"
+  - alert: RebootRequired
+    expr: "node_reboot_required > 0"
+    labels:
+      severity: warning
+    annotations:
+      description: "{% raw %}{{ $labels.instance }} requires a reboot.{% endraw %}"
+      summary: "{% raw %}Instance {{ $labels.instance }} - reboot required{% endraw %}"
+  - alert: NodeFilesystemSpaceFillingUp
+    annotations:
+      description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left and is filling up.{% endraw %}'
+      summary: "Filesystem is predicted to run out of space within the next 24 hours."
+    expr: "(\n  node_filesystem_avail_bytes{job=\"node\",fstype!=\"\"} / node_filesystem_size_bytes{job=\"node\",fstype!=\"\"} * 100 < 40\nand\n  predict_linear(node_filesystem_avail_bytes{job=\"node\",fstype!=\"\"}[6h], 24*60*60) < 0\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\"} == 0\n)\n"
+    for: 1h
+    labels:
+      severity: warning
+  - alert: NodeFilesystemSpaceFillingUp
+    annotations:
+      description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left and is filling up fast.{% endraw %}'
+      summary: "Filesystem is predicted to run out of space within the next 4 hours."
+    expr: "(\n  node_filesystem_avail_bytes{job=\"node\",fstype!=\"\"} / node_filesystem_size_bytes{job=\"node\",fstype!=\"\"} * 100 < 20\nand\n  predict_linear(node_filesystem_avail_bytes{job=\"node\",fstype!=\"\"}[6h], 4*60*60) < 0\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\"} == 0\n)\n"
+    for: 1h
+    labels:
+      severity: critical
+  - alert: NodeFilesystemAlmostOutOfSpace
+    annotations:
+      description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left.{% endraw %}'
+      summary: "Filesystem has less than 5% space left."
+    expr: "(\n  node_filesystem_avail_bytes{job=\"node\",fstype!=\"\"} / node_filesystem_size_bytes{job=\"node\",fstype!=\"\"} * 100 < 5\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\"} == 0\n)\n"
+    for: 1h
+    labels:
+      severity: warning
+  - alert: NodeFilesystemAlmostOutOfSpace
+    annotations:
+      description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available space left.{% endraw %}'
+      summary: "Filesystem has less than 3% space left."
+    expr: "(\n  node_filesystem_avail_bytes{job=\"node\",fstype!=\"\"} / node_filesystem_size_bytes{job=\"node\",fstype!=\"\"} * 100 < 3\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\"} == 0\n)\n"
+    for: 1h
+    labels:
+      severity: critical
+  - alert: NodeFilesystemFilesFillingUp
+    annotations:
+      description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available inodes left and is filling up.{% endraw %}'
+      summary: "Filesystem is predicted to run out of inodes within the next 24 hours."
+    expr: "(\n  node_filesystem_files_free{job=\"node\",fstype!=\"\"} / node_filesystem_files{job=\"node\",fstype!=\"\"} * 100 < 40\nand\n  predict_linear(node_filesystem_files_free{job=\"node\",fstype!=\"\"}[6h], 24*60*60) < 0\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\"} == 0\n)\n"
+    for: 1h
+    labels:
+      severity: warning
+  - alert: NodeFilesystemFilesFillingUp
+    annotations:
+      description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available inodes left and is filling up fast.{% endraw %}'
+      summary: "Filesystem is predicted to run out of inodes within the next 4 hours."
+    expr: "(\n  node_filesystem_files_free{job=\"node\",fstype!=\"\"} / node_filesystem_files{job=\"node\",fstype!=\"\"} * 100 < 20\nand\n  predict_linear(node_filesystem_files_free{job=\"node\",fstype!=\"\"}[6h], 4*60*60) < 0\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\"} == 0\n)\n"
+    for: 1h
+    labels:
+      severity: critical
+  - alert: NodeFilesystemAlmostOutOfFiles
+    annotations:
+      description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available inodes left.{% endraw %}'
+      summary: "Filesystem has less than 5% inodes left."
+    expr: "(\n  node_filesystem_files_free{job=\"node\",fstype!=\"\"} / node_filesystem_files{job=\"node\",fstype!=\"\"} * 100 < 5\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\"} == 0\n)\n"
+    for: 1h
+    labels:
+      severity: warning
+  - alert: NodeFilesystemAlmostOutOfFiles
+    annotations:
+      description: '{% raw %}Filesystem on {{ $labels.device }} at {{ $labels.instance }} has only {{ printf "%.2f" $value }}% available inodes left.{% endraw %}'
+      summary: "Filesystem has less than 3% inodes left."
+    expr: "(\n  node_filesystem_files_free{job=\"node\",fstype!=\"\"} / node_filesystem_files{job=\"node\",fstype!=\"\"} * 100 < 3\nand\n  node_filesystem_readonly{job=\"node\",fstype!=\"\"} == 0\n)\n"
+    for: 1h
+    labels:
+      severity: critical
+  - alert: NodeNetworkReceiveErrs
+    annotations:
+      description: '{% raw %}{{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf "%.0f" $value }} receive errors in the last two minutes.{% endraw %}'
+      summary: "Network interface is reporting many receive errors."
+    expr: "increase(node_network_receive_errs_total[2m]) > 10\n"
+    for: 1h
+    labels:
+      severity: warning
+  - alert: NodeNetworkTransmitErrs
+    annotations:
+      description: '{% raw %}{{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf "%.0f" $value }} transmit errors in the last two minutes.{% endraw %}'
+      summary: "Network interface is reporting many transmit errors."
+    expr: "increase(node_network_transmit_errs_total[2m]) > 10\n"
+    for: 1h
+    labels:
+      severity: warning
+  - alert: NodeHighNumberConntrackEntriesUsed
+    annotations:
+      description: "{% raw %}{{ $value | humanizePercentage }} of conntrack entries are used{% endraw %}"
+      summary: "Number of conntrack are getting close to the limit"
+    expr: "(node_nf_conntrack_entries / node_nf_conntrack_entries_limit) > 0.75\n"
+    labels:
+      severity: warning
+  - alert: NodeClockSkewDetected
+    annotations:
+      message: "{% raw %}Clock on {{ $labels.instance }} is out of sync by more than 300s. Ensure NTP is configured correctly on this host.{% endraw %}"
+      summary: "Clock skew detected."
+    expr: "(\n  node_timex_offset_seconds > 0.05\nand\n  deriv(node_timex_offset_seconds[5m]) >= 0\n)\nor\n(\n  node_timex_offset_seconds < -0.05\nand\n  deriv(node_timex_offset_seconds[5m]) <= 0\n)\n"
+    for: 10m
+    labels:
+      severity: warning
+  - alert: NodeClockNotSynchronising
+    annotations:
+      message: "{% raw %}Clock on {{ $labels.instance }} is not synchronising. Ensure NTP is configured on this host.{% endraw %}"
+      summary: "Clock not synchronising."
+    expr: "min_over_time(node_timex_sync_status[5m]) == 0\n"
+    for: 10m
+    labels:
+      severity: warning
+  # Node exporter
+  - alert: HostOutOfMemory
+    expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host out of memory (instance {{ $labels.instance }}) {% endraw %}"
+      description: "{% raw %}Node memory is filling up (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }} {% endraw %}"
+
+  - alert: HostMemoryUnderMemoryPressure
+    expr: (rate(node_vmstat_pgmajfault[1m]) > 1000) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host memory under memory pressure (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}The node is under heavy memory pressure. High rate of major page faults\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }} {% endraw %}"
+
+  # You may want to increase the alert manager 'repeat_interval' for this type of alert to daily or weekly
+  - alert: HostMemoryIsUnderutilized
+    expr: (100 - (avg_over_time(node_memory_MemAvailable_bytes[30m]) / node_memory_MemTotal_bytes * 100) < 20) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 1w
+    labels:
+      severity: info
+    annotations:
+      summary: "{% raw %}Host Memory is underutilized (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Node memory is < 20% for 1 week. Consider reducing memory space. (instance {{ $labels.instance }})\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostUnusualNetworkThroughputIn
+    expr: (sum by (instance) (rate(node_network_receive_bytes_total[2m])) / 1024 / 1024 > 100) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host unusual network throughput in (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Host network interfaces are probably receiving too much data (> 100 MB/s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostUnusualNetworkThroughputOut
+    expr: (sum by (instance) (rate(node_network_transmit_bytes_total[2m])) / 1024 / 1024 > 100) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host unusual network throughput out (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Host network interfaces are probably sending too much data (> 100 MB/s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostUnusualDiskReadRate
+    expr: (sum by (instance) (rate(node_disk_read_bytes_total[2m])) / 1024 / 1024 > 50) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host unusual disk read rate (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Disk is probably reading too much data (> 50 MB/s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostUnusualDiskWriteRate
+    expr: (sum by (instance) (rate(node_disk_written_bytes_total[2m])) / 1024 / 1024 > 50) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host unusual disk write rate (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Disk is probably writing too much data (> 50 MB/s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  # Please add ignored mountpoints in node_exporter parameters like
+  # "--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|run)($|/)".
+  # Same rule using "node_filesystem_free_bytes" will fire when disk fills for non-root users.
+  - alert: HostOutOfDiskSpace
+    expr: ((node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 10 and ON (instance, device, mountpoint) node_filesystem_readonly == 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host out of disk space (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Disk is almost full (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  # Please add ignored mountpoints in node_exporter parameters like
+  # "--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|run)($|/)".
+  # Same rule using "node_filesystem_free_bytes" will fire when disk fills for non-root users.
+  - alert: HostDiskWillFillIn24Hours
+    expr: ((node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 10 and ON (instance, device, mountpoint) predict_linear(node_filesystem_avail_bytes{fstype!~"tmpfs"}[1h], 24 * 3600) < 0 and ON (instance, device, mountpoint) node_filesystem_readonly == 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host disk will fill in 24 hours (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Filesystem is predicted to run out of space within the next 24 hours at current write rate\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostOutOfInodes
+    expr: (node_filesystem_files_free / node_filesystem_files * 100 < 10 and ON (instance, device, mountpoint) node_filesystem_readonly == 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host out of inodes (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Disk is almost running out of available inodes (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostFilesystemDeviceError
+    expr: node_filesystem_device_error == 1
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}Host filesystem device error (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}{{ $labels.instance }}: Device error with the {{ $labels.mountpoint }} filesystem\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostInodesWillFillIn24Hours
+    expr: (node_filesystem_files_free / node_filesystem_files * 100 < 10 and predict_linear(node_filesystem_files_free[1h], 24 * 3600) < 0 and ON (instance, device, mountpoint) node_filesystem_readonly == 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host inodes will fill in 24 hours (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Filesystem is predicted to run out of inodes within the next 24 hours at current write rate\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostUnusualDiskReadLatency
+    expr: (rate(node_disk_read_time_seconds_total[1m]) / rate(node_disk_reads_completed_total[1m]) > 0.1 and rate(node_disk_reads_completed_total[1m]) > 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host unusual disk read latency (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Disk latency is growing (read operations > 100ms)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostUnusualDiskWriteLatency
+    expr: (rate(node_disk_write_time_seconds_total[1m]) / rate(node_disk_writes_completed_total[1m]) > 0.1 and rate(node_disk_writes_completed_total[1m]) > 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host unusual disk write latency (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Disk latency is growing (write operations > 100ms)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostHighCpuLoad
+    expr: (sum by (instance) (avg by (mode, instance) (rate(node_cpu_seconds_total{mode!="idle"}[2m]))) > 0.8) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host high CPU load (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  # You may want to increase the alert manager 'repeat_interval' for this type of alert to daily or weekly
+  - alert: HostCpuIsUnderutilized
+    expr: (100 - (rate(node_cpu_seconds_total{mode="idle"}[30m]) * 100) < 20) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 1w
+    labels:
+      severity: info
+    annotations:
+      summary: "{% raw %}Host CPU is underutilized (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}CPU load is < 20% for 1 week. Consider reducing the number of CPUs.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostCpuStealNoisyNeighbor
+    expr: (avg by(instance) (rate(node_cpu_seconds_total{mode="steal"}[5m])) * 100 > 10) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host CPU steal noisy neighbor (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}CPU steal is > 10%. A noisy neighbor is killing VM performances or a spot instance may be out of credit.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostCpuHighIowait
+    expr: (avg by (instance) (rate(node_cpu_seconds_total{mode="iowait"}[5m])) * 100 > 10) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host CPU high iowait (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}CPU iowait > 10%. A high iowait means that you are disk or network bound.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostUnusualDiskIo
+    expr: (rate(node_disk_io_time_seconds_total[1m]) > 0.5) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host unusual disk IO (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Time spent in IO is too high on {{ $labels.instance }}. Check storage for issues.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  # 10000 context switches is an arbitrary number.
+  # The alert threshold depends on the nature of the application.
+  # Please read: https://github.com/samber/awesome-prometheus-alerts/issues/58
+  - alert: HostContextSwitching
+    expr: ((rate(node_context_switches_total[5m])) / (count without(cpu, mode) (node_cpu_seconds_total{mode="idle"})) > 10000) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host context switching (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Context switching is growing on the node (> 10000 / CPU / s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostSwapIsFillingUp
+    expr: ((1 - (node_memory_SwapFree_bytes / node_memory_SwapTotal_bytes)) * 100 > 80) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host swap is filling up (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Swap is filling up (>80%)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostSystemdServiceCrashed
+    expr: (node_systemd_unit_state{state="failed"} == 1) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host systemd service crashed (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}systemd service crashed\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostPhysicalComponentTooHot
+    expr: ((node_hwmon_temp_celsius * ignoring(label) group_left(instance, job, node, sensor) node_hwmon_sensor_label{label!="tctl"} > 75)) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host physical component too hot (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Physical hardware component too hot\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostNodeOvertemperatureAlarm
+    expr: (node_hwmon_temp_crit_alarm_celsius == 1) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}Host node overtemperature alarm (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Physical node temperature alarm triggered\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostRaidArrayGotInactive
+    expr: (node_md_state{state="inactive"} > 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}Host RAID array got inactive (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}RAID array {{ $labels.device }} is in a degraded state due to one or more disk failures. The number of spare drives is insufficient to fix the issue automatically.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostRaidDiskFailure
+    expr: (node_md_disks{state="failed"} > 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host RAID disk failure (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}At least one device in RAID array on {{ $labels.instance }} failed. Array {{ $labels.md_device }} needs attention and possibly a disk swap\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostKernelVersionDeviations
+    expr: (count(sum(label_replace(node_uname_info, "kernel", "$1", "release", "([0-9]+.[0-9]+.[0-9]+).*")) by (kernel)) > 1) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 6h
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host kernel version deviations (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Different kernel versions are running\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostOomKillDetected
+    expr: (increase(node_vmstat_oom_kill[1m]) > 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host OOM kill detected (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}OOM kill detected\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostEdacCorrectableErrorsDetected
+    expr: (increase(node_edac_correctable_errors_total[1m]) > 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 0m
+    labels:
+      severity: info
+    annotations:
+      summary: "{% raw %}Host EDAC Correctable Errors detected (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Host {{ $labels.instance }} has had {{ printf \"%.0f\" $value }} correctable memory errors reported by EDAC in the last 5 minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostEdacUncorrectableErrorsDetected
+    expr: (node_edac_uncorrectable_errors_total > 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host EDAC Uncorrectable Errors detected (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Host {{ $labels.instance }} has had {{ printf \"%.0f\" $value }} uncorrectable memory errors reported by EDAC in the last 5 minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostNetworkReceiveErrors
+    expr: (rate(node_network_receive_errs_total[2m]) / rate(node_network_receive_packets_total[2m]) > 0.01) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host Network Receive Errors (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Host {{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf \"%.0f\" $value }} receive errors in the last two minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostNetworkTransmitErrors
+    expr: (rate(node_network_transmit_errs_total[2m]) / rate(node_network_transmit_packets_total[2m]) > 0.01) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host Network Transmit Errors (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Host {{ $labels.instance }} interface {{ $labels.device }} has encountered {{ printf \"%.0f\" $value }} transmit errors in the last two minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostNetworkInterfaceSaturated
+    expr: ((rate(node_network_receive_bytes_total{device!~"^tap.*|^vnet.*|^veth.*|^tun.*"}[1m]) + rate(node_network_transmit_bytes_total{device!~"^tap.*|^vnet.*|^veth.*|^tun.*"}[1m])) / node_network_speed_bytes{device!~"^tap.*|^vnet.*|^veth.*|^tun.*"} > 0.8 < 10000) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host Network Interface Saturated (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}The network interface \"{{ $labels.device }}\" on \"{{ $labels.instance }}\" is getting overloaded.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostNetworkBondDegraded
+    expr: ((node_bonding_active - node_bonding_slaves) != 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host Network Bond Degraded (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Bond \"{{ $labels.device }}\" degraded on \"{{ $labels.instance }}\".\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostConntrackLimit
+    expr: (node_nf_conntrack_entries / node_nf_conntrack_entries_limit > 0.8) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host conntrack limit (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}The number of conntrack is approaching limit\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostClockSkew
+    expr: ((node_timex_offset_seconds > 0.05 and deriv(node_timex_offset_seconds[5m]) >= 0) or (node_timex_offset_seconds < -0.05 and deriv(node_timex_offset_seconds[5m]) <= 0)) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host clock skew (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Clock skew detected. Clock is out of sync. Ensure NTP is configured correctly on this host.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostClockNotSynchronising
+    expr: (min_over_time(node_timex_sync_status[1m]) == 0 and node_timex_maxerror_seconds >= 16) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Host clock not synchronising (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Clock not synchronising. Ensure NTP is configured on this host.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HostRequiresReboot
+    expr: (node_reboot_required > 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    for: 4h
+    labels:
+      severity: info
+    annotations:
+      summary: "{% raw %}Host requires reboot (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}{{ $labels.instance }} requires a reboot.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+  # HAProxy
+  - alert: HaproxyHighHttp4xxErrorRateBackend
+    expr: ((sum by (proxy) (rate(haproxy_server_http_responses_total{code="4xx"}[1m])) / sum by (proxy) (rate(haproxy_server_http_responses_total[1m]))) * 100) > 5
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}HAProxy high HTTP 4xx error rate backend (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Too many HTTP requests with status 4xx (> 5%) on backend {{ $labels.fqdn }}/{{ $labels.backend }}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HaproxyHighHttp5xxErrorRateBackend
+    expr: ((sum by (proxy) (rate(haproxy_server_http_responses_total{code="5xx"}[1m])) / sum by (proxy) (rate(haproxy_server_http_responses_total[1m]))) * 100) > 5
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}HAProxy high HTTP 5xx error rate backend (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Too many HTTP requests with status 5xx (> 5%) on backend {{ $labels.fqdn }}/{{ $labels.backend }}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HaproxyHighHttp4xxErrorRateServer
+    expr: ((sum by (server) (rate(haproxy_server_http_responses_total{code="4xx"}[1m])) / sum by (server) (rate(haproxy_server_http_responses_total[1m]))) * 100) > 5
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}HAProxy high HTTP 4xx error rate server (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Too many HTTP requests with status 4xx (> 5%) on server {{ $labels.server }}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HaproxyHighHttp5xxErrorRateServer
+    expr: ((sum by (server) (rate(haproxy_server_http_responses_total{code="5xx"}[1m])) / sum by (server) (rate(haproxy_server_http_responses_total[1m]))) * 100) > 5
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}HAProxy high HTTP 5xx error rate server (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Too many HTTP requests with status 5xx (> 5%) on server {{ $labels.server }}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HaproxyServerResponseErrors
+    expr: (sum by (server) (rate(haproxy_server_response_errors_total[1m])) / sum by (server) (rate(haproxy_server_http_responses_total[1m]))) * 100 > 5
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}HAProxy server response errors (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Too many response errors to {{ $labels.server }} server (> 5%).\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HaproxyBackendConnectionErrors
+    expr: (sum by (proxy) (rate(haproxy_backend_connection_errors_total[1m]))) > 100
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}HAProxy backend connection errors (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Too many connection errors to {{ $labels.fqdn }}/{{ $labels.backend }} backend (> 100 req/s). Request throughput may be too high.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HaproxyServerConnectionErrors
+    expr: (sum by (proxy) (rate(haproxy_server_connection_errors_total[1m]))) > 100
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}HAProxy server connection errors (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Too many connection errors to {{ $labels.server }} server (> 100 req/s). Request throughput may be too high.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HaproxyBackendMaxActiveSession>80%
+    expr: ((haproxy_server_max_sessions >0) * 100) / (haproxy_server_limit_sessions > 0) > 80
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}HAProxy backend max active session > 80% (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Session limit from backend {{ $labels.proxy }} to server {{ $labels.server }} reached 80% of limit - {{ $value | printf \"%.2f\"}}%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HaproxyPendingRequests
+    expr: sum by (proxy) (rate(haproxy_backend_current_queue[2m])) > 0
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}HAProxy pending requests (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Some HAProxy requests are pending on {{ $labels.proxy }} - {{ $value | printf \"%.2f\"}}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HaproxyHttpSlowingDown
+    expr: avg by (instance, proxy) (haproxy_backend_max_total_time_seconds) > 1
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}HAProxy HTTP slowing down (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Average request time is increasing - {{ $value | printf \"%.2f\"}}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HaproxyRetryHigh
+    expr: sum by (proxy) (rate(haproxy_backend_retry_warnings_total[1m])) > 10
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}HAProxy retry high (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}High rate of retry on {{ $labels.proxy }} - {{ $value | printf \"%.2f\"}}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HaproxyHasNoAliveBackends
+    expr: haproxy_backend_active_servers + haproxy_backend_backup_servers == 0
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}HAproxy has no alive backends (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}HAProxy has no alive active or backup backends for {{ $labels.proxy }}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HaproxyFrontendSecurityBlockedRequests
+    expr: sum by (proxy) (rate(haproxy_frontend_denied_connections_total[2m])) > 10
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}HAProxy frontend security blocked requests (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}HAProxy is blocking requests for security reason\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: HaproxyServerHealthcheckFailure
+    expr: increase(haproxy_server_check_failures_total[1m]) > 0
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}HAProxy server healthcheck failure (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Some server healthcheck are failing on {{ $labels.server }}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+  # Nomad
+  - alert: NomadJobFailed
+    expr: nomad_nomad_job_summary_failed > 0
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Nomad job failed (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Nomad job failed\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: NomadJobLost
+    expr: nomad_nomad_job_summary_lost > 0
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Nomad job lost (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Nomad job lost\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: NomadJobQueued
+    expr: nomad_nomad_job_summary_queued > 0
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Nomad job queued (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Nomad job queued\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: NomadBlockedEvaluation
+    expr: nomad_nomad_blocked_evals_total_blocked > 0
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Nomad blocked evaluation (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Nomad blocked evaluation\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+  # Consul
+  - alert: ConsulServiceHealthcheckFailed
+    expr: consul_catalog_service_node_healthy == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}Consul service healthcheck failed (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Service: `{{ $labels.service_name }}` Healthcheck: `{{ $labels.service_id }}`\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: ConsulMissingMasterNode
+    expr: consul_raft_peers < 3
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}Consul missing master node (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Numbers of consul raft peers should be 3, in order to preserve quorum.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: ConsulAgentUnhealthy
+    expr: consul_health_node_status{status="critical"} == 1
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}Consul agent unhealthy (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}A Consul agent is down\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+  # SSL
+  - alert: SslCertificateProbeFailed
+    expr: ssl_probe_success == 0
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}SSL certificate probe failed (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Failed to fetch SSL information {{ $labels.instance }}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: SslCertificateOscpStatusUnknown
+    expr: ssl_ocsp_response_status == 2
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}SSL certificate OSCP status unknown (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}Failed to get the OSCP status {{ $labels.instance }}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: SslCertificateRevoked
+    expr: ssl_ocsp_response_status == 1
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}SSL certificate revoked (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}SSL certificate revoked {{ $labels.instance }}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: SslCertificateExpiry(<7Days)
+    expr: ssl_verified_cert_not_after{chain_no="0"} - time() < 86400 * 7
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}SSL certificate expiry (< 7 days) (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}{{ $labels.instance }} Certificate is expiring in 7 days\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+  # Loki
+  - alert: LokiProcessTooManyRestarts
+    expr: changes(process_start_time_seconds{job=~".*loki.*"}[15m]) > 2
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{% raw %}Loki process too many restarts (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}A loki process had too many restarts (target {{ $labels.instance }})\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: LokiRequestErrors
+    expr: 100 * sum(rate(loki_request_duration_seconds_count{status_code=~"5.."}[1m])) by (namespace, job, route) / sum(rate(loki_request_duration_seconds_count[1m])) by (namespace, job, route) > 10
+    for: 15m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}Loki request errors (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}The {{ $labels.job }} and {{ $labels.route }} are experiencing errors\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: LokiRequestPanic
+    expr: sum(increase(loki_panic_total[10m])) by (namespace, job) > 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}Loki request panic (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}The {{ $labels.job }} is experiencing {{ printf \"%.2f\" $value }}% increase of panics\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: LokiRequestLatency
+    expr: (histogram_quantile(0.99, sum(rate(loki_request_duration_seconds_bucket{route!~"(?i).*tail.*"}[5m])) by (le)))  > 1
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}Loki request latency (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}The {{ $labels.job }} {{ $labels.route }} is experiencing {{ printf \"%.2f\" $value }}s 99th percentile latency\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+  # Promtail
+  - alert: PromtailRequestErrors
+    expr: 100 * sum(rate(promtail_request_duration_seconds_count{status_code=~"5..|failed"}[1m])) by (namespace, job, route, instance) / sum(rate(promtail_request_duration_seconds_count[1m])) by (namespace, job, route, instance) > 10
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}Promtail request errors (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}The {{ $labels.job }} {{ $labels.route }} is experiencing {{ printf \"%.2f\" $value }}% errors.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+
+  - alert: PromtailRequestLatency
+    expr: histogram_quantile(0.99, sum(rate(promtail_request_duration_seconds_bucket[5m])) by (le)) > 1
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{% raw %}Promtail request latency (instance {{ $labels.instance }}){% endraw %}"
+      description: "{% raw %}The {{ $labels.job }} {{ $labels.route }} is experiencing {{ printf \"%.2f\" $value }}s 99th percentile latency.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
