@@ -183,10 +183,10 @@ prometheus_scrape_configs:
     scheme: https
     params:
       format: ["prometheus"]
-    tls_config:
-      cert_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
-      key_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
-      ca_file: "{{ vars_common_all_certs_ca_path }}"
+    #tls_config:
+    #  cert_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
+    #  key_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
+    #  ca_file: "{{ vars_common_all_certs_ca_path }}"
     static_configs:
       - targets:
           - "192.168.10.120:8501"
@@ -205,10 +205,10 @@ prometheus_scrape_configs:
     relabel_configs:
       - replacement: "jamlab-nomad"
         target_label: instance
-    tls_config:
-      cert_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
-      key_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
-      ca_file: "{{ vars_common_all_certs_ca_path }}"
+    #tls_config:
+    #  cert_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
+    #  key_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
+    #  ca_file: "{{ vars_common_all_certs_ca_path }}"
     static_configs:
       - targets:
           - "192.168.10.120:4646"
