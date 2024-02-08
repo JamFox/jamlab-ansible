@@ -1,5 +1,15 @@
-node_exporter_tls_server_config:
-  cert_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
-  key_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
+node_exporter_enabled_collectors:
+  - systemd:
+      unit-blacklist: "{% raw %}.+\\.(automount|device|mount|scope|slice|netfilter){% endraw %}"
+  - textfile:
+      directory: "{{ node_exporter_textfile_dir }}"
+  - diskstats:
+      ignored-devices: "{% raw %}^(ram|loop|fd|(h|s|v|xv)d[a-z]+|nvme\\d+n\\d+p)\\d+${% endraw %}"
+  - filesystem:
+      ignored-mount-points: "{% raw %}^/(dev|proc|sys|host|etc|run/user|var/lib/docker/.+)($|/){% endraw %}"
+      ignored-fs-types: "{% raw %}^(ramfs|aufs|autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|fuse[.]lxcfs|fusectl|hugetlbfs|mqueue|nsfs|overlay|proc|procfs|pstore|rootfs|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs)${% endraw %}"
+#node_exporter_tls_server_config:
+#  cert_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
+#  key_file: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
 #node_exporter_basic_auth_users:
 #  randomuser: examplepassword

@@ -60,7 +60,7 @@
           {{ key }}
           {% endfor %}
           {% endif %}
-        dest: "{{ ' /etc/AuthorizedKeys/' + item.name if users_auth_keys_etc else item.homedir + '/.ssh/authorized_keys' }}"
+        dest: "{{ '/etc/AuthorizedKeys/' + item.name if users_auth_keys_etc else item.homedir + '/.ssh/authorized_keys' }}"
         owner: "{{ item.name }}"
         group: "{{ item.primary_group | default(omit)
           if users_create_primary_group else omit }}"

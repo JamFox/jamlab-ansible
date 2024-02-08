@@ -7,9 +7,9 @@
     - ../vars_common_all.yml
     - ../vars_disabled_roles.yml
     - ../vars_common_hashistack.yml
-    #- ../vars_common_nodeexporter.yml
     - ../vars_common_promtail.yml
     - ../vars_common_rsyslog_client.yml
+    - ../vars_common_nodeexporter.yml
 
   roles:
     - { role: users_groups,   tags: [all, users_groups],               when: not (disabled_roles.users_groups | default(false))}
