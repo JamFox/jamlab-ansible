@@ -9,7 +9,7 @@ JamLab Ansible Management Monorepo
 
 Ansible playbooks for configuration management in push mode.
 
-## Current status of roles
+## Current status of unfinished roles
 
 ❌ - false
 
@@ -23,32 +23,10 @@ Ansible playbooks for configuration management in push mode.
 
 | Role             | Complete | Dry-Test | Real-Test |
 | ---------------- | -------- | -------- | --------- |
-| ansible_parallel | ✔️        | ✔️        | ✔️         |
-| certbot          | ✔️        | ✔️        | ✔️         |
-| custom_scripts   | ✔️        | ✔️        | ✔️         |
-| ddclient         | ✔️        | ✔️        | ✔️         |
-| dnsmasq          | ✔️        | ✔️        | ✔️         |
-| firewalld        | ✔️        | ✔️        | ✔️         |
-| gitlab           | ✔️        | ✔️        | ✔️         |
-| haproxy          | ✔️        | ✔️        | ✔️         |
-| hashistack       | ✔️        | ✔️        | ✔️         |
-| motd             | ✔️        | ✔️        | ✔️         |
 | mounts_exports   | ✔️        | ✔️        | ❌         |
-| netplan          | ✔️        | ✔️        | ✔️         |
 | networking       | ✔️        | ✔️        | ❌         |
 | nfs              | ❌        | ❌        | ❌         |
-| podman           | ✔️        | ✔️        | ✔️         |
-| proxmox          | ✔️        | ✔️        | ✔️         |
 | resolv_hosts     | ✔️        | ✔️        | ❌         |
-| selinux          | ✔️        | ✔️        | ✔️         |
-| soft_yum         | ✔️        | ✔️        | ✔️         |
-| soft_apt         | ✔️        | ✔️        | ✔️         |
-| sshd             | ✔️        | ✔️        | ✔️         |
-| step_ca_certs    | ✔️        | ✔️        | ✔️         |
-| telegram_send    | ✔️        | ✔️        | ✔️         |
-| users_groups     | ✔️        | ✔️        | ✔️         |
-| zabbix_agent2    | ✔️        | ✔️        | ✔️         |
-| zabbix_server    | ✔️        | ✔️        | ✔️         |
 
 ## Usage
 
@@ -61,6 +39,24 @@ ansible-galaxy collection install -r requirements.yml
 ```
 
 Then use ansible-playbook or [ansible-parallel](https://github.com/JamFox/ansible-parallel) bash script to run playbooks.
+
+### Jumphost configuration
+
+To use a jumphost (for example from your local machine over base):
+
+1. Go to `hosts` file
+2. Uncomment the `ansible_ssh_common_args` variable under [all:vars]
+3. Uncomment later when you have finished testing locally or run `git checkout hosts`
+
+### Override remote user
+
+All playbooks set their default remote user used by the automatic scheduled system like so:
+
+```yaml
+remote_user: ansible
+```
+
+If you do not have access to this user directly then override the remote_user variable with the following flag: `-e 'ansible_user=<YOUR USER HERE>'`
 
 ### Host inventory / Creating group playbooks
 
@@ -119,6 +115,64 @@ For example `playbooks/vars_common_all.yml` contains variables that every single
 ### Combine group and host vars
 
 After the announcement of deprecating `hash_behaviour=merge` option in Ansible it is no longer possible to implicitly combine dictionaries with same names in role, group and host variables. Instead separate dictionaries should be defined and then combined as needed, this is more explicit and improves readability.
+
+### Using secrets
+
+AVOID COMMITING PLAINTEXT SECRETS, USE ANSIBLE-VAULT!
+
+Using [`ansible-vault`](https://docs.ansible.com/ansible/latest/cli/ansible-vault.html) it is possible to create encrypted variables and files that can be commited to the repository.
+
+In `ansible.cfg` the `vault_password_file` variable defines in which file the ansible-vault password should be defined in.
+
+Once the vault password file is set up you can use ansible-vault as follows:
+
+Secret variables can be set by encrypting strings:
+
+```bash
+ansible-vault encrypt_string password123 
+```
+
+And pasting the output in place of a variable:
+
+```yaml
+my_password: !vault |
+    $ANSIBLE_VAULT;1.1;AES256
+    66386439653236336347626566653063336164663966303231363934653561363964363833
+    3136626431626536303530376336343832656537303632313433360a626438346336353331
+```
+
+View encrypted variable with:
+
+```bash
+ansible localhost \
+       -m debug \
+       -a "var=<VAR NAME>" \
+       -e "@<PATH TO VAR FILE>"
+```
+
+Encrypt files with:
+
+```bash
+ansible-vault encrypt encrypt_me.txt
+```
+
+View encrypted files with:
+
+```bash
+ansible-vault view encrypt_me.txt
+```
+
+Edit encrypted files with:
+
+```bash
+ansible-vault edit encrypt_me.txt
+```
+
+Decrypt encrypted files with:
+
+```bash
+ansible-vault decrypt encrypt_me.txt
+```
 
 ### Playbook structure
 
