@@ -164,19 +164,30 @@ prometheus_scrape_configs:
     consul_sd_configs:
       - server: "192.168.10.120:8501"
     relabel_configs:
+      # If there is a nomad service registered in consul with 'logs.promtail=true' tag - grab it
       - source_labels: [__meta_consul_tags]
-        regex: .*,prometheus,.*
+        regex: '(.*)logs\.promtail=true(.*)'
         action: keep
+      - source_labels: [__meta_consul_node]
+        target_label: __host__
+      - source_labels: [__meta_consul_service_metadata_external_source]
+        target_label: source
+        regex: (.*)
+        replacement: '$1'
+      - source_labels: [__meta_consul_service_id]
+        regex: '_nomad-task-([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})-.*'
+        target_label:  'task_id'
+        replacement: '$1'
       - source_labels: [__meta_consul_service]
         target_label: job
-  - job_name: "nomad_metrics"
-    consul_sd_configs:
-      - server: "192.168.10.120:8501"
-        services: ["nomad-client", "nomad"]
-    relabel_configs:
-      - source_labels: ["__meta_consul_tags"]
-        regex: "(.*)http(.*)"
-        action: keep
+      - source_labels: ['__meta_consul_node']
+        regex:         '(.*)'
+        target_label:  'instance'
+        replacement:   '$1'
+      - source_labels: [__meta_consul_service_id]
+        regex: '_nomad-task-([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})-.*'
+        target_label:  '__path__'
+        replacement: '/nomad/$1/alloc/logs/*std*.{?,??}'
     metrics_path: /v1/metrics
     params:
       format: ["prometheus"]

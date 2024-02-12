@@ -22,6 +22,9 @@ job "fabio" {
           "custom/fabio.properties:/etc/fabio/fabio.properties"
         ]
       }
+      service {
+        tags = ["logs.promtail=true"]
+      }
 
       template {
         data = <<EOH

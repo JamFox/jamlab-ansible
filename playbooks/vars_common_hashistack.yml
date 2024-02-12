@@ -1,17 +1,20 @@
 soft_packages_latest: "{{ vars_common_all_soft_apt_tools + vars_common_all_soft_apt_unattended }}"
-soft_packages_keep_latest_exclude: 
+soft_packages_keep_latest_exclude:
   - vault
   - nomad
   - consul
 
 podman_system_users:
-  - name: 'podman'
-    primary_group: 'podman'
+  - name: "podman"
+    primary_group: "podman"
     groups:
       - "{{ nomad_group }}"
-    homedir: '/home/podman'
+      - systemd-journal
+    homedir: "/home/podman"
   - name: "{{ nomad_user }}"
     primary_group: "{{ nomad_group }}"
+    groups:
+      - systemd-journal
     comment: "Nomad user"
     system: true
 podman_enabled: true
@@ -19,11 +22,11 @@ podman_manual_mapping: true
 podman_enable_user_socket: true
 # Set uid:gid, according to https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
 podman_users:
-  podman: '231072:65537'
-  nomad: '296609:65537'
-podman_registries: 
-  - 'docker.io'
-  - 'quay.io'
+  podman: "231072:65537"
+  nomad: "296609:65537"
+podman_registries:
+  - "docker.io"
+  - "quay.io"
 
 users: "{{ vars_common_all_main_users + podman_system_users }}"
 
@@ -170,6 +173,15 @@ nomad_jobs_nomad_ca_file: "{{ nomad_ca_file | basename }}"
 
 nomad_jobs_consul_addr: "https://127.0.0.1:{{ consul_ports_https }}"
 nomad_jobs_consul_api_endpoint: "v1"
+
+nomad_plugins:
+  nomad-driver-podman:
+    config:
+      disable_log_collection: false
+      extra_labels:
+        ["job_name", "task_group_name", "task_name", "namespace", "node_name"]
+      volumes:
+        enabled: true
 
 # Custom
 nomad_allow_purge_config: true
