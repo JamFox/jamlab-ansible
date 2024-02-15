@@ -23,6 +23,60 @@
   loop: "{{ step_ca_certs }}"
   when: step_ca_certs is defined and step_ca_certs | length > 0
 
+#- name: Complex data processing
+#  debug:
+#    msg: "User {{ item.key }} - Task {{ task.name }}"
+#  loop: "{{ users }}"
+#  vars:
+#    user_tasks: "{{ item.value.tasks }}"
+#    task: "{{ user_tasks }}"
+
+#- name: Set authorized ssh key, extracting just that data from 'users'
+#  ansible.posix.authorized_key:
+#    user: "{{ item.0.name }}"
+#    key: "{{ lookup('file', item.1) }}"
+#  with_subelements:
+#      - "{{ users }}"
+#      - authorized
+
+- name: Create directories for each extra_path
+  ansible.builtin.file:
+    path: "{{ item.1.path }}"
+    mode: "{{ item.1.mode }}"
+    owner: "{{ item.1.owner }}"
+    group: "{{ item.1.group }}"
+    state: directory
+  with_subelements:
+    - "{{ step_ca_certs }}"
+    - extra_paths
+    - skip_missing: true
+
+- name: Copy key to extra_paths
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{ item.0.key_path }}"
+    dest: "{{ item.1.path }}"
+    owner: "{{ item.1.owner }}"
+    group: "{{ item.1.group }}"
+    mode: "0640"
+  with_subelements:
+    - "{{ step_ca_certs }}"
+    - extra_paths
+    - skip_missing: true
+
+- name: Copy cert to extra_paths
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{ item.0.crt_path }}"
+    dest: "{{ item.1.path }}"
+    owner: "{{ item.1.owner }}"
+    group: "{{ item.1.group }}"
+    mode: "0644"
+  with_subelements:
+    - "{{ step_ca_certs }}"
+    - extra_paths
+    - skip_missing: true
+
 - name: Renew a certificate
   maxhoesel.smallstep.step_ca_renew:
     crt_file: "{{ item.crt_path }}"
