@@ -94,7 +94,7 @@ include(file="/etc/rsyslog.d/*.conf" mode="optional")
 {{ '' if rsyslog_receiver else '#' }}  ]
 {% endif %}
 {{ '' if rsyslog_receiver else '#' }})
-{{ '' if rsyslog_receiver else '#' }}input(type="imtcp" port="10514")
+{{ '' if rsyslog_receiver else '#' }}input(type="imtcp" port="10514" RateLimit.Burst="500000")
 
 # each host in separate directory
 {{ '' if rsyslog_receiver else '#' }}$template DynaFile,"/var/log/remote/%HOSTNAME%/%PROGRAMNAME%.log"
