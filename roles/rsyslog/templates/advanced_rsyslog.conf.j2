@@ -141,5 +141,5 @@ action(
 # Logging for Loki
 # https://www.rsyslog.com/doc/v8-stable/configuration/modules/omfwd.html
 # https://grafana.com/docs/loki/latest/clients/promtail/scraping/#rsyslog-output-configuration
-action(type="omfwd" Target="127.0.0.1" Port="1514" Protocol="tcp" Template="RSYSLOG_SyslogProtocol23Format" TCP_Framing="octet-counted" KeepAlive="on")
+action(type="omfwd" Target="127.0.0.1" Port="1514" Protocol="tcp" Template="RSYSLOG_SyslogProtocol23Format" TCP_Framing="octet-counted")
 {% endif %}

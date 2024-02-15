@@ -3,4 +3,5 @@ rsyslog_user: root
 rsyslog_group: admin
 rsyslog_remote: 192.168.10.50
 rsyslog_tls_enable: false
-rsyslog_loki: true
+# Disable sending to loki from all clients, collect on syslog machine and send from there
+rsyslog_loki: false

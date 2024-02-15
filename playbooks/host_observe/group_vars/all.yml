@@ -604,13 +604,13 @@ prometheus_alert_rules: # noqa yaml[line-length]  # noqa line-length
       description: "{% raw %}Disk latency is growing (read operations > 100ms)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
 
   - alert: HostUnusualDiskWriteLatency
-    expr: (rate(node_disk_write_time_seconds_total[1m]) / rate(node_disk_writes_completed_total[1m]) > 0.1 and rate(node_disk_writes_completed_total[1m]) > 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+    expr: (rate(node_disk_write_time_seconds_total[1m]) / rate(node_disk_writes_completed_total[1m]) > 0.2 and rate(node_disk_writes_completed_total[1m]) > 0) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
     for: 2m
     labels:
       severity: warning
     annotations:
       summary: "{% raw %}Host unusual disk write latency (instance {{ $labels.instance }}){% endraw %}"
-      description: "{% raw %}Disk latency is growing (write operations > 100ms)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
+      description: "{% raw %}Disk latency is growing (write operations > 200ms)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
 
   - alert: HostHighCpuLoad
     expr: (sum by (instance) (avg by (mode, instance) (rate(node_cpu_seconds_total{mode!="idle"}[2m]))) > 0.8) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
