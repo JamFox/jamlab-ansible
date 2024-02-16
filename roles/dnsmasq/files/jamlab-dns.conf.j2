@@ -30,6 +30,8 @@ address=/{{ dnsmasq_domain_local }}/{{ vars_common_all_proxy_ipv4 }}
 # Ignore internet paths
 server=/docs.jamfox.dev/#
 server=/brain.jamfox.dev/#
+server=/valheim.jamfox.dev/#
+server=/vpn.jamfox.dev/#
 
 # Host records
 {% for host in groups['all'] if host != 'localhost' %}
