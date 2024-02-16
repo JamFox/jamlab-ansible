@@ -22,7 +22,8 @@ server=4.4.4.4
 #domain=/{{ dnsmasq_domain }}/
 
 # Increase the size of dnsmasq's cache
-cache-size=65536
+cache-size=9000
+clear-on-reload
 
 # Wilcard subdomain record
 address=/{{ dnsmasq_domain_local }}/{{ vars_common_all_proxy_ipv4 }}
