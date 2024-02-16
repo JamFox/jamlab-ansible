@@ -70,6 +70,9 @@ frontend https-in
     acl haproxy-acl hdr(host) -i haproxy.jamfox.dev
     use_backend haproxy-stats if haproxy-acl
 
+    acl portainer hdr(host) -i portainer.jamfox.dev
+    use_backend portainer if portainer
+
     acl grafana-acl hdr(host) -i grafana.jamfox.dev
     use_backend grafana if grafana-acl
 
@@ -110,6 +113,9 @@ frontend https-in
 
 backend haproxy-stats
     server haproxy-stats 127.0.0.1:1936
+
+backend portainer
+    server portainer 192.168.10.111:9443 check ssl verify none
 
 backend grafana
     server grafana 192.168.10.50:3000

@@ -22,6 +22,8 @@ collections:
 roles:
   - name: pip
     src: https://github.com/geerlingguy/ansible-role-pip
+  - name: docker
+    src: https://github.com/geerlingguy/ansible-role-docker
   - name: iptables
     src: https://github.com/mikegleasonjr/ansible-role-firewall
   - name: ipsets

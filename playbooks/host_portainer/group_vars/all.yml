@@ -1,0 +1,30 @@
+custom_scripts: "{{ vars_common_all_scripts_admin }}"
+
+soft_packages_latest: "{{ vars_common_all_soft_apt_tools + vars_common_all_soft_apt_unattended }}"
+
+portainer_users:
+  - name: "docker"
+    primary_group: "docker"
+    homedir: "/home/docker"
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILayJ7ZP6Z6IDms4ujnz9nRnAJEIXwyto1SbSwfzjqst jamfox
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJruHSfE0z4yEY4SJW5/ZnBjgpvlz8u199+s4srW85WV jamfox@DESKTOP-6KK4JTC
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPRJW/Gczo1HVsvYMQOW2QQx1xPDpDEO89s7jO3vQ0I1 katurv@IC012N
+  - name: "portainer"
+    primary_group: "portainer"
+    homedir: "/home/portainer"
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILayJ7ZP6Z6IDms4ujnz9nRnAJEIXwyto1SbSwfzjqst jamfox
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJruHSfE0z4yEY4SJW5/ZnBjgpvlz8u199+s4srW85WV jamfox@DESKTOP-6KK4JTC
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPRJW/Gczo1HVsvYMQOW2QQx1xPDpDEO89s7jO3vQ0I1 katurv@IC012N
+users: "{{ portainer_users + vars_common_all_main_users }}"
+
+sshd: "{{ vars_common_all_default_sshd }}"
+
+pip_install_packages:
+  - name: docker
+
+docker_users:
+  - docker
+  - portainer
+  - jamfox

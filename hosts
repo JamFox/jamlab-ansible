@@ -1,3 +1,6 @@
+[portainer]
+portainer    ansible_host=192.168.10.111
+
 [head]
 head         ansible_host=192.168.10.10
 

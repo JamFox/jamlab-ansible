@@ -43,3 +43,4 @@ roles/ipsets
 #roles/consul
 #roles/nomad
 roles/logrotate
+roles/docker

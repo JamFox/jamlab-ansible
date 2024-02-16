@@ -255,7 +255,7 @@ alertmanager_route:
   group_by: ["alertname", "cluster", "service"]
   group_wait: 5s
   group_interval: 5m
-  repeat_interval: 3h
+  repeat_interval: 24h
   receiver: "Teams"
   routes:
     - receiver: "Teams"
