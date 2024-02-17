@@ -178,21 +178,21 @@ prometheus_scrape_configs:
       - source_labels: [__meta_consul_service_metadata_external_source]
         target_label: source
         regex: (.*)
-        replacement: '$1'
+        replacement: "$1"
       - source_labels: [__meta_consul_service_id]
-        regex: '_nomad-task-([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})-.*'
-        target_label:  'task_id'
-        replacement: '$1'
+        regex: "_nomad-task-([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})-.*"
+        target_label: "task_id"
+        replacement: "$1"
       - source_labels: [__meta_consul_service]
         target_label: job
-      - source_labels: ['__meta_consul_node']
-        regex:         '(.*)'
-        target_label:  'instance'
-        replacement:   '$1'
+      - source_labels: ["__meta_consul_node"]
+        regex: "(.*)"
+        target_label: "instance"
+        replacement: "$1"
       - source_labels: [__meta_consul_service_id]
-        regex: '_nomad-task-([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})-.*'
-        target_label:  '__path__'
-        replacement: '/nomad/$1/alloc/logs/*std*.{?,??}'
+        regex: "_nomad-task-([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})-.*"
+        target_label: "__path__"
+        replacement: "/nomad/$1/alloc/logs/*std*.{?,??}"
     metrics_path: /v1/metrics
     params:
       format: ["prometheus"]
@@ -243,22 +243,9 @@ prometheus_scrape_configs:
 alertmanager_version: 0.26.0
 alertmanager_config_flags_extra:
   data.retention: 45d
-# Default example:
-#alertmanager_slack_api_url: "http://example.com"
-#alertmanager_receivers:
-#  - name: slack
-#    slack_configs:
-#      - send_resolved: true
-#        channel: '#alerts'
-#alertmanager_route:
-#  group_by: ['alertname', 'cluster', 'service']
-#  group_wait: 30s
-#  group_interval: 5m
-#  repeat_interval: 3h
-#  receiver: slack
 alertmanager_route:
   group_by: ["alertname", "cluster", "service"]
-  group_wait: 5s
+  group_wait: 20s
   group_interval: 5m
   repeat_interval: 24h
   receiver: "Teams"
@@ -333,20 +320,6 @@ grafana_dashboards:
     revision_id: 2
     datasource: prometheus
   # Consul and Nomad dashboards end
-
-#grafana_alert_notifications:
-#  notifiers:
-#    - name: Channel 1
-#      type: email
-#      uid: channel1
-#      is_default: false
-#      send_reminder: false
-#      settings:
-#        addresses: "example@example.com"
-#        autoResolve: true
-#  delete_notifiers:
-#    - name: Channel 2
-#      uid: channel2
 
 loki_version: 2.9.1
 loki_install: true
