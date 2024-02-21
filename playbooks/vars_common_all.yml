@@ -177,6 +177,11 @@ vars_common_all_soft_apt_hashicorp:
 pip_package: python3-pip
 pip_executable: "{{ 'pip3' if pip_package.startswith('python3') else 'pip' }}"
 
+users_deleted:
+  - name: "rocky"
+  - name: "debian"
+  - name: "ubuntu"
+  #- name: "ali"
 vars_common_all_main_user: jamfox
 vars_common_all_main_group: admin
 vars_common_all_main_users:

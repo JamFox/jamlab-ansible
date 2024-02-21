@@ -174,15 +174,6 @@ nomad_jobs_nomad_ca_file: "{{ nomad_ca_file | basename }}"
 nomad_jobs_consul_addr: "https://127.0.0.1:{{ consul_ports_https }}"
 nomad_jobs_consul_api_endpoint: "v1"
 
-nomad_plugins:
-  nomad-driver-podman:
-    config:
-      disable_log_collection: false
-      extra_labels:
-        ["job_name", "task_group_name", "task_name", "namespace", "node_name"]
-      volumes:
-        enabled: true
-
 # Custom
 nomad_allow_purge_config: true
 #nomad_config_custom:
