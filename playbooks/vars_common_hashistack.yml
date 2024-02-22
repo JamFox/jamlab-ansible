@@ -3,6 +3,7 @@ soft_packages_keep_latest_exclude:
   - vault
   - nomad
   - consul
+  - systemd-container # machinectl
 
 podman_system_users:
   - name: "podman"
