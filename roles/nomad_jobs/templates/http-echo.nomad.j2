@@ -1,0 +1,45 @@
+job "http-echo" {
+    datacenters = ["dc1"]
+  
+    group "echo" {
+      count = 1
+      network {
+        port "http" {
+          static = "8080"
+        }
+      }
+      service {
+        name = "http-echo"
+        port = "http"
+        
+        tags = [
+          # Fabio will route based on the URL prefix tag
+          "urlprefix-echo.jamfox.dev/",
+        ]
+  
+        # Fabio requires a health check to be passed before routing traffic
+        check {
+          type     = "http"
+          path     = "/health"
+          interval = "2s"
+          timeout  = "2s"
+        }
+      }
+      # Task name will determine conatiner label for container journald collector
+      task "http_echo" {
+        driver = "podman"
+        resources {
+            cpu    = 500
+            memory = 128
+          }
+        config {
+          image = "docker.io/hashicorp/http-echo"
+          ports = ["http"]
+          args = [
+            "-listen", ":8080",
+            "-text", "hello-world",
+          ]
+        }
+      }
+    }
+  }

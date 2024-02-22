@@ -14,7 +14,7 @@ job "fabio" {
     task "fabio" {
       driver = "podman"
       config {
-        image = "fabiolb/fabio"
+        image = "docker.io/fabiolb/fabio"
         network_mode = "host"
         ports = ["lb","ui"]
         volumes = [
@@ -22,13 +22,11 @@ job "fabio" {
           "custom/fabio.properties:/etc/fabio/fabio.properties"
         ]
       }
-      service {
-        tags = ["logs.promtail=true"]
-      }
 
       template {
         data = <<EOH
           # ref: https://github.com/fabiolb/fabio/blob/master/fabio.properties
+          insecure = true
           proxy.addr = :9999 
           #;proto=https;cs=lb;tlsmin=tls12
           #proxy.cs = cs=lb;type=file;cert={{ nomad_jobs_nomad_config_dir }}/{{ nomad_jobs_nomad_cert_file }};key={{ nomad_jobs_nomad_config_dir }}/{{ nomad_jobs_nomad_key_file }}
