@@ -5,6 +5,8 @@ soft_packages_keep_latest_exclude:
   - consul
   - systemd-container # machinectl
 
+custom_scripts: "{{ vars_common_all_scripts_admin }}"
+
 podman_system_users:
   - name: "podman"
     primary_group: "podman"

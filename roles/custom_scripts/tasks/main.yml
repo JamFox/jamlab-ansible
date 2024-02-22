@@ -1,3 +1,13 @@
+- name: Make sure script destination directory exists
+  ansible.builtin.file:
+    path: "{{ item.dest }}"
+    state: directory
+    mode: "{{ item.destmode | default(omit) }}"
+    owner: "{{ item.destowner | default(omit) }}"
+    group: "{{ item.destgroup | default(omit) }}"
+  when: item.dest is defined
+  with_items: "{{ custom_scripts | default([]) }}"
+
 - name: Template local scripts
   ansible.builtin.template:
     src: "{{ item.local }}"
@@ -13,8 +23,8 @@
     url: "{{ item.url }}"
     dest: "{{ item.dest | default('/usr/local/bin') }}/{{ item.name }}"
     mode: "{{ item.mode | default('0700') }}"
-    owner: "{{ item.mode | default('root') }}"
-    group: "{{ item.mode | default('root') }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
   when: item.url is defined
   with_items: "{{ custom_scripts | default([]) }}"
 

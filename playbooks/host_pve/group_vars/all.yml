@@ -15,6 +15,8 @@ sshd: "{{ vars_common_all_default_sshd }}"
 users: "{{ vars_common_all_main_users }}"
 users_deleted: "{{ vars_common_all_users_deleted }}"
 
+custom_scripts: "{{ vars_common_all_scripts_admin }}"
+
 provision_vm_default_target_node: "{{ groups['pve'][0] }}"
 provision_vm_gateway: "{{ vars_common_all_gateway_ipv4 }}"
 provision_vm_cidr: "{{ vars_common_all_mask_ipv4 }}"

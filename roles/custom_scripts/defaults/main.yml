@@ -10,6 +10,9 @@ custom_scripts: []
 #  - name: example
 #    url: https://raw.githubusercontent.com/example/example.sh
 #    dest: /usr/local/bin
+#    destuser: root
+#    destgroup: root
+#    destmode: 755
 #    owner: example
 #    group: admin
 #    mode: "0707"

@@ -35,6 +35,12 @@ vars_common_all_scripts_admin:
     mode: "0774"
     owner: "{{ vars_common_all_main_user }}"
     group: "{{ vars_common_all_main_group }}"
+  - name: ".bashrc"
+    url: "https://raw.githubusercontent.com/JamFox/dotfiles/main/.bashrc"
+    dest: "/home/jamfox/"
+    mode: "0640"
+    owner: "{{ vars_common_all_main_user }}"
+    group: "{{ vars_common_all_main_group }}"
 vars_common_all_scripts_vault_client:
   - name: "vault-login"
     link: "/usr/local/bin/vl"
