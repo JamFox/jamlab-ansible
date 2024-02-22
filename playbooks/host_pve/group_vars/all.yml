@@ -12,6 +12,9 @@ soft_packages_latest: "{{ vars_common_all_soft_apt_unattended + vars_common_all_
 
 sshd: "{{ vars_common_all_default_sshd }}"
 
+users: "{{ vars_common_all_main_users }}"
+users_deleted: "{{ vars_common_all_users_deleted }}"
+
 provision_vm_default_target_node: "{{ groups['pve'][0] }}"
 provision_vm_gateway: "{{ vars_common_all_gateway_ipv4 }}"
 provision_vm_cidr: "{{ vars_common_all_mask_ipv4 }}"

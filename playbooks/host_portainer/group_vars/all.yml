@@ -18,6 +18,7 @@ portainer_users:
       - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJruHSfE0z4yEY4SJW5/ZnBjgpvlz8u199+s4srW85WV jamfox@DESKTOP-6KK4JTC
       - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPRJW/Gczo1HVsvYMQOW2QQx1xPDpDEO89s7jO3vQ0I1 katurv@IC012N
 users: "{{ portainer_users + vars_common_all_main_users }}"
+users_deleted: "{{ vars_common_all_users_deleted }}"
 
 sshd: "{{ vars_common_all_default_sshd }}"
 

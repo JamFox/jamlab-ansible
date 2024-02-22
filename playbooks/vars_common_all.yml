@@ -177,11 +177,11 @@ vars_common_all_soft_apt_hashicorp:
 pip_package: python3-pip
 pip_executable: "{{ 'pip3' if pip_package.startswith('python3') else 'pip' }}"
 
-users_deleted:
+vars_common_all_users_deleted:
   - name: "rocky"
   - name: "debian"
   - name: "ubuntu"
-  #- name: "ali"
+  - name: "ali"
 vars_common_all_main_user: jamfox
 vars_common_all_main_group: admin
 vars_common_all_main_users:
@@ -194,6 +194,7 @@ vars_common_all_main_users:
       - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM0ULeAHpFD9I+oIBImBw+UHQui4Q8V1jQThOIlYExi5 jamfox@5t'
       - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICMfvfGWOQuhmQ1MRJifS0VddwvwUpFYiETPb1V5W+5Y katurv@hpcbook'
       - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJruHSfE0z4yEY4SJW5/ZnBjgpvlz8u199+s4srW85WV jamfox@DESKTOP-6KK4JTC'
+vars_common_all_temp_hashistack_users: 
   - name: "ali"
     primary_group: "{{ vars_common_all_main_group }}"
     homedir: "/home/ali"
