@@ -1,16 +1,16 @@
-vars_common_all_default_domain: 'jamfox.dev'
-vars_common_all_default_netblock: '192.168.0.0/16'
-vars_common_all_gateway_ipv4: '192.168.10.1'
-vars_common_all_gateway_intra_ipv4: '192.168.1.190'
-vars_common_all_loki_ipv4: '192.168.10.50'
-vars_common_all_mask_ipv4: '/24'
-vars_common_all_proxy_ipv4: '192.168.10.80'
-vars_common_all_dns_ipv4: '192.168.10.53'
-vars_common_all_dns_default_port: '53'
-vars_common_all_pve_default_ipv4: '192.168.10.100'
-vars_common_all_pve_default_port: '8006'
+vars_common_all_default_domain: "jamfox.dev"
+vars_common_all_default_netblock: "192.168.0.0/16"
+vars_common_all_gateway_ipv4: "192.168.10.1"
+vars_common_all_gateway_intra_ipv4: "192.168.1.190"
+vars_common_all_loki_ipv4: "192.168.10.50"
+vars_common_all_mask_ipv4: "/24"
+vars_common_all_proxy_ipv4: "192.168.10.80"
+vars_common_all_dns_ipv4: "192.168.10.53"
+vars_common_all_dns_default_port: "53"
+vars_common_all_pve_default_ipv4: "192.168.10.100"
+vars_common_all_pve_default_port: "8006"
 
-var_common_all_consul_dns_port: '8600'
+var_common_all_consul_dns_port: "8600"
 
 hostname: "{{ ansible_hostname }}.{{ vars_common_all_default_domain }}"
 nameservers:
@@ -58,36 +58,36 @@ vars_common_all_scripts_vault_client:
     group: "{{ vars_common_all_main_group }}"
 
 vars_common_all_ipsets_allow:
-  - 'at'
-  - 'be'
-  - 'bg'
-  - 'hr'
-  - 'cy'
-  - 'ch'
-  - 'cz'
-  - 'dk'
-  - 'ee'
-  - 'fi'
-  - 'fr'
-  - 'de'
-  - 'gr'
-  - 'hu'
-  - 'ie'
-  - 'it'
-  - 'lv'
-  - 'lt'
-  - 'lu'
-  - 'mt'
-  - 'no'
-  - 'nl'
-  - 'pl'
-  - 'pt'
-  - 'ro'
-  - 'sk'
-  - 'si'
-  - 'es'
-  - 'se'
-  - 'gb'
+  - "at"
+  - "be"
+  - "bg"
+  - "hr"
+  - "cy"
+  - "ch"
+  - "cz"
+  - "dk"
+  - "ee"
+  - "fi"
+  - "fr"
+  - "de"
+  - "gr"
+  - "hu"
+  - "ie"
+  - "it"
+  - "lv"
+  - "lt"
+  - "lu"
+  - "mt"
+  - "no"
+  - "nl"
+  - "pl"
+  - "pt"
+  - "ro"
+  - "sk"
+  - "si"
+  - "es"
+  - "se"
+  - "gb"
 
 vars_common_all_iptable_default:
   - -P INPUT ACCEPT
@@ -156,7 +156,7 @@ vars_common_all_soft_apt_tools:
   - jq
   - curl
   - wget
-  - vim 
+  - vim
   - git
   - keychain
   - tmux
@@ -171,7 +171,7 @@ vars_common_all_soft_apt_tools:
   - ansible-lint
 
 vars_common_all_soft_apt_unattended:
-  - unattended-upgrades 
+  - unattended-upgrades
   - apt-listchanges
 
 vars_common_all_soft_apt_hashicorp:
@@ -196,16 +196,16 @@ vars_common_all_main_users:
     homedir: "/home/{{ vars_common_all_main_user }}"
     sudo: "%{{ vars_common_all_main_group }} ALL=(ALL) NOPASSWD: ALL"
     ssh_authorized_keys:
-      - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILayJ7ZP6Z6IDms4ujnz9nRnAJEIXwyto1SbSwfzjqst jamfox'
-      - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM0ULeAHpFD9I+oIBImBw+UHQui4Q8V1jQThOIlYExi5 jamfox@5t'
-      - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICMfvfGWOQuhmQ1MRJifS0VddwvwUpFYiETPb1V5W+5Y katurv@hpcbook'
-      - 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJruHSfE0z4yEY4SJW5/ZnBjgpvlz8u199+s4srW85WV jamfox@DESKTOP-6KK4JTC'
-vars_common_all_temp_hashistack_users: 
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILayJ7ZP6Z6IDms4ujnz9nRnAJEIXwyto1SbSwfzjqst jamfox"
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM0ULeAHpFD9I+oIBImBw+UHQui4Q8V1jQThOIlYExi5 jamfox@5t"
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICMfvfGWOQuhmQ1MRJifS0VddwvwUpFYiETPb1V5W+5Y katurv@hpcbook"
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJruHSfE0z4yEY4SJW5/ZnBjgpvlz8u199+s4srW85WV jamfox@DESKTOP-6KK4JTC"
+vars_common_all_temp_hashistack_users:
   - name: "ali"
     primary_group: "{{ vars_common_all_main_group }}"
     homedir: "/home/ali"
     ssh_authorized_keys:
-      - 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCnNmdXibMQWwyQrCfSUIp0GXeXnTvqNfYkmCYtDVkwFHqAfZ2FCgYcpTANtAjqdIgDt4x0k49vZTTbc1+g1BigDG5a/CwUKJj0oI9DYrblmJxdGNvaQVH00O1udgffIFh1EJjlxLWphmh2juGDw+iFGyfKDqmyE52n2qO84DnMpnjfhaCy2Uz/Ml/h6ekQDcud6Uv2hB05UhvqmTyrvFvS11cnr1epS7SHFqhgsRXSkaLGNt18pQj4a4VxFAVy6d3eXe7+4ofMhwmm7X4Jf+gUCYm0sqeZn9b2Q5jYnj+Z46dPCW/KPchLnNLxt+ChiUnG68z3/hwE048mTGdSP/SEbcKYGoYisTZZg6+x/ePsX+QwD2HoKoovUdKWUQ//Po1ZGLFyOaDyPI7WLxqNxAn9W4btfEtrpXvlq/GzDE2ILta0OUDreNUw7JLeBMAoaTu+t4duRQYcrJGg0VzE6CtODcVwzl5AjtTLtZKD1gcybwW5oyN/oLnsP5R6nus+UQk= ali@Alis-MacBook-Air-M2.local'
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCnNmdXibMQWwyQrCfSUIp0GXeXnTvqNfYkmCYtDVkwFHqAfZ2FCgYcpTANtAjqdIgDt4x0k49vZTTbc1+g1BigDG5a/CwUKJj0oI9DYrblmJxdGNvaQVH00O1udgffIFh1EJjlxLWphmh2juGDw+iFGyfKDqmyE52n2qO84DnMpnjfhaCy2Uz/Ml/h6ekQDcud6Uv2hB05UhvqmTyrvFvS11cnr1epS7SHFqhgsRXSkaLGNt18pQj4a4VxFAVy6d3eXe7+4ofMhwmm7X4Jf+gUCYm0sqeZn9b2Q5jYnj+Z46dPCW/KPchLnNLxt+ChiUnG68z3/hwE048mTGdSP/SEbcKYGoYisTZZg6+x/ePsX+QwD2HoKoovUdKWUQ//Po1ZGLFyOaDyPI7WLxqNxAn9W4btfEtrpXvlq/GzDE2ILta0OUDreNUw7JLeBMAoaTu+t4duRQYcrJGg0VzE6CtODcVwzl5AjtTLtZKD1gcybwW5oyN/oLnsP5R6nus+UQk= ali@Alis-MacBook-Air-M2.local"
 
 vars_common_all_default_sshd:
   LogLevel: "INFO"
@@ -343,3 +343,18 @@ step_bootstrap_fingerprint: "{{ vars_common_all_step_ca_fingerprint }}"
 vars_common_all_certs_path: "/etc/pki"
 vars_common_all_certs_name: "jamlab"
 vars_common_all_certs_ca_path: "/root/.step/certs/root_ca.crt"
+
+vars_common_all_pve0_ilo_user: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  33623536353033353936336566643133663836333735613737656235373335356139633063303035
+  3439376436636238646163313665393535653338333032610a353533343132383434316236326464
+  65393438333339303335386234303432343532303962663833346130633861646234323763376631
+  3939643766666632380a623631326233613338303239663735366639316634313432616239663765
+  3562
+vars_common_all_pve0_ilo_pass: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  32633034346165333461373331333036613965636365623735633734363466656331613932623231
+  3662323731303364643532376362383665353035363332350a373364646665613232643339343932
+  33393763353965366434643166333830666564376439343238346266303638643134396136383762
+  6538666632633830620a356138656262336230353238343834363266306234636564343233373334
+  3762

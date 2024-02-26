@@ -86,7 +86,21 @@ prometheus_config_flags_extra: {}
 #        - localhost:9090
 #      labels:
 #        env: monitor
+
+# For Ilo: https://github.com/hpilo-exporter/hpilo-exporter
+# Easy install: bash <(curl -Ls https://raw.githubusercontent.com/hpilo-exporter/hpilo-exporter/master/install.sh)
 prometheus_scrape_configs:
+  - job_name: "iloexporter"
+    scrape_interval: 1m
+    scrape_timeout: 30s
+    params:
+      ilo_host: ["192.168.10.241"]
+      ilo_port: ["443"]
+      ilo_user: ["{{ vars_common_all_pve0_ilo_user }}"]
+      ilo_password: ["{{ vars_common_all_pve0_ilo_pass }}"]
+    static_configs:
+      - targets:
+          - 127.0.0.1:9416
   - job_name: "haproxy"
     metrics_path: "/metrics"
     static_configs:
@@ -169,6 +183,12 @@ prometheus_scrape_configs:
     consul_sd_configs:
       - server: "192.168.10.120:8501"
     relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_ilo_host
+      - source_labels: [__param_ilo_host]
+        target_label: ilo_host
+      - target_label: __address__
+        replacement: localhost:9416 # hpilo exporter.
       # If there is a nomad service registered in consul with 'logs.promtail=true' tag - grab it
       - source_labels: [__meta_consul_tags]
         regex: '(.*)logs\.promtail=true(.*)'
@@ -290,6 +310,9 @@ grafana_datasources:
 grafana_dashboards:
   - dashboard_id: 1860 # Node exporter
     revision_id: 33
+    datasource: prometheus
+  - dashboard_id: 13709 # Ilo exporter
+    revision_id: 1
     datasource: prometheus
   # Consul and Nomad dashboards begin
   - dashboard_id: 3662
@@ -456,6 +479,125 @@ prometheus_alert_rules: # noqa yaml[line-length]  # noqa line-length
     for: 10m
     labels:
       severity: warning
+  # Ilo exporter
+  - alert: "hPiLO exporter"
+    expr: up{job="hpilo"} == 0
+    for: 10m
+    labels:
+      severity: "warning"
+    annotations:
+      title: "HPiLO exporter"
+      description: "HPiLO exporter seems down."
+  - alert: "HPiLO_Temperature"
+    expr: 'min(hpilo_temperature_value{job="hpilo"} > 0) without (sensor) > 30'
+    for: 3m
+    labels:
+      severity: "warning"
+    annotations:
+      title: "High Temperature"
+      description: "{% raw %}High temperature detected ({{ $value | humanize }}C){% endraw %}"
+  # all other alerts
+  - alert: "HWstatus"
+    expr: '{job="hpilo", __name__=~"hpilo_.*status", __name__!~"hpilo_nic_status|hpilo_network_status|hpilo_battery_status|hpilo_power_supply_status|hpilo_fan_status"} > 0'
+    for: 0s
+    labels:
+      severity: '{% raw %}{{ if eq ($value | humanize) "1" }}warning{{ else if eq ($value | humanize) "3" }}warning{{else}}critical{{end}}{% endraw %}'
+      metric: "{% raw %}{{ .Labels.__name__ }}{% endraw %}"
+      vsp: '{% raw %}{{ with printf "hpilo_onboard_administrator_info{instance=''''%s'''',job=''''%s''''}" .Labels.instance .Labels.job | query }}{{ . | first | label "encl" }}{{end}}{% endraw %}'
+    annotations:
+      title: "{% raw %}{{ .Labels.__name__ }} status{% endraw %}"
+      description: '{% raw %}{{ .Labels.__name__ }} is{% endraw %}
+        {% raw %}{{      if eq ($value | humanize) ''0'' }}''''ok''''{% endraw %}
+        {% raw %}{{ else if eq ($value | humanize) ''1'' }}''''warning''''{% endraw %}
+        {% raw %}{{ else if eq ($value | humanize) ''2'' }}''''critical''''{% endraw %}
+        {% raw %}{{else}}''''unknown''''{% endraw %}
+        {% raw %}{{ end }}({{ $value | printf "%.0f" }}).{% endraw %}
+        {% raw %}{{ with printf "hpilo_onboard_administrator_info{instance=''''%s'''',job=''''%s''''}" .Labels.instance .Labels.job | query }}{% endraw %}
+        {% raw %}Blade Enclosure {{ . | first | label "encl" }}, OA_IP {{ . | first | label "oa_ip" }}, Bay {{ . | first | label "location_bay" }}{% endraw %}
+        {% raw %}{{end}}{% endraw %}'
+  # set separate alert about battery with possibility of exclusion hosts with 'battery' tag in noAlarmOn label
+  - alert: "Battery Status"
+    expr: 'hpilo_battery_status{job="hpilo",noAlarmOn!~"(.*,|^)battery(,.*|$)"} > 0'
+    for: 0s
+    labels:
+      severity: '{% raw %}{{ if eq ($value | humanize) "1" }}warning{{ else if eq ($value | humanize) "3" }}warning{{else}}critical{{end}}{% endraw %}'
+      metric: "{% raw %}{{ .Labels.__name__ }}{% endraw %}"
+      vsp: '{% raw %}{{ with printf "hpilo_onboard_administrator_info{instance=''''%s'''',job=''''%s''''}" .Labels.instance .Labels.job | query }}{{ . | first | label "encl" }}{{end}}{% endraw %}'
+    annotations:
+      title: "{% raw %}{{ .Labels.__name__ }} status{% endraw %}"
+      description: '{% raw %}{{ .Labels.__name__ }} is{% endraw %}
+        {% raw %}{{      if eq ($value | humanize) ''0'' }}''''ok''''{% endraw %}
+        {% raw %}{{ else if eq ($value | humanize) ''1'' }}''''warning''''{% endraw %}
+        {% raw %}{{ else if eq ($value | humanize) ''2'' }}''''critical''''{% endraw %}
+        {% raw %}{{else}}''''unknown''''{% endraw %}
+        {% raw %}{{ end }}({{ $value | printf "%.0f" }}).{% endraw %}
+        {% raw %}{{ with printf "hpilo_onboard_administrator_info{instance=''''%s'''',job=''''%s''''}" .Labels.instance .Labels.job | query }}{% endraw %}
+        {% raw %}Blade Enclosure {{ . | first | label "encl" }}, OA_IP {{ . | first | label "oa_ip" }}, Bay {{ . | first | label "location_bay" }}{% endraw %}
+        {% raw %}{{end}}{% endraw %}'
+  # prevent fake PS alert enforced while having battery alert
+  - alert: "Battery Supply Status"
+    expr: 'hpilo_power_supply_status{job="hpilo",noAlarmOn!~"(.*,|^)battery(,.*|$)",ps=~"Battery.*"} > 0'
+    for: 0s
+    labels:
+      severity: '{% raw %}{{ if eq ($value | humanize) "1" }}warning{{ else if eq ($value | humanize) "3" }}warning{{else}}critical{{end}}{% endraw %}'
+      metric: "{% raw %}{{ .Labels.__name__ }}{% endraw %}"
+      vsp: '{% raw %}{{ with printf "hpilo_onboard_administrator_info{instance=''''%s'''',job=''''%s''''}" .Labels.instance .Labels.job | query }}{{ . | first | label "encl" }}{{end}}{% endraw %}'
+    annotations:
+      title: "hpilo Battery Supply status"
+      description: '{% raw %}{{ .Labels.__name__ }} is{% endraw %}
+        {% raw %}{{      if eq ($value | humanize) ''0'' }}''''ok''''{% endraw %}
+        {% raw %}{{ else if eq ($value | humanize) ''1'' }}''''warning''''{% endraw %}
+        {% raw %}{{ else if eq ($value | humanize) ''2'' }}''''critical''''{% endraw %}
+        {% raw %}{{else}}''''unknown''''{% endraw %}
+        {% raw %}{{ end }}({{ $value | printf "%.0f" }}).{% endraw %}
+        {% raw %}{{ with printf "hpilo_onboard_administrator_info{instance=''''%s'''',job=''''%s''''}" .Labels.instance .Labels.job | query }}{% endraw %}
+        {% raw %}Blade Enclosure {{ . | first | label "encl" }}, OA_IP {{ . | first | label "oa_ip" }}, Bay {{ . | first | label "location_bay" }}{% endraw %}
+        {% raw %}{{end}}{% endraw %}'
+  # prevent fake PS alert enforced while having battery alert
+  - alert: "Power Supply Status"
+    expr: 'hpilo_power_supply_status{job="hpilo",noAlarmOn!~"(.*,|^)PowerSupply(,.*|$)",ps!~"Battery.*"} > 0'
+    for: 0s
+    labels:
+      severity: '{% raw %}{{ if eq ($value | humanize) "1" }}warning{{ else if eq ($value | humanize) "3" }}warning{{else}}critical{{end}}{% endraw %}'
+      metric: "{% raw %}{{ .Labels.__name__ }}{% endraw %}"
+      vsp: '{% raw %}{{ with printf "hpilo_onboard_administrator_info{instance=''''%s'''',job=''''%s''''}" .Labels.instance .Labels.job | query }}{{ . | first | label "encl" }}{{end}}{% endraw %}'
+    annotations:
+      title: "{% raw %}{{ .Labels.__name__ }} status{% endraw %}"
+      description: '{% raw %}{{ .Labels.__name__ }} is{% endraw %}
+        {% raw %}{{      if eq ($value | humanize) ''0'' }}''''ok''''{% endraw %}
+        {% raw %}{{ else if eq ($value | humanize) ''1'' }}''''warning''''{% endraw %}
+        {% raw %}{{ else if eq ($value | humanize) ''2'' }}''''critical''''{% endraw %}
+        {% raw %}{{else}}''''unknown''''{% endraw %}
+        {% raw %}{{ end }}({{ $value | printf "%.0f" }}).{% endraw %}
+        {% raw %}{{ with printf "hpilo_onboard_administrator_info{instance=''''%s'''',job=''''%s''''}" .Labels.instance .Labels.job | query }}{% endraw %}
+        {% raw %}Blade Enclosure {{ . | first | label "encl" }}, OA_IP {{ . | first | label "oa_ip" }}, Bay {{ . | first | label "location_bay" }}{% endraw %}
+        {% raw %}{{end}}{% endraw %}'
+  # prevent fake alert for two-socket servers with only one socket installed: two fans will be absent
+  - alert: "Fan Status"
+    expr: 'hpilo_fan_status{job="hpilo",noAlarmOn!~"(.*,|^)Fan(,.*|$)"} * ignoring(fan) group_left  hpilo_fans_status > 0'
+    for: 0s
+    labels:
+      severity: '{% raw %}{{ if eq ($value | humanize) "1" }}warning{{ else if eq ($value | humanize) "3" }}warning{{else}}critical{{end}}{% endraw %}'
+      metric: "{% raw %}{{ .Labels.__name__ }}{% endraw %}"
+      vsp: '{% raw %}{{ with printf "hpilo_onboard_administrator_info{instance=''''%s'''',job=''''%s''''}" .Labels.instance .Labels.job | query }}{{ . | first | label "encl" }}{{end}}{% endraw %}'
+    annotations:
+      title: "{% raw %}{{ .Labels.__name__ }} status{% endraw %}"
+      description: '{% raw %}{{ .Labels.__name__ }} is{% endraw %}
+        {% raw %}{{      if eq ($value | humanize) ''0'' }}''''ok''''{% endraw %}
+        {% raw %}{{ else if eq ($value | humanize) ''1'' }}''''warning''''{% endraw %}
+        {% raw %}{{else}}''''critical''''{% endraw %}
+        {% raw %}{{ end }}({{ $value | printf "%.0f" }}).{% endraw %}
+        {% raw %}{{ with printf "hpilo_onboard_administrator_info{instance=''''%s'''',job=''''%s''''}" .Labels.instance .Labels.job | query }}{% endraw %}
+        {% raw %}Blade Enclosure {{ . | first | label "encl" }}, OA_IP {{ . | first | label "oa_ip" }}, Bay {{ . | first | label "location_bay" }}{% endraw %}
+        {% raw %}{{end}}{% endraw %}'
+  #  - alert: 'RunningStatus'
+  #    expr: 'hpilo_running_status{job="hpilo"} != 0'
+  #    for: 1m
+  #    labels:
+  #      severity: "critical"
+  #    annotations:
+  #      title: 'Running status'
+  #      description: "{{ .Labels.server_name }} is not in RUNNING(ON) status"
   # Node exporter
   - alert: HostOutOfMemory
     expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
