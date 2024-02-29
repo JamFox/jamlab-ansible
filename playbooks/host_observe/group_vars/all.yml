@@ -1033,15 +1033,6 @@ prometheus_alert_rules: # noqa yaml[line-length]  # noqa line-length
       summary: "{% raw %}HAProxy pending requests (instance {{ $labels.instance }}){% endraw %}"
       description: "{% raw %}Some HAProxy requests are pending on {{ $labels.proxy }} - {{ $value | printf \"%.2f\"}}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
 
-  - alert: HaproxyHttpSlowingDown
-    expr: avg by (instance, proxy) (haproxy_backend_max_total_time_seconds) > 5
-    for: 1m
-    labels:
-      severity: warning
-    annotations:
-      summary: "{% raw %}HAProxy HTTP slowing down (instance {{ $labels.instance }}){% endraw %}"
-      description: "{% raw %}Average request time is increasing - {{ $value | printf \"%.2f\"}}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}{% endraw %}"
-
   - alert: HaproxyRetryHigh
     expr: sum by (proxy) (rate(haproxy_backend_retry_warnings_total[1m])) > 10
     for: 2m
