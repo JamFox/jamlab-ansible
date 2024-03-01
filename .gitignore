@@ -44,3 +44,7 @@ roles/ipsets
 #roles/nomad
 roles/logrotate
 roles/docker
+roles/java
+roles/elasticsearch
+roles/filebeat
+roles/logstash

@@ -70,11 +70,14 @@ frontend https-in
     acl haproxy-acl hdr(host) -i haproxy.jamfox.dev
     use_backend haproxy-stats if haproxy-acl
 
-    acl portainer hdr(host) -i portainer.jamfox.dev
+    acl portainer hdr(host) -i port.jamfox.dev
     use_backend portainer if portainer
 
     acl grafana-acl hdr(host) -i grafana.jamfox.dev
     use_backend grafana if grafana-acl
+
+    acl actual-acl hdr(host) -i actual.jamfox.dev
+    use_backend actual if actual-acl
 
     acl prometheus-acl hdr(host) -i prometheus.jamfox.dev
     use_backend prometheus if prometheus-acl
@@ -116,6 +119,9 @@ backend haproxy-stats
 
 backend portainer
     server portainer 192.168.10.111:9443 check ssl verify none
+
+backend actual
+    server actual 192.168.10.111:5006 check ssl verify none
 
 backend grafana
     server grafana 192.168.10.50:3000

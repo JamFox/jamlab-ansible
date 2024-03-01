@@ -31,3 +31,23 @@ docker_users:
   - docker
   - portainer
   - jamfox
+
+step_ca_certs_dir: "{{ vars_common_all_certs_path }}"
+step_ca_certs_key: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
+step_ca_certs_crt: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
+step_ca_certs_jwk_pass: "{{ vars_common_all_step_ca_jwk_password }}"
+step_ca_certs_pass_dir: "{{ vars_common_all_certs_path }}"
+step_ca_certs:
+  - name: "{{ ansible_hostname }}.{{ vars_common_all_default_domain }}"
+    crt_path: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
+    key_path: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
+    not_after: 720h
+    renew_after: 20h
+    san:
+      - "{{ ansible_host }}"
+      - localhost
+      - 127.0.0.1
+#step_ca_certs_renew:
+#    crt_path: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.crt"
+#    key_path: "{{ vars_common_all_certs_path }}/{{ vars_common_all_certs_name }}.key"
+#    renew_after: 20h

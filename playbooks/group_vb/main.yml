@@ -18,7 +18,7 @@
     - { role: motd,           tags: [all, motd],                       when: not (disabled_roles.motd | default(false))}
     - { role: sshd,           tags: [all, sshd],                       when: not (disabled_roles.sshd | default(false))}
     - { role: maxhoesel.smallstep.step_bootstrap_host, tags: [all, step_ca, ca, step_bootstrap_host]}
-    - { role: step_ca_certs,  tags: [all, step_ca_certs, step_ca, ca], when: not (disabled_roles.consul | default(false))}
+    - { role: step_ca_certs,  tags: [all, step_ca_certs, step_ca, ca], when: not (disabled_roles.step_ca_certs | default(false))}
     - { role: consul,         tags: [all, consul],                     when: not (disabled_roles.consul | default(false))}
     - { role: nomad,          tags: [all, nomad],                      when: not (disabled_roles.nomad | default(false))}
     - { role: podman,         tags: [all, podman],                     when: not (disabled_roles.podman | default(false))}
