@@ -1,3 +1,5 @@
+# gickup.conf to /gickup/conf.yml
+# valheim-adminlist.txt to /valheim/saves/adminlist.txt
 custom_scripts: "{{ vars_common_all_scripts_admin }}"
 
 soft_packages_latest: "{{ vars_common_all_soft_apt_tools + vars_common_all_soft_apt_unattended }}"

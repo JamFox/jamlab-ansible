@@ -1,0 +1,25 @@
+source:
+  github:
+    - token: {{ vars_common_all_hpc_gitlab_repo_read_token }}
+    # alternatively, specify token in a file, relative to current working directory when executed.
+      # token_file: token.txt
+  gitlab:
+    - token: {{ vars_common_all_hpc_gitlab_repo_read_token }}
+      # token_file: token.txt # alternatively, specify token in a file
+      user: some-user # the user you want to clone the repositories from.
+      url: https://gitlab.hpc.taltech.ee
+destination:
+  local:
+    # Export this path from Docker with a volume to make it accessible and more permanent.
+    - path: /gickup/backup
+      structured: true # checks repos out like hostersite/user|organization/repo
+      zip: true # zips the repository after cloned and removes the repository afterwards
+      keep: 1 # only keeps x backups
+      bare: false # clone the repositories as bare
+      lfs: false # clone lfs repos, !! ATTENTION !! git and git-lfs must be installed on the system!
+
+cron: 5 9 * * 2 # optional - when cron is not provided, the program runs once and exits.
+# Otherwise, it runs according to the cron schedule.
+# See timezone commentary in docker-compose.yml for making sure this container runs
+# in the timezone you want.
+# For more information on crontab or testing: https://crontab.guru/
