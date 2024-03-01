@@ -37,3 +37,11 @@ roles:
   #  src: https://github.com/rezizter/ansible_loki
   - name: logrotate
     src: https://github.com/robertdebock/ansible-role-logrotate
+  - name: java
+    src: https://github.com/geerlingguy/ansible-role-java
+  - name: elasticsearch
+    src: https://github.com/geerlingguy/ansible-role-elasticsearch
+  - name: logstash
+    src: https://github.com/geerlingguy/ansible-role-logstash
+  - name: filebeat
+    src: https://github.com/geerlingguy/ansible-role-filebeat
