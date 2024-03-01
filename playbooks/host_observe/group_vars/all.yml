@@ -47,6 +47,18 @@ rsyslog_loki: true
 #rsyslog_tls_certs_path: "/opt/rsyslog/tls"
 #rsyslog_tls_private_path: "{{ rsyslog_tls_certs_path }}_private"
 
+logrotate_dateext: true
+logrotate_entries:
+  - name: remote-logs
+    path: "/var/log/remote/**/*"
+    frequency: weekly
+    keep: 12
+    missingok: true
+    notifempty: true
+    create: true
+    compress: true
+    delaycompress: true
+
 # https://github.com/prometheus-community/ansible/blob/main/roles/prometheus/defaults/main.yml
 # Prometheus web settings
 prometheus_web_listen_address: "0.0.0.0:9090"
