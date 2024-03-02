@@ -35,3 +35,4 @@ copy_directory() {
 # /mnt/c/Users/jamfox/Downloads/
 copy_latest_file jport /valheim/backups /mnt/d/SynologyDrive/Games/ValheimWords/JamHeim/backups
 copy_directory jport /gickup/backup /mnt/d/SynologyDrive/Repos
+copy_directory jport /actual-data /mnt/d/SynologyDrive/ActualBackup

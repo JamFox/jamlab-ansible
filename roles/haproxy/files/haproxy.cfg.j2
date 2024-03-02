@@ -78,6 +78,8 @@ frontend https-in
 
     acl actual-acl hdr(host) -i actual.jamfox.dev
     use_backend actual if actual-acl
+    acl budget-acl hdr(host) -i budget.jamfox.dev
+    use_backend actual if budget-acl
 
     acl prometheus-acl hdr(host) -i prometheus.jamfox.dev
     use_backend prometheus if prometheus-acl
