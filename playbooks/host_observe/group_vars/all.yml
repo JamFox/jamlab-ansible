@@ -58,6 +58,7 @@ logrotate_entries:
     create: true
     compress: true
     delaycompress: true
+    postrotate: "/usr/bin/systemctl kill -s HUP rsyslog.service >/dev/null 2>&1 || true"
 
 # https://github.com/prometheus-community/ansible/blob/main/roles/prometheus/defaults/main.yml
 # Prometheus web settings
