@@ -1,0 +1,39 @@
+# Requires privileges, does not work on rootless
+job "cadvisor" {
+    datacenters = ["dc1"]
+    type = "system"
+
+    group "cadvisor" {
+      network {
+        port "cadvisor-port" {
+          static = "8080"
+        }
+      }
+      service {
+        name = "cadvisor"
+        port = "cadvisor-port"
+      }
+      # Task name will determine conatiner label for container journald collector
+      task "cadvisor" {
+        driver = "podman"
+        resources {
+            cpu    = 500
+            memory = 512
+          }
+        config {
+          image = "gcr.io/cadvisor/cadvisor:latest"
+          ports = ["cadvisor-port"]
+          volumes = [
+            "/:/rootfs:ro",
+            "/dev/disk/:/dev/disk:ro",
+            "/etc/machine-id:/etc/machine-id:ro",
+            "/sys:/sys:ro",
+            "/sys/fs/cgroup:/sys/fs/cgroup:ro",
+            "/var/lib/containers:/var/lib/containers:ro",
+            "/var/lib/dbus/machine-id:/var/lib/dbus/machine-id:ro",
+            "/var/run:/var/run:rw"
+          ]
+        }
+      }
+    }
+  }

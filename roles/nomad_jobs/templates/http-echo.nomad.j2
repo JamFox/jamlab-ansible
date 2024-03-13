@@ -5,7 +5,7 @@ job "http-echo" {
       count = 1
       network {
         port "http" {
-          static = "8080"
+          static = "8081"
         }
       }
       service {
@@ -36,7 +36,7 @@ job "http-echo" {
           image = "docker.io/hashicorp/http-echo"
           ports = ["http"]
           args = [
-            "-listen", ":8080",
+            "-listen", ":8081",
             "-text", "hello-world",
           ]
         }
