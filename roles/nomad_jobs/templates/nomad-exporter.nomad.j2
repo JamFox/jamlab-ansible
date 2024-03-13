@@ -1,0 +1,32 @@
+# NB! Does not support podman 3.x (latest provided in official ubuntu 22 repos)
+job "podman-exporter" {
+    datacenters = ["dc1"]
+    type = "system"
+
+    group "podman-exporter" {
+      network {
+        port "podman-export" {
+          static = "9882"
+        }
+      }
+      service {
+        name = "podman-exporter"
+        port = "podman-export"
+      }
+      # Task name will determine conatiner label for container journald collector
+      task "podmanexporter" {
+        driver = "podman"
+        resources {
+            cpu    = 500
+            memory = 512
+          }
+        config {
+          image = "quay.io/navidys/prometheus-podman-exporter"
+          ports = ["podman-export"]
+          args = [
+            "-a"
+          ]
+        }
+      }
+    }
+  }
