@@ -356,35 +356,6 @@ grafana_dashboards:
   - dashboard_id: 13946 # cadvisor
     revision_id: 5
     datasource: prometheus
-  # Consul and Nomad dashboards begin
-  - dashboard_id: 3662
-    revision_id: 2
-    datasource: prometheus
-  - dashboard_id: 17549
-    revision_id: 2
-    datasource: prometheus
-  - dashboard_id: 6278
-    revision_id: 1
-    datasource: prometheus
-  - dashboard_id: 6281
-    revision_id: 1
-    datasource: prometheus
-  - dashboard_id: 6281
-    revision_id: 1
-    datasource: prometheus
-  - dashboard_id: 10642
-    revision_id: 1
-    datasource: prometheus
-  - dashboard_id: 2351
-    revision_id: 1
-    datasource: prometheus
-  - dashboard_id: 13396
-    revision_id: 3
-    datasource: prometheus
-  - dashboard_id: 15859
-    revision_id: 2
-    datasource: prometheus
-  # Consul and Nomad dashboards end
 
 loki_version: 2.9.1
 loki_install: true
