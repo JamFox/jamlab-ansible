@@ -26,7 +26,6 @@ Ansible playbooks for configuration management in push mode.
 | mounts_exports   | ✔️        | ✔️        | ❌         |
 | networking       | ✔️        | ✔️        | ❌         |
 | nfs              | ❌        | ❌        | ❌         |
-| resolv_hosts     | ✔️        | ✔️        | ❌         |
 
 ## Usage
 
