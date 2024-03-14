@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+[Unit]
+Description=service to run ansible on schedule
+After=network-online.target
+
+[Service]
+Type=oneshot
+User={{ ansible_parallel_user }}
+Group={{ ansible_parallel_group }}
+StandardOutput=file:{{ ansible_parallel_log_dir }}/ansible_parallel_latest_run.log
+ExecStartPre=/usr/bin/truncate --size=0 {{ ansible_parallel_log_dir }}/ansible_parallel_latest_run.log
+ExecStart=/bin/bash -c "{{ ansible_parallel_exec_dir }}/ansible-parallel -cfg {{ ansible_parallel_main_dir }}/ansible-parallel.cfg -r -a -s --forks 2"

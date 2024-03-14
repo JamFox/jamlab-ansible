@@ -1,0 +1,20 @@
+ansible_parallel_packages_centos: 
+  - git
+  - curl
+ansible_parallel_packages_debian: "{{ ansible_parallel_packages_centos }}"
+
+ansible_parallel_oncalendar: "Mon..Sun 07:00:00"
+ansible_parallel_main_dir: "/opt/ansible"
+ansible_parallel_repo_dir: "{{ ansible_parallel_main_dir }}/ansible-mono"
+ansible_parallel_exec_dir: "/usr/bin"
+ansible_parallel_log_dir: "/var/log/ansible-parallel"
+ansible_parallel_log_retention_in_days: "30"
+
+# Secret vars
+ansible_parallel_git_user:
+ansible_parallel_git_token:
+ansible_parallel_vault_pass:
+
+# Optional
+ansible_parallel_user: "ansible"
+ansible_parallel_group: "admin"

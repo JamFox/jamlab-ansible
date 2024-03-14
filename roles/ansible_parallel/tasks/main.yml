@@ -1,0 +1,116 @@
+# Install requirements
+- name: Install ansible_parallel packages for CentOS/RedHat
+  ansible.builtin.yum:
+    name: "{{ ansible_parallel_packages_centos }}"
+    state: "{{ ansible_parallel_package_state | default(default_package_state | default('present')) }}"
+  when: ansible_os_family in ['CentOS', 'RedHat']
+
+- name: Install ansible_parallel packages for Debian
+  ansible.builtin.apt:
+    name: "{{ ansible_parallel_packages_debian }}"
+    state: "{{ ansible_parallel_package_state | default(default_package_state | default('present')) }}"
+  when: ansible_os_family == "Debian"
+
+# Group setup
+- name: Create ansible-mono group
+  ansible.builtin.group:
+    name: "{{ ansible_parallel_group }}"
+    state: present
+  when: ansible_parallel_group is defined and ansible_parallel_group != ""
+
+# Build ansible repo configs and directories
+- name: Create ansible-mono directories recursively
+  ansible.builtin.file:
+    path: "{{ ansible_parallel_main_dir }}"
+    state: directory
+    owner: "{{ ansible_parallel_user | default('root') }}"
+    group: "{{ ansible_parallel_group | default('root') }}"
+    mode: "0775"
+
+- name: Clone ansible-mono repository
+  ansible.builtin.git:
+    repo: "https://{{ ansible_parallel_git_user }}:{{ ansible_parallel_git_token }}@gitlab.hpc.taltech.ee/hpc/ansible/ansible-mono"
+    dest: "{{ ansible_parallel_repo_dir }}"
+    version: master
+    update: true
+    force: true
+  no_log: true
+  become: true
+  become_user: "{{ ansible_parallel_user | default('root') }}"
+
+- name: Create .ansible-vault-pass file
+  ansible.builtin.copy:
+    content: "{{ ansible_parallel_vault_pass }}"
+    dest: "{{ ansible_parallel_repo_dir }}/.ansible-vault-pass"
+    mode: "0660"
+    owner: "{{ ansible_parallel_user | default('root') }}"
+    group: "{{ ansible_parallel_group | default('root') }}"
+  no_log: true
+  when: ansible_parallel_vault_pass is defined
+
+# Install ansible-parallel and teams-msg
+- name: Clone ansible-parallel repository
+  ansible.builtin.git:
+    repo: "https://{{ ansible_parallel_git_user }}:{{ ansible_parallel_git_token }}@gitlab.hpc.taltech.ee/hpc/ansible/ansible-parallel"
+    dest: "{{ ansible_parallel_main_dir }}/ansible-parallel"
+    version: master
+    update: true
+    force: true
+  no_log: true
+  become: true
+  become_user: "{{ ansible_parallel_user | default('root') }}"
+
+- name: Install ansible-parallel
+  ansible.builtin.copy:
+    src: "{{ ansible_parallel_main_dir }}/ansible-parallel/ansible-parallel"
+    remote_src: true
+    dest: "{{ ansible_parallel_exec_dir }}/ansible-parallel"
+    mode: "0774"
+    owner: "{{ ansible_parallel_user | default('root') }}"
+    group: "{{ ansible_parallel_group | default('root') }}"
+
+- name: Install teams-msg
+  ansible.builtin.copy:
+    src: "{{ ansible_parallel_main_dir }}/ansible-parallel/teams-msg"
+    remote_src: true
+    dest: "{{ ansible_parallel_exec_dir }}/teams-msg"
+    mode: "0774"
+    owner: "{{ ansible_parallel_user | default('root') }}"
+    group: "{{ ansible_parallel_group | default('root') }}"
+
+# Ownership
+- name: Set ownership of ansible dirs
+  ansible.builtin.file:
+    path: "{{ ansible_parallel_main_dir }}"
+    recurse: true
+    owner: "{{ ansible_parallel_user | default('root') }}"
+    group: "{{ ansible_parallel_group | default('root') }}"
+
+# Logs
+- name: Create symlink from ansible-parallel default logs to ansible_parallel_log_dir
+  ansible.builtin.file:
+    src: "{{ ansible_parallel_repo_dir }}/logs"
+    dest: "{{ ansible_parallel_log_dir }}"
+    state: link
+    owner: "{{ ansible_parallel_user | default('root') }}"
+    group: "{{ ansible_parallel_group | default('root') }}"
+    mode: "0755"
+
+# Configure and start
+- name: Template ansible-parallel configs
+  ansible.builtin.template:
+    dest: "{{ item.dest }}"
+    src: "files/{{ item.src }}"
+    mode: "0644"
+    owner: "{{ ansible_parallel_user | default('root') }}"
+    group: "{{ ansible_parallel_group | default('root') }}"
+  loop:
+    - { src: ansible-parallel.cfg.j2, dest: "{{ ansible_parallel_main_dir }}/ansible-parallel.cfg" }
+    - { src: ansible-parallel.service.j2, dest: /etc/systemd/system/ansible-parallel.service }
+    - { src: ansible-parallel.timer.j2, dest: /etc/systemd/system/ansible-parallel.timer }
+
+- name: Enable and start ansible-parallel timer
+  ansible.builtin.systemd:
+    name: ansible-parallel.timer
+    state: started
+    enabled: true

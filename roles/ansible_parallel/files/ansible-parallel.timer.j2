@@ -1,0 +1,10 @@
+# {{ ansible_managed }}
+[Unit]
+Description=timer for service to run ansible on schedule
+
+[Timer]
+OnCalendar={{ ansible_parallel_oncalendar }}
+Persistent=true
+
+[Install]
+WantedBy=timers.target
