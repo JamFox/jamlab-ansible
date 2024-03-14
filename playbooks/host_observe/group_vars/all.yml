@@ -101,33 +101,34 @@ prometheus_config_flags_extra: {}
 #        env: monitor
 
 prometheus_scrape_configs:
-  # For cadvisor, run as root on nodes you wish to target:
-  # podman rm --force cadvisor; podman run -d --name cadvisor \
-  #   --volume /:/rootfs:ro \
-  #   --volume /dev/disk/:/dev/disk:ro \
-  #   --volume /etc/machine-id:/etc/machine-id:ro \
-  #   --volume /sys:/sys:ro \
-  #   --volume /sys/fs/cgroup:/sys/fs/cgroup:ro \
-  #   --volume /home/nomad/.local/share/containers:/var/lib/containers:ro \
-  #   --volume /var/lib/dbus/machine-id:/var/lib/dbus/machine-id:ro \
-	#   --volume=/var/run:/var/run:rw \
-	#   --volume=/run/user/997:/run/user/997:ro \
-  #   --privileged \
-	#   --device=/dev/kmsg \
-  #   -p 8080:8080 \
-  #   gcr.io/cadvisor/cadvisor:v0.49.1 \
-	#   --podman="unix:///run/user/997/podman/podman.sock"
-  #
-  # Remove with: podman rm --force cadvisor
+# For cadvisor, run as root on nodes you wish to target:
+# podman rm --force cadvisor; podman run -d --name cadvisor \
+#   --volume /:/rootfs:ro \
+#   --volume /dev/disk/:/dev/disk:ro \
+#   --volume /etc/machine-id:/etc/machine-id:ro \
+#   --volume /sys:/sys:ro \
+#   --volume /sys/fs/cgroup:/sys/fs/cgroup:ro \
+#   --volume /home/nomad/.local/share/containers:/var/lib/containers:ro \
+#   --volume /var/lib/dbus/machine-id:/var/lib/dbus/machine-id:ro \
+#   --volume=/var/run:/var/run:rw \
+#   --volume=/run/user/997:/run/user/997:ro \
+#   --privileged \
+#   --device=/dev/kmsg \
+#   -p 8080:8080 \
+#   gcr.io/cadvisor/cadvisor:v0.49.1 \
+#   --podman="unix:///run/user/997/podman/podman.sock"
+#
+# Remove with: podman rm --force cadvisor
   - job_name: cadvisor
     scrape_interval: 5s
     static_configs:
       - targets:
+          - 192.168.10.111:8080
           - 192.168.10.130:8080
           - 192.168.10.131:8080
           - 192.168.10.132:8080
-  # For Ilo: https://github.com/hpilo-exporter/hpilo-exporter
-  # Easy install: bash <(curl -Ls https://raw.githubusercontent.com/hpilo-exporter/hpilo-exporter/master/install.sh)
+# For Ilo: https://github.com/hpilo-exporter/hpilo-exporter
+# Easy install: bash <(curl -Ls https://raw.githubusercontent.com/hpilo-exporter/hpilo-exporter/master/install.sh)
   - job_name: "iloexporter"
     scrape_interval: 1m
     scrape_timeout: 30s
