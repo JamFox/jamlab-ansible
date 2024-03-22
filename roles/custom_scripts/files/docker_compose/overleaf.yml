@@ -105,6 +105,8 @@ services:
     container_name: overleaf_mongo
     expose:
       - 27017
+    ports:
+      - "127.0.0.1:27017:27017"
     volumes:
       - /jamleaf/mongo_data:/data/db
     command: --replSet overleaf
