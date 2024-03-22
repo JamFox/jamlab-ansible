@@ -1,0 +1,9 @@
+version: "3"
+services:
+  runner:
+    # build: . # If you want to Build the Image locally (You need the complete Repo on your PC)
+    image: buddyspencer/gickup:latest
+    volumes:
+      - /gickup/backup:/gickup/backup
+      - /gickup/conf.yml:/gickup/conf.yml # Change the path of your local config ${PWD} is your current directory (where the docker-compose.yml is located)
+    command: ["/gickup/conf.yml"] # Changes the path of the internal bound config

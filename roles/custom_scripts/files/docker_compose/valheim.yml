@@ -1,0 +1,37 @@
+version: "3"
+services:
+  valheim:
+    image: mbround18/valheim:latest
+    stop_signal: SIGINT
+    ports:
+      - "2456:2456/udp"
+      - "2457:2457/udp"
+      - "2458:2458/udp"
+    environment:
+      PORT: 2456
+      NAME: "JamHeim"
+      WORLD: "JamWorld"
+      #PASSWORD: ""
+      PRESET: "Normal"
+      MODIFIERS: "resources=muchmore"
+      #MODS:
+      #WEBHOOK_URL: "https://discord.com/api/webhooks/1208106693943230566/lIo6dhTeuRivd1cxt0IhTFc0vABoNt6OoshWWPq6Rt-VljKwkZiiwPQePNIjZKOQ6YlM"
+      WEBHOOK_INCLUDE_PUBLIC_IP: 1
+      PUBLIC: 1
+      AUTO_UPDATE: 1
+      AUTO_UPDATE_SCHEDULE: "0 1 * * *"
+      AUTO_UPDATE_PAUSE_WITH_PLAYERS: 1
+      AUTO_BACKUP: 1
+      AUTO_BACKUP_SCHEDULE: "*/15 * * * *"
+      AUTO_BACKUP_REMOVE_OLD: 1
+      AUTO_BACKUP_DAYS_TO_LIVE: 3
+      AUTO_BACKUP_ON_UPDATE: 1
+      AUTO_BACKUP_ON_SHUTDOWN: 1
+      AUTO_BACKUP_PAUSE_WITH_NO_PLAYERS: 1
+
+      UPDATE_ON_STARTUP: 1
+      #ADDITIONAL_STEAMCMD_ARGS:
+    volumes:
+      - /valheim/saves:/home/steam/.config/unity3d/IronGate/Valheim
+      - /valheim/server:/home/steam/valheim
+      - /valheim/backups:/home/steam/backups
