@@ -15,6 +15,7 @@
 # image: sharelatex/sharelatex:with-texlive-full
 # Note that you will need to remove this committed container and repeat these steps when you upgrade.
 # https://github.com/overleaf/toolkit/blob/master/doc/upgrading.md
+# May have bibtex issues: https://github.com/overleaf/overleaf/issues/1030
 version: "2.2"
 services:
   sharelatex:
