@@ -37,3 +37,5 @@ copy_latest_file jport /valheim/backups /mnt/d/SynologyDrive/Games/ValheimWords/
 copy_directory jport /gickup/backup /mnt/d/SynologyDrive/Repos
 copy_directory jport /actual-data/server-files /mnt/d/SynologyDrive/ActualBackup/server-files
 copy_directory jport /actual-data/user-files /mnt/d/SynologyDrive/ActualBackup/user-files
+copy_directory jport /jamleaf/sharelatex_data /mnt/d/SynologyDrive/Homelab/OverLeafBackup/sharelatex_data
+#copy_directory jport /jamleaf/mongo_data /mnt/d/SynologyDrive/Homelab/OverLeafBackup/mongo_data
