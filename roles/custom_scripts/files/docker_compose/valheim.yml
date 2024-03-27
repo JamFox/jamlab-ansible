@@ -16,8 +16,8 @@ services:
       MODIFIERS: "resources=muchmore"
       # Comment next 2 out for vanilla
       TYPE: "ValheimPlus" 
-      MODS: "https://gcdn.thunderstore.io/live/repository/packages/Advize-CartographySkill-3.0.0.zip"
-      #WEBHOOK_URL: "https://discord.com/api/webhooks/1208106693943230566/lIo6dhTeuRivd1cxt0IhTFc0vABoNt6OoshWWPq6Rt-VljKwkZiiwPQePNIjZKOQ6YlM"
+      MODS: "https://gcdn.thunderstore.io/live/repository/packages/denikson-BepInExPack_Valheim-5.4.2202.zip,https://gcdn.thunderstore.io/live/repository/packages/Advize-CartographySkill-3.0.0.zip,https://gcdn.thunderstore.io/live/repository/packages/Azumatt-Official_BepInEx_ConfigurationManager-18.2.0.zip,https://gcdn.thunderstore.io/live/repository/packages/ValheimPlus-ValheimPlus-9.9.11.zip"
+      #WEBHOOK_URL: ""
       WEBHOOK_INCLUDE_PUBLIC_IP: 1
       PUBLIC: 1
       AUTO_UPDATE: 0
