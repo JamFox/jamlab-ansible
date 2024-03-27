@@ -1,7 +1,7 @@
 version: "3"
 services:
   valheim:
-    image: mbround18/valheim:latest
+    image: mbround18/valheim:sha-f25b81a
     stop_signal: SIGINT
     ports:
       - "2456:2456/udp"
@@ -11,14 +11,16 @@ services:
       PORT: 2456
       NAME: "JamHeim"
       WORLD: "JamWorld"
-      #PASSWORD: ""
+      PASSWORD: ""
       PRESET: "Normal"
       MODIFIERS: "resources=muchmore"
-      #MODS:
+      # Comment next 2 out for vanilla
+      TYPE: "ValheimPlus" 
+      MODS: "https://gcdn.thunderstore.io/live/repository/packages/Advize-CartographySkill-3.0.0.zip"
       #WEBHOOK_URL: "https://discord.com/api/webhooks/1208106693943230566/lIo6dhTeuRivd1cxt0IhTFc0vABoNt6OoshWWPq6Rt-VljKwkZiiwPQePNIjZKOQ6YlM"
       WEBHOOK_INCLUDE_PUBLIC_IP: 1
       PUBLIC: 1
-      AUTO_UPDATE: 1
+      AUTO_UPDATE: 0
       AUTO_UPDATE_SCHEDULE: "0 1 * * *"
       AUTO_UPDATE_PAUSE_WITH_PLAYERS: 1
       AUTO_BACKUP: 1
@@ -30,7 +32,7 @@ services:
       AUTO_BACKUP_PAUSE_WITH_NO_PLAYERS: 1
 
       UPDATE_ON_STARTUP: 1
-      #ADDITIONAL_STEAMCMD_ARGS:
+      ADDITIONAL_STEAMCMD_ARGS: "-console"
     volumes:
       - /valheim/saves:/home/steam/.config/unity3d/IronGate/Valheim
       - /valheim/server:/home/steam/valheim
