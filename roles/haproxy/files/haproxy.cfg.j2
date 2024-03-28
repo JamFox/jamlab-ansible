@@ -84,6 +84,11 @@ frontend https-in
     acl overleaf-acl hdr(host) -i overleaf.jamfox.dev
     use_backend jamleaf if overleaf-acl
 
+    acl stablediffusion-acl hdr(host) -i stablediffusion.jamfox.dev
+    use_backend stablediffusion if stablediffusion-acl
+    acl sd-acl hdr(host) -i sd.jamfox.dev
+    use_backend stablediffusion if sd-acl
+
     acl pve0-acl hdr(host) -i pve0.jamfox.dev
     use_backend pve0 if pve0-acl
 
@@ -133,6 +138,9 @@ backend actual
 
 backend jamleaf
     server jamleaf 192.168.10.111:8888
+
+backend stablediffusion
+    server stablediffusion 192.168.10.111:7860
 
 backend pve0
     server pve0 192.168.10.100:8006 check ssl verify none
