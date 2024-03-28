@@ -122,10 +122,11 @@ frontend https-in
     acl video-acl hdr(host) -i video.jamfox.dev
     use_backend video if video-acl
 
-    acl fabio hdr(host) -i fabio.jamfox.dev
-    use_backend fabio-hosts if fabio
+    # Nomad
+    #acl fabio hdr(host) -i fabio.jamfox.dev
+    #use_backend fabio-hosts if fabio
 
-    default_backend nomad-lbs
+    default_backend haproxy-stats #nomad-lbs
 
 backend haproxy-stats
     server haproxy-stats 127.0.0.1:1936
@@ -154,13 +155,15 @@ backend prometheus
 backend alertmanager
     server alertmanager 192.168.10.50:9093
 
-backend fabio-hosts
-    balance leastconn
-    server-template fabio {{ groups['vs'] | length }} fabio.service.consul:9998 check resolvers jamlab-dns init-addr none
+# Nomad
+#backend fabio-hosts
+#    balance leastconn
+#    server-template fabio {{ groups['vs'] | length }} fabio.service.consul:9998 check resolvers jamlab-dns init-addr none
 
-backend nomad-lbs
-    balance roundrobin
-    server-template web {{ groups['vs'] | length }} fabio.service.consul:9999 check resolvers jamlab-dns init-addr none
+# Nomad
+#backend nomad-lbs
+#    balance roundrobin
+#    server-template web {{ groups['vs'] | length }} fabio.service.consul:9999 check resolvers jamlab-dns init-addr none
 
 backend octoprint
     server octoprint 192.168.10.53:443 check ssl verify none

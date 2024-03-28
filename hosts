@@ -1,13 +1,13 @@
 [portainer] # Portainer docker management
 portainer    ansible_host=192.168.10.111
 
-[head] # Internal CA and conf management
+[head] # Internal CA, conf management
 head         ansible_host=192.168.10.10
 
 [observe] # Observability stack on Prometheus
 logmon       ansible_host=192.168.10.50
 
-[bastion] # VPN
+[bastion] # VPN, DNS
 rpi0         ansible_host=192.168.10.53
 
 [proxy] # HAProxy

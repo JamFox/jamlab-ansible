@@ -25,9 +25,6 @@ server=4.4.4.4
 cache-size=9000
 clear-on-reload
 
-# Wilcard subdomain record
-address=/{{ dnsmasq_domain_local }}/{{ vars_common_all_proxy_ipv4 }}
-
 # Ignore internet paths
 server=/docs.jamfox.dev/#
 server=/brain.jamfox.dev/#
@@ -42,10 +39,15 @@ address=/{{ hostvars[host].inventory_hostname }}.{{ dnsmasq_domain }}/{{ hostvar
 # Custom records, to support multiple fixed IP
 addn-hosts=/etc/hosts.jamfox.dev
 
+
+# --- Nomad, Consul ---
+# Wilcard subdomain record
+#address=/{{ dnsmasq_domain_local }}/{{ vars_common_all_proxy_ipv4 }}
+
 # Enable reverse DNS lookups for the netblock
-rev-server={{ vars_common_all_default_netblock }},127.0.0.1#{{ var_common_all_consul_dns_port }}
+#rev-server={{ vars_common_all_default_netblock }},127.0.0.1#{{ var_common_all_consul_dns_port }}
 
 # Enable forward lookup of the 'consul' domain to consul server instances
-{% for host in groups['vb'] %}
-server=/consul/{{ hostvars[host].ansible_host }}#{{ var_common_all_consul_dns_port }}
-{% endfor %}
+#{% for host in groups['vb'] %}
+#server=/consul/{{ hostvars[host].ansible_host }}#{{ var_common_all_consul_dns_port }}
+#{% endfor %}
