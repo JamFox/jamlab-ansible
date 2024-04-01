@@ -79,3 +79,5 @@ dnsmasq_records:
     ip: "{{ hostvars['rpi1'].ansible_host }}"
   - name: "fabio.{{ vars_common_all_default_domain }}"
     ip: "{{ hostvars['rpi1'].ansible_host }}"
+  - name: "comfy.{{ vars_common_all_default_domain }}"
+    ip: "{{ hostvars['rpi1'].ansible_host }}"

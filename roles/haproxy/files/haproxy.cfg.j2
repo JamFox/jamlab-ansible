@@ -88,6 +88,8 @@ frontend https-in
     use_backend stablediffusion if stablediffusion-acl
     acl sd-acl hdr(host) -i sd.jamfox.dev
     use_backend stablediffusion if sd-acl
+    acl comfy-acl hdr(host) -i comfy.jamfox.dev
+    use_backend sdcomfy if comfy-acl
 
     acl pve0-acl hdr(host) -i pve0.jamfox.dev
     use_backend pve0 if pve0-acl
@@ -142,6 +144,8 @@ backend jamleaf
 
 backend stablediffusion
     server stablediffusion 192.168.10.111:7860
+backend sdcomfy
+    server sdcomfy 192.168.10.111:7861
 
 backend pve0
     server pve0 192.168.10.100:8006 check ssl verify none
