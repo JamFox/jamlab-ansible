@@ -11,12 +11,13 @@ services:
       PORT: 2456
       NAME: "JamHeim"
       WORLD: "JamWorld"
-      PASSWORD: ""
+      #PASSWORD: "" # Use permittedlist
       PRESET: "Normal"
       MODIFIERS: "resources=muchmore"
       # Comment next 2 out for vanilla
       TYPE: "BepInEx"
       BEPINEX_DOWNLOAD_URL: "https://gcdn.thunderstore.io/live/repository/packages/denikson-BepInExPack_Valheim-5.4.2202.zip"
+      # On client side also get server devcommands to use devcommands on dedicated server as admin
       MODS: "https://gcdn.thunderstore.io/live/repository/packages/Advize-CartographySkill-3.0.0.zip,https://gcdn.thunderstore.io/live/repository/packages/Azumatt-Official_BepInEx_ConfigurationManager-18.2.0.zip,https://gcdn.thunderstore.io/live/repository/packages/Grantapher-ValheimPlus_Grantapher_Temporary-9.12.0.zip"
       #WEBHOOK_URL: ""
       WEBHOOK_INCLUDE_PUBLIC_IP: 1
