@@ -9,6 +9,10 @@
     - ../vars_common_rsyslog_client.yml
     - ../vars_common_nodeexporter.yml
 
+  # VPN with wireguard done manually with https://github.com/Nyr/wireguard-install
+  # Get script: wget https://git.io/wireguard -O wireguard-install.sh
+  # (un)install/add client: bash wireguard-install.sh 
+
   roles:
     - { role: users_groups,   tags: [all, users_groups],   when: not (disabled_roles.users_groups | default(false))}
     - { role: custom_scripts, tags: [all, custom_scripts], when: not (disabled_roles.custom_scripts | default(false))}

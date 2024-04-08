@@ -10,7 +10,6 @@
     - ../vars_common_nodeexporter.yml
 
   roles:
-    # PiVPN for this host is done manually: https://docs.jamfox.dev/content/homelab/rpi/#pivpn
     - { role: users_groups,   tags: [all, users_groups],   when: not (disabled_roles.users_groups | default(false))}
     - { role: custom_scripts, tags: [all, custom_scripts], when: not (disabled_roles.custom_scripts | default(false))}
     - { role: soft_apt,       tags: [all, soft, soft_apt], when: not (disabled_roles.soft_apt | default(false)) }
