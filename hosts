@@ -19,21 +19,21 @@ pve0         ansible_host=192.168.10.100 ilo_addr=192.168.10.241
 [nas] # NAS
 nas0         ansible_host=192.168.10.66
 
-[vb] # Nomad base nodes aka the control plane
-vb0          ansible_host=192.168.10.120
-vb1          ansible_host=192.168.10.121
-vb2          ansible_host=192.168.10.122
-
-[vs] # Nomad service nodes aka the container nodes
-vs0          ansible_host=192.168.10.130
-#vs1          ansible_host=192.168.10.131
-#vs2          ansible_host=192.168.10.132
-
-# These are role specific groups
-# Some roles configure hosts according to these groups
-[hashistack:children]
-vb
-vs
+#[vb] # Nomad base nodes aka the control plane
+#vb0          ansible_host=192.168.10.120
+#vb1          ansible_host=192.168.10.121
+#vb2          ansible_host=192.168.10.122
+#
+#[vs] # Nomad service nodes aka the container nodes
+#vs0          ansible_host=192.168.10.130
+##vs1          ansible_host=192.168.10.131
+##vs2          ansible_host=192.168.10.132
+#
+## These are role specific groups
+## Some roles configure hosts according to these groups
+#[hashistack:children]
+#vb
+#vs
 [loki:children]
 observe
 [promtail:children]
