@@ -24,7 +24,6 @@ Ansible playbooks for configuration management in push mode.
 | Role             | Complete | Dry-Test | Real-Test |
 | ---------------- | -------- | -------- | --------- |
 | mounts_exports   | ✔️        | ✔️        | ❌         |
-| networking       | ✔️        | ✔️        | ❌         |
 | nfs              | ❌        | ❌        | ❌         |
 
 ## Usage
