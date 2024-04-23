@@ -50,13 +50,14 @@ rsyslog_loki: true
 logrotate_dateext: true
 logrotate_entries:
   - name: remote-logs
-    path: "/var/log/remote/**/*"
+    path: "/var/log/remote/**/*.log"
     frequency: weekly
     keep: 12
     missingok: true
     notifempty: true
     create: true
     compress: true
+    sharedscripts: true
     delaycompress: true
     postrotate: "/usr/bin/systemctl kill -s HUP rsyslog.service >/dev/null 2>&1 || true"
 
