@@ -11,7 +11,7 @@
 
   roles:
     - { role: users_groups,   tags: [all, users_groups],   when: not (disabled_roles.users_groups | default(false))}
-    - { role: custom_scripts, tags: [all, custom_scripts], when: not (disabled_roles.custom_scripts | default(false))}
+    - { role: custom_files, tags: [all, custom_files], when: not (disabled_roles.custom_files | default(false))}
     - { role: soft_apt,       tags: [all, soft, soft_apt], when: not (disabled_roles.soft_apt | default(false)) }
     - { role: motd,           tags: [all, motd],           when: not (disabled_roles.motd | default(false))}
     - { role: sshd,           tags: [all, sshd],           when: not (disabled_roles.sshd | default(false))}

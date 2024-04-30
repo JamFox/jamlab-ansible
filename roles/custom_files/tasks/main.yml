@@ -1,0 +1,8 @@
+# This block is run instead of running tasks in this main file
+# to follow results of item tasks in a readable manner
+- name: Custom files loop
+  ansible.builtin.include_tasks: "file.yml"
+  loop: "{{ custom_files }}"
+  loop_control:
+    loop_var: custom_file
+  when: custom_file.dest is defined

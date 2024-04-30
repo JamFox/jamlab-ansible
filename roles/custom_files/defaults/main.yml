@@ -1,6 +1,6 @@
-custom_scripts: []
+custom_files: []
 # Example
-#custom_scripts:
+#custom_files:
 #  - name: adduser
 #    local: files/adduser.sh
 #    dest: /usr/local/bin

@@ -6,7 +6,7 @@ Local means script is from ansible repository files, url means downloading scrip
 
 ## Role variables
 
-* `custom_scripts`
+* `custom_files`
 
 List of scripts to install. For example, check the role variable `defaults`.
 

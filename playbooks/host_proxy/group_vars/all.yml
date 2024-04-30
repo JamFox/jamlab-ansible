@@ -3,7 +3,7 @@ soft_packages_latest: "{{ vars_common_all_soft_apt_unattended }}"
 users: "{{ vars_common_all_main_users }}"
 users_deleted: "{{ vars_common_all_users_deleted }}"
 
-custom_scripts: "{{ vars_common_all_scripts_admin }}"
+custom_files: "{{ vars_common_all_scripts_admin }}"
 
 sshd: "{{ vars_common_all_default_sshd }}"
 

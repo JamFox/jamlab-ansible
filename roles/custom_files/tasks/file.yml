@@ -1,0 +1,78 @@
+- name: Make sure custom file destination directory exists
+  ansible.builtin.file:
+    path: "{{ custom_file.dest }}"
+    state: directory
+    mode: "{{ custom_file.destmode | default(omit) }}"
+    owner: "{{ custom_file.destowner | default(omit) }}"
+    group: "{{ custom_file.destgroup | default(omit) }}"
+  when:
+    - custom_file.dest is defined
+    - custom_file.lineinfile is not defined
+    - custom_file.blockinfile is not defined
+
+- name: Template local file
+  ansible.builtin.template:
+    src: "{{ custom_file.local }}"
+    dest: "{{ custom_file.dest | default('/usr/local/bin') }}/{{ custom_file.name }}"
+    mode: "{{ custom_file.mode | default('0700') }}"
+    owner: "{{ custom_file.owner | default('root') }}"
+    group: "{{ custom_file.group | default('root') }}"
+  when: custom_file.local is defined
+
+- name: Download external files
+  ansible.builtin.get_url:
+    url: "{{ custom_file.url }}"
+    dest: "{{ custom_file.dest | default('/usr/local/bin') }}/{{ custom_file.name }}"
+    mode: "{{ custom_file.mode | default('0700') }}"
+    owner: "{{ custom_file.owner | default('root') }}"
+    group: "{{ custom_file.group | default('root') }}"
+  when: custom_file.url is defined
+
+- name: Ensure line in custom file is present
+  ansible.builtin.lineinfile:
+    path: "{{ custom_file.dest }}"
+    line: "{{ custom_file.lineinfile }}"
+    insertafter: "{{ custom_file.insertafter | default(omit) }}"
+    insertbefore: "{{ custom_file.insertbefore | default(omit) }}"
+    regexp: "{{ custom_file.regexp | default(omit) }}"
+    search_string: "{{ custom_file.search_string | default(omit) }}"
+    validate: "{{ custom_file.validate | default(omit) }}"
+    mode: "{{ custom_file.mode | default(omit) }}"
+    owner: "{{ custom_file.owner | default(omit) }}"
+    group: "{{ custom_file.group | default(omit) }}"
+    create: yes
+  register: line_r
+  when:
+    - custom_file.lineinfile is defined
+    - custom_file.dest is defined
+
+- name: Ensure block in custom file is present
+  ansible.builtin.blockinfile:
+    block: |
+      {% for line in custom_file.blockinfile %}
+      {{ line }}
+      {% endfor %}
+    dest: "{{ custom_file.dest }}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+  register: block_r
+  when: 
+    - custom_file.blockinfile is defined
+    - custom_file.dest is defined
+
+- name: Run custom command on change
+  ansible.builtin.shell: "{{ custom_file.command_to_run_after }}"
+  register: command_r
+  failed_when: command_r.rc != 0
+  changed_when: false
+  when: 
+    - custom_file.command_to_run_after is defined
+    - line_r.changed or block_r.changed
+
+- name: Create alternatives for scripts
+  community.general.alternatives:
+    name: "{{ custom_file.name }}"
+    link: "{{ custom_file.link }}"
+    path: "{{ custom_file.dest | default('/usr/local/bin') }}/{{ custom_file.name }}"
+  when: 
+    - custom_file.link is defined
+    - not ansible_check_mode
