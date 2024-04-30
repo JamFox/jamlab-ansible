@@ -2,7 +2,7 @@ custom_files: "{{ vars_common_all_scripts_admin }}"
 
 soft_packages_latest: "{{ vars_common_all_soft_apt_tools + vars_common_all_soft_apt_unattended }}"
 
-users: "{{ vars_common_all_main_users + vars_common_all_temp_hashistack_users }}"
+users: "{{ vars_common_all_main_users }}"
 logging_admin_pass: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   36383434656461633863323939333336313534643332396364663830636366323065313233366635

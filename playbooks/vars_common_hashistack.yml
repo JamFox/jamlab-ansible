@@ -30,7 +30,7 @@ podman_users:
 podman_registries:
   - "docker.io"
   - "quay.io"
-users: "{{ vars_common_all_main_users + podman_system_users + vars_common_all_temp_hashistack_users }}"
+users: "{{ vars_common_all_main_users + podman_system_users }}"
 
 sshd: "{{ vars_common_all_default_sshd }}"
 
