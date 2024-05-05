@@ -134,7 +134,7 @@ prometheus_scrape_configs:
     scrape_interval: 1m
     scrape_timeout: 30s
     params:
-      ilo_host: ["192.168.10.241"]
+      ilo_host: ["192.168.10.114"]
       ilo_port: ["443"]
       ilo_user: ["{{ vars_common_all_pve0_ilo_user }}"]
       ilo_password: ["{{ vars_common_all_pve0_ilo_pass }}"]
@@ -147,7 +147,7 @@ prometheus_scrape_configs:
         replacement: localhost:9416
     static_configs:
       - targets:
-        - "192.168.10.241"
+        - "192.168.10.114"
   - job_name: "haproxy"
     metrics_path: "/metrics"
     static_configs:
