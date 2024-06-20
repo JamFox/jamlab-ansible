@@ -1,5 +1,5 @@
 custom_files: []
-# Example
+# Examples
 #custom_files:
 #  - name: adduser
 #    local: files/adduser.sh
@@ -16,3 +16,12 @@ custom_files: []
 #    owner: example
 #    group: admin
 #    mode: "0707"
+
+custom_directories: []
+#custom_directories:
+#  - src: files/dir1
+#    dest: /var/www/html/dir1
+#    owner: root
+#    group: root
+#    mode: "0644"
+#    force: true
