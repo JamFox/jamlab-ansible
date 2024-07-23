@@ -30,6 +30,7 @@ services:
       #CF_FORCE_INCLUDE_MODS: ''
       # Set to temporarily to "true" to ensure excluded mods are cleaned up.
       #CF_FORCE_SYNCHRONIZE: true
+      VIEW_DISTANCE: 24
       MOTD: |
         Welcome to Jam's Better Beta Server!
         
