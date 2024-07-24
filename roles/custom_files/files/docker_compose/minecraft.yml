@@ -37,7 +37,10 @@ services:
         Better Beta refocuses all progression on exploration and provides quality of life features while providing the classic experience.
       WHITELIST: |
         jamfox
-
+        JobiMollusk
+        SergeantRat
+        mathiasm99
+        Violetic
       OPS: |
         jamfox
       DIFFICULTY: 'hard'
