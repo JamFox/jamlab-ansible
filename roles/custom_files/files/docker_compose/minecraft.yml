@@ -39,8 +39,9 @@ services:
         jamfox
         JobiMollusk
         SergeantRat
-        mathiasm99
+        mathiasmarcus99
         Violetic
+        SaladPT
       OPS: |
         jamfox
       DIFFICULTY: 'hard'
