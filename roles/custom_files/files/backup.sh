@@ -32,11 +32,11 @@ copy_directory() {
     echo "Directory copied from '$host:$source_directory' to '$destination_directory'."
 }
 
-# /mnt/c/Users/jamfox/Downloads/
-copy_latest_file jport /valheim/backups /mnt/d/SynologyDrive/Games/ValheimWords/JamHeim/backups
+#copy_latest_file jport /valheim/backups /mnt/d/SynologyDrive/Games/ValheimWords/JamHeim/backups
 copy_directory jport /gickup/backup /mnt/d/SynologyDrive/Repos
-copy_directory jport /actual-data/server-files /mnt/d/SynologyDrive/ActualBackup/server-files
-copy_directory jport /actual-data/user-files /mnt/d/SynologyDrive/ActualBackup/user-files
-copy_directory jport /jamleaf/sharelatex_data /mnt/d/SynologyDrive/Homelab/OverLeafBackup/sharelatex_data
-ssh jport 'cd /home/jamfox/overleaf_dump && mongodump --archive="$(date +%Y-%m-%d)_mongo.dump" --db=sharelatex --host=127.0.0.1 --port=27017'
-copy_latest_file jport /home/jamfox/overleaf_dump /mnt/d/SynologyDrive/Homelab/OverLeafBackup/mongo_data
+#copy_directory jport /actual-data/server-files /mnt/d/SynologyDrive/ActualBackup/server-files
+#copy_directory jport /actual-data/user-files /mnt/d/SynologyDrive/ActualBackup/user-files
+#copy_directory jport /jamleaf/sharelatex_data /mnt/d/SynologyDrive/Homelab/OverLeafBackup/sharelatex_data
+#ssh jport 'cd /home/jamfox/overleaf_dump && mongodump --archive="$(date +%Y-%m-%d)_mongo.dump" --db=sharelatex --host=127.0.0.1 --port=27017'
+#copy_latest_file jport /home/jamfox/overleaf_dump /mnt/d/SynologyDrive/Homelab/OverLeafBackup/mongo_data
+copy_directory jport /itzg-minecraft/data/world '/mnt/d/SynologyDrive/Games/MinecraftWorlds/Better-Beta-3.2/multiplayer-world'
