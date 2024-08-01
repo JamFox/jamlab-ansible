@@ -44,6 +44,14 @@ services:
       OPS: |
         jamfox
       DIFFICULTY: 'hard'
+      # To change level type on existing world:
+      # 1. Get NBT Studio (or other NBT editor): https://github.com/tryashtar/nbt-studio
+      # 2. Generate world with desired world gen algorithm
+      # 3. Stop server
+      # 4. Open your world and new worlds level.dat in NBT editor
+      # 5. Copy 'level-desired.dat > Data > WorldGenSettings > dimensions' to your level.dat
+      # 6. Save and reboot 
+      LEVEL_TYPE: "NORMAL"
       MAX_PLAYERS: 10
       SPAWN_PROTECTION: 9
       # https://minecraft.wiki/w/Server.properties#level-type
