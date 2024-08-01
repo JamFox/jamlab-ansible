@@ -8,6 +8,7 @@ services:
       - "25565:25565"
     environment:
       EULA: "TRUE"
+      TZ: 'Europe/Tallinn'
       # Version variable options:
       # LATEST (the default)
       # SNAPSHOT
@@ -18,7 +19,8 @@ services:
       MOD_PLATFORM: "AUTO_CURSEFORGE"
       # When entering your API Key in a docker compose file you will need to escape any $ character with a second $
       CF_API_KEY: 'CHANGEME'
-      CF_PAGE_URL: 'https://www.curseforge.com/minecraft/modpacks/better-beta'
+      # Latest: #'https://www.curseforge.com/minecraft/modpacks/better-beta'
+      CF_PAGE_URL: 'https://www.curseforge.com/minecraft/modpacks/better-beta/files/5576692' # 3.2.3
       MODS: |
         https://mediafilez.forgecdn.net/files/5162/837/modmenu-7.2.2.jar
       CF_DOWNLOADS_REPO: '/downloads'
@@ -28,13 +30,10 @@ services:
       # Similarly, there are some mods that are incorrectly tagged as client only
       # For those, pass the project slugs or IDs via CF_FORCE_INCLUDE_MODS.
       #CF_FORCE_INCLUDE_MODS: ''
-      # Set to temporarily to "true" to ensure excluded mods are cleaned up.
       #CF_FORCE_SYNCHRONIZE: true
-      VIEW_DISTANCE: 24
       MOTD: |
-        Welcome to Jam's Better Beta Server!
-        
-        Better Beta refocuses all progression on exploration and provides quality of life features while providing the classic experience.
+        JamFox's Better Beta Server!
+      EXISTING_WHITELIST_FILE: "SYNCHRONIZE"
       WHITELIST: |
         jamfox
         JobiMollusk
@@ -58,9 +57,12 @@ services:
       ENABLE_AUTOPAUSE: true
       # pausing causes a single tick to take as long as the process is stopped, so we disable tick watchdog
       MAX_TICK_TIME: -1
-      INIT_MEMORY: '1G'
-      MAX_MEMORY: '8G'
-      TZ: 'Europe/Tallinn'
+      USE_AIKAR_FLAGS: true
+      INIT_MEMORY: '12G'
+      MAX_MEMORY: '64G'
+      SYNC_CHUNK_WRITES: false
+      VIEW_DISTANCE: 12
+      SIMULATION_DISTANCE: 6
     volumes:
       # attach the relative directory 'data' to the container's /data path
       - /itzg-minecraft/data:/data
