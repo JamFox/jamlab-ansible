@@ -23,6 +23,7 @@ services:
       CF_PAGE_URL: 'https://www.curseforge.com/minecraft/modpacks/better-beta/files/5576692' # 3.2.3
       MODS: |
         https://mediafilez.forgecdn.net/files/5162/837/modmenu-7.2.2.jar
+        https://mediafilez.forgecdn.net/files/4586/218/worldedit-mod-7.2.15.jar
       CF_DOWNLOADS_REPO: '/downloads'
       # Mods can be excluded by passing a comma or space delimited list of project slugs or IDs via CF_EXCLUDE_MODS
       # Exclude erroring Abuseless Hardcore 968038
@@ -41,6 +42,7 @@ services:
         mathiasmarcus99
         Violetic
         SaladPT
+        Saage__
       OPS: |
         jamfox
       DIFFICULTY: 'hard'
