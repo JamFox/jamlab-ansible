@@ -34,6 +34,12 @@ services:
         https://cdn.modrinth.com/data/bii8qPSt/versions/lAWeUicN/ati_structures%281.20%29_v1.1.0_FABRIC.jar
         https://cdn.modrinth.com/data/kL2MnxMQ/versions/UjlSd5DK/i_wanna_travel-fabric-0.2.jar
         https://mediafilez.forgecdn.net/files/4646/391/enchantment-transfer-0.0.6-fabric-1.20.1.jar
+        https://cdn.modrinth.com/data/H8CaAYZC/versions/XGIsoVGT/starlight-1.1.2%2Bfabric.dbc156f.jar
+        https://cdn.modrinth.com/data/fALzjamp/versions/NHWYq9at/Chunky-1.3.146.jar
+        https://cdn.modrinth.com/data/KuNKN7d2/versions/EuQErqo9/noisium-forge-2.0.3%2Bmc1.20-1.20.1.jar
+        https://cdn.modrinth.com/data/VSNURh3q/versions/meepZdLs/c2me-fabric-mc1.20.1-0.2.0%2Balpha.11.10.jar
+        https://cdn.modrinth.com/data/EEIwvQVo/versions/29RM9vrK/tidal-towns-1.3.jar
+        https://cdn.modrinth.com/data/8oi3bsk5/versions/WeYhEb5d/Terralith_1.20.x_v2.5.4.jar
       DATAPACKS: |
         https://cdn.modrinth.com/data/x4MjQT3r/versions/PWPlMf8Z/discoveria-datapack-2.0.1.zip
         https://cdn.modrinth.com/data/V6LLU8Gf/versions/udHMljEk/Katters%20Structures.zip
@@ -43,6 +49,7 @@ services:
         https://cdn.modrinth.com/data/bii8qPSt/versions/8OC8faML/ATi%20StructuresV1.1.0%20%281.20%29%20-%20DATAPACK.zip
         https://cdn.modrinth.com/data/kL2MnxMQ/versions/K6l8e4eC/i_wanna_travel-datapack-0.1.zip
         https://cdn.modrinth.com/data/Dn6ZBPxm/versions/7p9w32nz/StructuresPack%20v1.0.0.zip
+        https://cdn.modrinth.com/data/EEIwvQVo/versions/kyK3ZfPm/tidal.zip
       CF_DOWNLOADS_REPO: '/downloads'
       # Mods can be excluded by passing a comma or space delimited list of project slugs or IDs via CF_EXCLUDE_MODS
       # Exclude erroring Abuseless Hardcore 968038
