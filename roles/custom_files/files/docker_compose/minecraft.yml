@@ -24,6 +24,25 @@ services:
       MODS: |
         https://mediafilez.forgecdn.net/files/5162/837/modmenu-7.2.2.jar
         https://mediafilez.forgecdn.net/files/4586/218/worldedit-mod-7.2.15.jar
+        https://mediafilez.forgecdn.net/files/4579/791/imst-2.1.0.jar
+        https://mediafilez.forgecdn.net/files/5597/594/Fantastic%20Remastered%20Structures%201.20%2B1.20.6-0.5%20For%2Bfab.jar
+        https://cdn.modrinth.com/data/x4MjQT3r/versions/Fm3PgljJ/discoveria-2.0.1.jar
+        https://cdn.modrinth.com/data/V6LLU8Gf/versions/9lcqtOok/katters-structures-1.6.jar
+        https://cdn.modrinth.com/data/A9XFwNaH/versions/I22FK4xu/just-another-structure-pack-1.5.jar
+        https://cdn.modrinth.com/data/InKbRcdX/versions/X8LPgIKP/vanilla-friendly-structures-1.0.6.jar
+        https://cdn.modrinth.com/data/HSfsxuTo/versions/WqmT3avQ/Explorify%20v1.6.0%20f10-48.jar
+        https://cdn.modrinth.com/data/bii8qPSt/versions/lAWeUicN/ati_structures%281.20%29_v1.1.0_FABRIC.jar
+        https://cdn.modrinth.com/data/kL2MnxMQ/versions/UjlSd5DK/i_wanna_travel-fabric-0.2.jar
+        https://mediafilez.forgecdn.net/files/4646/391/enchantment-transfer-0.0.6-fabric-1.20.1.jar
+      DATAPACKS: |
+        https://cdn.modrinth.com/data/x4MjQT3r/versions/PWPlMf8Z/discoveria-datapack-2.0.1.zip
+        https://cdn.modrinth.com/data/V6LLU8Gf/versions/udHMljEk/Katters%20Structures.zip
+        https://cdn.modrinth.com/data/A9XFwNaH/versions/6p0dzN83/Just%20Another%20Structure%20Pack%20v1.5.zip
+        https://cdn.modrinth.com/data/InKbRcdX/versions/DQcizC1s/%C2%A79V%C2%A7aa%C2%A7bn%C2%A7ci%C2%A7dl%C2%A7el%C2%A79a%20%C2%A7aF%C2%A7br%C2%A7ce%C2%A7di%C2%A7en%C2%A79d%C2%A7al%C2%A7by%20%C2%A7cS%C2%A7dt%C2%A7er%C2%A79u%C2%A7ac%C2%A7bt%C2%A7cu%C2%A7dr%C2%A7ee%C2%A79s_1.20-1.20.6.zip
+        https://cdn.modrinth.com/data/HSfsxuTo/versions/haQCGB8I/Explorify%20v1.6.0%20f10-48.zip
+        https://cdn.modrinth.com/data/bii8qPSt/versions/8OC8faML/ATi%20StructuresV1.1.0%20%281.20%29%20-%20DATAPACK.zip
+        https://cdn.modrinth.com/data/kL2MnxMQ/versions/K6l8e4eC/i_wanna_travel-datapack-0.1.zip
+        https://cdn.modrinth.com/data/Dn6ZBPxm/versions/7p9w32nz/StructuresPack%20v1.0.0.zip
       CF_DOWNLOADS_REPO: '/downloads'
       # Mods can be excluded by passing a comma or space delimited list of project slugs or IDs via CF_EXCLUDE_MODS
       # Exclude erroring Abuseless Hardcore 968038
