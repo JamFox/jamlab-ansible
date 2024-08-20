@@ -1,0 +1,75 @@
+services:
+  mc:
+    image: itzg/minecraft-server
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    ports:
+      - "25566:25565"
+    environment:
+      EULA: "TRUE"
+      TZ: 'Europe/Tallinn'
+      # Version variable options:
+      # LATEST (the default)
+      # SNAPSHOT
+      # a specific version, such as "1.7.9"
+      # or an alpha and beta version, such as "b1.7.3" (server download might not exist)
+      VERSION: 1.19.2
+      # https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/
+      MOD_PLATFORM: "AUTO_CURSEFORGE"
+      TYPE: "FORGE"
+      # When entering your API Key in a docker compose file you will need to escape any $ character with a second $
+      CF_API_KEY: 'CHANGEME'
+      # Latest: #'https://www.curseforge.com/minecraft/modpacks/fear-nightfall'
+      CF_PAGE_URL: 'https://www.curseforge.com/minecraft/modpacks/fear-nightfall/files/5545197' # v15
+      MODS: |
+        https://cdn.modrinth.com/data/uEfK2CXF/versions/gYpN3Xsx/JustEnoughResources-1.19.2-1.2.3.243.jar
+        https://cdn.modrinth.com/data/fALzjamp/versions/WNen5Iom/Chunky-1.3.38.jar
+      #DATAPACKS: |
+      #  
+      #CF_DOWNLOADS_REPO: '/downloads'
+      # Mods can be excluded by passing a comma or space delimited list of project slugs or IDs via CF_EXCLUDE_MODS
+      # Exclude erroring Abuseless Hardcore 968038
+      CF_EXCLUDE_MODS: ''
+      # Similarly, there are some mods that are incorrectly tagged as client only
+      # For those, pass the project slugs or IDs via CF_FORCE_INCLUDE_MODS.
+      #CF_FORCE_INCLUDE_MODS: ''
+      #CF_FORCE_SYNCHRONIZE: true
+      MOTD: |
+        JamFox's Fear Nightfall Server!
+      EXISTING_WHITELIST_FILE: "SYNCHRONIZE"
+      WHITELIST: |
+        jamfox
+        JobiMollusk
+        SergeantRat
+        mathiasmarcus99
+        Violetic
+        SaladPT
+        Saage__
+        HellHound1717
+        beanieb00bie
+      OPS: |
+        jamfox
+      DIFFICULTY: 'hard'
+      MAX_PLAYERS: 10
+      SPAWN_PROTECTION: 2
+      # https://minecraft.wiki/w/Server.properties#level-type
+      #LEVEL_TYPE: 'minecraft:default'
+      # https://minecraft.wiki/w/Server.properties#generator-settings
+      #GENERATOR_SETTINGs:
+      SERVER_NAME: 'JamFox Fear Nightfall Server'
+      RCON_PASSWORD: ''
+      RCON_PORT: 25575
+      # Autopause when last connect was a while ago
+      ENABLE_AUTOPAUSE: true
+      # pausing causes a single tick to take as long as the process is stopped, so we disable tick watchdog
+      MAX_TICK_TIME: -1
+      USE_AIKAR_FLAGS: true
+      INIT_MEMORY: '6G'
+      MAX_MEMORY: '18G'
+      SYNC_CHUNK_WRITES: false
+      VIEW_DISTANCE: 16
+      SIMULATION_DISTANCE: 6
+    volumes:
+      # attach the relative directory 'data' to the container's /data path
+      - /horror-minecraft/data:/data
