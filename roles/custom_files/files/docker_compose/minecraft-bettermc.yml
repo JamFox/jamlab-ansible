@@ -5,7 +5,7 @@ services:
     stdin_open: true
     restart: unless-stopped
     ports:
-      - "25567:25565"
+      - "25568:25565"
     environment:
       EULA: "TRUE"
       TZ: 'Europe/Tallinn'
@@ -21,27 +21,52 @@ services:
       # When entering your API Key in a docker compose file you will need to escape any $ character with a second $
       CF_API_KEY: 'CHANGEME'
       # Latest: #'https://www.curseforge.com/minecraft/modpacks/better-beta'
-      CF_PAGE_URL: 'https://www.curseforge.com/minecraft/modpacks/better-mc-forge-bmc4'
-      #https://cdn.modrinth.com/data/codAaoxh/versions/UhRAdyzr/midnightlib-forge-1.4.2.jar
-      # Mods can be excluded by passing a comma or space delimited list of project slugs or IDs via CF_EXCLUDE_MODS
-      # Exclude erroring Abuseless Hardcore 968038
-      CF_EXCLUDE_MODS: '585546,401648,917285,621529,508933,654373,551736,908741,60089,866084'
+      CF_MODPACK_MANIFEST: /manifests/manifest.json
+      CF_SLUG: "custom"
       MODS: |
+        https://mediafilez.forgecdn.net/files/4579/791/imst-2.1.0.jar
+        https://mediafilez.forgecdn.net/files/5597/594/Fantastic%20Remastered%20Structures%201.20%2B1.20.6-0.5%20For%2Bfab.jar
+        https://cdn.modrinth.com/data/x4MjQT3r/versions/Fm3PgljJ/discoveria-2.0.1.jar
+        https://cdn.modrinth.com/data/V6LLU8Gf/versions/9lcqtOok/katters-structures-1.6.jar
+        https://cdn.modrinth.com/data/A9XFwNaH/versions/I22FK4xu/just-another-structure-pack-1.5.jar
+        https://cdn.modrinth.com/data/InKbRcdX/versions/X8LPgIKP/vanilla-friendly-structures-1.0.6.jar
+        https://cdn.modrinth.com/data/HSfsxuTo/versions/WqmT3avQ/Explorify%20v1.6.0%20f10-48.jar
+        https://cdn.modrinth.com/data/bii8qPSt/versions/lAWeUicN/ati_structures%281.20%29_v1.1.0_FABRIC.jar
+        https://cdn.modrinth.com/data/kL2MnxMQ/versions/PAKhOQoL/i_wanna_travel-0.3-forge-1.20.1.jar
+        https://mediafilez.forgecdn.net/files/4646/391/enchantment-transfer-0.0.6-fabric-1.20.1.jar
+        https://cdn.modrinth.com/data/H8CaAYZC/versions/XGIsoVGT/starlight-1.1.2%2Bfabric.dbc156f.jar
+        https://cdn.modrinth.com/data/EEIwvQVo/versions/29RM9vrK/tidal-towns-1.3.jar
+        https://cdn.modrinth.com/data/8oi3bsk5/versions/WeYhEb5d/Terralith_1.20.x_v2.5.4.jar
+        https://cdn.modrinth.com/data/MCnBYP0b/versions/TO1g4SDa/tru.e-ending-v1.1.0c.jar
+        https://cdn.modrinth.com/data/NFlNaUBA/versions/M8PetBVr/qraftys-end-villages-1.jar
+        https://cdn.modrinth.com/data/u58R1TMW/versions/j0igWmaL/Connector-1.0.0-beta.45%2B1.20.1.jar
+        https://cdn.modrinth.com/data/FYpiwiBR/versions/d28gpPn6/ConnectorExtras-1.11.2%2B1.20.1.jar
+        https://cdn.modrinth.com/data/Aqlf1Shp/versions/D3EZO1Kr/fabric-api-0.92.2%2B1.11.8%2B1.20.1.jar
         https://cdn.modrinth.com/data/OrtjXTCH/versions/jWMVQdZu/chalk-2.2.0.jar
         https://cdn.modrinth.com/data/VPJS28NH/versions/gvVFiwqG/chalk-colorful-addon-2.1.1.jar
         https://cdn.modrinth.com/data/d7PCSOkD/versions/sZpVjhCs/highspeed-rail-0.4.0%2B1.20.1.jar
         https://edge.forgecdn.net/files/5412/490/MendingOverTime-1.20.1-1.2.jar
         https://cdn.modrinth.com/data/8Sy2SQOg/versions/VTN2Jvfv/no_xp_anvils-1.1.0-fabric-1.20.1.jar
-        https://cdn.modrinth.com/data/l1rj36Ob/versions/nnXJhhJv/NostalgicTweaks-mc1.20.1-Forge-2.0.0-beta.903.jar
-        https://cdn.modrinth.com/data/hB899VmG/versions/6tNXzXkA/exposure-1.20.1-1.7.6-forge.jar
-        https://cdn.modrinth.com/data/p1WH6sHr/versions/JTd3TFcc/From-The-Fog-1.20-v1.9.2-Forge-Fabric.jar
-        https://cdn.modrinth.com/data/ZJTGwAND/versions/SQS2aSUl/endrem_forge-5.3.3-R-1.20.1.jar
-      #  https://cdn.modrinth.com/data/CxaV51ez/versions/228OMT78/eso-forge-1.20.1-1.2.2-all.jar
-      #  https://cdn.modrinth.com/data/codAaoxh/versions/UhRAdyzr/midnightlib-forge-1.4.2.jar
+      DATAPACKS: |
+        https://cdn.modrinth.com/data/x4MjQT3r/versions/PWPlMf8Z/discoveria-datapack-2.0.1.zip
+        https://cdn.modrinth.com/data/V6LLU8Gf/versions/udHMljEk/Katters%20Structures.zip
+        https://cdn.modrinth.com/data/A9XFwNaH/versions/6p0dzN83/Just%20Another%20Structure%20Pack%20v1.5.zip
+        https://cdn.modrinth.com/data/InKbRcdX/versions/DQcizC1s/%C2%A79V%C2%A7aa%C2%A7bn%C2%A7ci%C2%A7dl%C2%A7el%C2%A79a%20%C2%A7aF%C2%A7br%C2%A7ce%C2%A7di%C2%A7en%C2%A79d%C2%A7al%C2%A7by%20%C2%A7cS%C2%A7dt%C2%A7er%C2%A79u%C2%A7ac%C2%A7bt%C2%A7cu%C2%A7dr%C2%A7ee%C2%A79s_1.20-1.20.6.zip
+        https://cdn.modrinth.com/data/HSfsxuTo/versions/haQCGB8I/Explorify%20v1.6.0%20f10-48.zip
+        https://cdn.modrinth.com/data/bii8qPSt/versions/8OC8faML/ATi%20StructuresV1.1.0%20%281.20%29%20-%20DATAPACK.zip
+        https://cdn.modrinth.com/data/kL2MnxMQ/versions/K6l8e4eC/i_wanna_travel-datapack-0.1.zip
+        https://cdn.modrinth.com/data/Dn6ZBPxm/versions/7p9w32nz/StructuresPack%20v1.0.0.zip
+        https://cdn.modrinth.com/data/EEIwvQVo/versions/kyK3ZfPm/tidal.zip
+        https://cdn.modrinth.com/data/MCnBYP0b/versions/reTqSC7O/trueending_v1.1.0c_1.20.x.zip
+        https://cdn.modrinth.com/data/NFlNaUBA/versions/jVhp1McJ/qrafty%27s-end-villages.zip
+        https://cdn.modrinth.com/data/emsZpWnG/versions/epyqDFFw/True%20End%20v1.4.zip 
+      # Mods can be excluded by passing a comma or space delimited list of project slugs or IDs via CF_EXCLUDE_MODS
+      # Exclude erroring Abuseless Hardcore 968038
+      CF_EXCLUDE_MODS: '401648,917285,621529,508933,654373,551736,908741,60089'
       # Similarly, there are some mods that are incorrectly tagged as client only
       # For those, pass the project slugs or IDs via CF_FORCE_INCLUDE_MODS.
       #CF_FORCE_INCLUDE_MODS: ''
-      CF_FORCE_SYNCHRONIZE: true
+      #CF_FORCE_SYNCHRONIZE: true
       MOTD: |
         JamFox's BB Forge Server!
       EXISTING_WHITELIST_FILE: "SYNCHRONIZE"
@@ -88,4 +113,5 @@ services:
       SIMULATION_DISTANCE: 6
     volumes:
       # attach the relative directory 'data' to the container's /data path
-      - /forge-minecraft/data:/data
+      - /forge2-minecraft/data:/data
+      - /forge2-minecraft/manifests:/manifests:ro
