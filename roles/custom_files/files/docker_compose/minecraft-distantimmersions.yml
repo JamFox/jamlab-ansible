@@ -1,0 +1,89 @@
+services:
+  mc:
+    image: itzg/minecraft-server
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    ports:
+      - "25568:25565"
+    environment:
+      EULA: "TRUE"
+      TZ: 'Europe/Tallinn'
+      # Version variable options:
+      # LATEST (the default)
+      # SNAPSHOT
+      # a specific version, such as "1.7.9"
+      # or an alpha and beta version, such as "b1.7.3" (server download might not exist)
+      VERSION: 1.20.1
+      # https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/
+      MOD_PLATFORM: "AUTO_CURSEFORGE"
+      TYPE: "FORGE"
+      # When entering your API Key in a docker compose file you will need to escape any $ character with a second $
+      CF_API_KEY: 'CHANGEME'
+      # Latest: #'https://www.curseforge.com/minecraft/modpacks/better-beta'
+      CF_MODPACK_MANIFEST: /manifests/manifest.json
+      CF_SLUG: "custom"
+      MODS: |
+        https://cdn.modrinth.com/data/u58R1TMW/versions/j0igWmaL/Connector-1.0.0-beta.45%2B1.20.1.jar
+        https://cdn.modrinth.com/data/FYpiwiBR/versions/d28gpPn6/ConnectorExtras-1.11.2%2B1.20.1.jar
+        https://cdn.modrinth.com/data/Aqlf1Shp/versions/D3EZO1Kr/fabric-api-0.92.2%2B1.11.8%2B1.20.1.jar
+        https://cdn.modrinth.com/data/OrtjXTCH/versions/jWMVQdZu/chalk-2.2.0.jar
+        https://cdn.modrinth.com/data/VPJS28NH/versions/gvVFiwqG/chalk-colorful-addon-2.1.1.jar
+        https://cdn.modrinth.com/data/d7PCSOkD/versions/sZpVjhCs/highspeed-rail-0.4.0%2B1.20.1.jar
+        https://edge.forgecdn.net/files/5412/490/MendingOverTime-1.20.1-1.2.jar
+        https://cdn.modrinth.com/data/8Sy2SQOg/versions/VTN2Jvfv/no_xp_anvils-1.1.0-fabric-1.20.1.jar
+      # Mods can be excluded by passing a comma or space delimited list of project slugs or IDs via CF_EXCLUDE_MODS
+      # Exclude erroring Abuseless Hardcore 968038
+      CF_EXCLUDE_MODS: '401648,917285,621529,508933,654373,551736,908741,60089'
+      # Similarly, there are some mods that are incorrectly tagged as client only
+      # For those, pass the project slugs or IDs via CF_FORCE_INCLUDE_MODS.
+      #CF_FORCE_INCLUDE_MODS: ''
+      #CF_FORCE_SYNCHRONIZE: true
+      MOTD: |
+        JamFox's BB Forge Server!
+      EXISTING_WHITELIST_FILE: "SYNCHRONIZE"
+      WHITELIST: |
+        jamfox
+        JobiMollusk
+        SergeantRat
+        mathiasmarcus99
+        Violetic
+        SaladPT
+        Saage__
+        HellHound1717
+        beanieb00bie
+        papadadino
+      OPS: |
+        jamfox
+      DIFFICULTY: 'hard'
+      # To change level type on existing world:
+      # 1. Get NBT Studio (or other NBT editor): https://github.com/tryashtar/nbt-studio
+      # 2. Generate world with desired world gen algorithm
+      # 3. Stop server
+      # 4. Open your world and new worlds level.dat in NBT editor
+      # 5. Copy 'level-desired.dat > Data > WorldGenSettings > dimensions' to your level.dat
+      # 6. Save and reboot 
+      LEVEL_TYPE: "NORMAL"
+      MAX_PLAYERS: 10
+      SPAWN_PROTECTION: 9
+      # https://minecraft.wiki/w/Server.properties#level-type
+      #LEVEL_TYPE: 'minecraft:default'
+      # https://minecraft.wiki/w/Server.properties#generator-settings
+      #GENERATOR_SETTINGs:
+      SERVER_NAME: 'JamFox BB Forge Server'
+      #RCON_PASSWORD: ''
+      RCON_PORT: 25575
+      # Autopause when last connect was a while ago
+      ENABLE_AUTOPAUSE: true
+      # pausing causes a single tick to take as long as the process is stopped, so we disable tick watchdog
+      MAX_TICK_TIME: -1
+      USE_AIKAR_FLAGS: true
+      INIT_MEMORY: '12G'
+      MAX_MEMORY: '64G'
+      SYNC_CHUNK_WRITES: false
+      VIEW_DISTANCE: 12
+      SIMULATION_DISTANCE: 6
+    volumes:
+      # attach the relative directory 'data' to the container's /data path
+      - /forge2-minecraft/data:/data
+      - /forge2-minecraft/manifests:/manifests:ro
