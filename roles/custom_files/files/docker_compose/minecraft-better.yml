@@ -1,0 +1,89 @@
+services:
+  mc:
+    image: itzg/minecraft-server
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    ports:
+      - "25565:25565"
+      - "8123:8123"
+    environment:
+      EULA: "TRUE"
+      TZ: 'Europe/Tallinn'
+      # Version variable options:
+      # LATEST (the default)
+      # SNAPSHOT
+      # a specific version, such as "1.7.9"
+      # or an alpha and beta version, such as "b1.7.3" (server download might not exist)
+      VERSION: 1.20.1
+      # https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/
+      TYPE: FABRIC
+      #MOD_PLATFORM: "AUTO_CURSEFORGE"
+      # When entering your API Key in a docker compose file you will need to escape any $ character with a second $
+      #CF_API_KEY: ''
+      #CF_PAGE_URL: 'https://www.curseforge.com/minecraft/modpacks/better-adventures-plus/files/6556517'
+      MODPACK: 'https://drive.jamfox.dev/d/s/13eryTZNA7jYWCZtglMu38E5a8cF7A4D/webapi/entry.cgi/SYNO.SynologyDrive.Files/mods.zip?api=SYNO.SynologyDrive.Files&method=download&version=2&files=%5B%22id%3A888834310409335136%22%5D&force_download=true&json_error=true&download_type=%22download%22&c2_offload=%22allow%22&_dc=1749205384969&sharing_token=%22J2Dlus1NE5fOZ0.tTirP41QWMZVlMt_cacCzVlovnPpAFpj4UdmtyUCWaFzlsKmOyRMGNQoxD5XtSoQV_Uqzk0e8aeTYlQLVdgYzVUx1ZbDZqO48RNc1eeSMQcd.m.1efnGJsON9RV4STOx6H7VNFcgttvJTvM1GvnydGfpEh.VOs.UtYxe1wjfqW_RjzWIxrfxq_ts_edIjCeRxKxRAehJGp7WxjmSmTy.t3PEis9obOvII6Mq_jE5l%22&SynoToken=vIr.oKNojIrJs'
+      # Don't add noxray mod
+      # MODS:
+      #CURSEFORGE_FILES: |
+
+      CF_DOWNLOADS_REPO: '/downloads'
+      # Mods can be excluded by passing a comma or space delimited list of project slugs or IDs via CF_EXCLUDE_MODS
+      # Exclude erroring Abuseless Hardcore 968038, Dungeon Now Loading 1% 638535, Simple Voice Chat 416089
+      CF_EXCLUDE_MODS: |
+        968038
+        638535
+        416089
+      MODRINTH_EXCLUDE_FILES: |
+        horsebuff
+      GENERIC_PACKS_DISABLE_MODS: |
+        HorseBuff-1.20.1-2.1.3.jar
+      CF_IGNORE_MISSING_FILES: |
+        mods/HorseBuff-1.20.1-2.1.3.jar
+      # Similarly, there are some mods that are incorrectly tagged as client only
+      # For those, pass the project slugs or IDs via CF_FORCE_INCLUDE_MODS.
+      #CF_FORCE_INCLUDE_MODS: ''
+      CF_FORCE_SYNCHRONIZE: true
+      MOTD: |
+        JamFox's Better Adventures Server!
+      EXISTING_WHITELIST_FILE: "SYNCHRONIZE"
+      WHITELIST: |
+        jamfox
+        JobiMollusk
+        SergeantRat
+        mathiasmarcus99
+        Violetic
+        SaladPT
+        Saage__
+        HellHound1717
+        beanieb00bie
+        papadadino
+        V3nggg
+      OPS: |
+        jamfox
+      DIFFICULTY: 'hard'
+      LEVEL_TYPE: "NORMAL"
+      MODE: "survival"
+      MAX_PLAYERS: 10
+      SPAWN_PROTECTION: 9
+      # https://minecraft.wiki/w/Server.properties#level-type
+      #LEVEL_TYPE: 'minecraft:default'
+      # https://minecraft.wiki/w/Server.properties#generator-settings
+      #GENERATOR_SETTINGs:
+      SERVER_NAME: 'JamFox Better Adventures'
+      #RCON_PASSWORD: ''
+      RCON_PORT: 25575
+      # Autopause when last connect was a while ago
+      ENABLE_AUTOPAUSE: false
+      # pausing causes a single tick to take as long as the process is stopped, so we disable tick watchdog
+      MAX_TICK_TIME: -1
+      USE_AIKAR_FLAGS: true
+      INIT_MEMORY: '12G'
+      MAX_MEMORY: '64G'
+      SYNC_CHUNK_WRITES: false
+      VIEW_DISTANCE: 16
+      SIMULATION_DISTANCE: 6
+    volumes:
+      # attach the relative directory 'data' to the container's /data path
+      - /minecraft-better/data:/data
+      - /minecraft-better/downloads:/downloads
