@@ -19,6 +19,9 @@ pve0         ansible_host=192.168.10.100 ilo_addr=192.168.10.114
 [nas] # NAS
 nas0         ansible_host=192.168.10.66
 
+[green]
+green        ansible_host=192.168.10.67  
+
 #[vb] # Nomad base nodes aka the control plane
 #vb0          ansible_host=192.168.10.120
 #vb1          ansible_host=192.168.10.121

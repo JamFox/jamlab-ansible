@@ -1,0 +1,4 @@
+users: "{{ vars_common_all_main_users }}"
+users_deleted: "{{ vars_common_all_users_deleted }}"
+
+sshd: "{{ vars_common_all_default_sshd }}"
