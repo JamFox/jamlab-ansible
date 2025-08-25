@@ -45,3 +45,61 @@ roles:
     src: https://github.com/geerlingguy/ansible-role-logstash
   - name: filebeat
     src: https://github.com/geerlingguy/ansible-role-filebeat
+  - name: ansible_parallel
+    src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-ansible-parallel.git
+    scm: git
+  - name: firewalld
+    src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-firewalld.git
+    scm: git
+  - name: letsencrypt
+    src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-letsencrypt.git
+    scm: git
+  - name: loki_promtail
+    src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-loki_promtail.git
+    scm: git
+  - name: mounts_exports
+    src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-mounts_exports.git
+    scm: git
+  - name: netplan
+    src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-netplan.git
+    scm: git
+  - name: networking
+    src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-networking.git
+    scm: git
+  - name: podman
+    src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-podman.git
+    scm: git
+  - name: resolv_hosts
+    src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-resolv_hosts.git
+    scm: git
+  - name: rsyslog
+    src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-rsyslog.git
+    scm: git
+  - name: soft_apt
+    src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-soft_apt.git
+    scm: git
+  - name: soft_yum
+    src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-soft_yum.git
+    scm: git
+  - name: soft_repo
+    src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-soft_repo.git
+    scm: git
+  - name: sshd
+    src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-sshd.git
+    scm: git
+  - name: sysctl
+    src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-sysctl.git
+    scm: git
+  - name: users_groups
+    src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-users_groups.git
+    scm: git
+  - name: cron
+    src: https://github.com/weareinteractive/ansible-cron.git
+  - name: selinux
+    src: https://github.com/linux-system-roles/selinux
+  - name: network
+    src: https://github.com/linux-system-roles/network
+  - name: apache
+    src: https://github.com/geerlingguy/ansible-role-apache
+  - name: nginx
+    src: https://github.com/geerlingguy/ansible-role-nginx
