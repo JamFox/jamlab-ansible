@@ -2,3 +2,31 @@ users: "{{ vars_common_all_main_users }}"
 users_deleted: "{{ vars_common_all_users_deleted }}"
 
 sshd: "{{ vars_common_all_default_sshd }}"
+
+firewalld_enabled: true
+firewalld_service_state: started
+firewalld_remove_unmanaged: false
+firewalld_zones:
+  - name: "internal"
+    short: "Internal"
+    description: "For use on internal networks. You mostly trust the other computers on the networks to not harm your computer. Only selected incoming connections are accepted."
+    source:
+      - address: "172.16.0.0/12"
+      - address: "192.168.0.0/16"
+      - address: "10.10.0.0/16"
+
+sysctl_items: "{{ vars_common_all_sysctl_items }}"
+
+selinux_policy: targeted
+selinux_state: enforcing
+
+soft_packages_latest: "{{ vars_common_all_admin_packages_rocky }}"
+
+ddclient_api_login: "{{ vars_common_all_dns_login }}"
+ddclient_api_key: "{{ vars_common_all_dns_key }}"
+ddclient_api_token: "{{ vars_common_all_dns_token }}"
+
+certbot_domain: "{{ vars_common_all_default_domain }}"
+certbot_dns_token: "{{ vars_common_all_dns_token }}"
+
+haproxy_domain: "{{ vars_common_all_default_domain }}"

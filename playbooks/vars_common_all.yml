@@ -377,3 +377,24 @@ vars_common_all_github_repo_read_token: !vault |
   39323132386538343832363230396638643538313165653462333938636666623532376131353930
   39346137663538633635373338656365326131626238373231663566356464383563633562633532
   6466
+
+vars_common_all_sysctl_items:
+  - name: net.ipv6.conf.all.disable_ipv6
+    value: "1"
+    file: 98-disable_ipv6.conf
+  - name: net.ipv6.conf.default.disable_ipv6
+    value: "1"
+    file: 98-disable_ipv6.conf
+  - name: net.ipv6.conf.lo.disable_ipv6
+    value: "1"
+    file: 98-disable_ipv6.conf
+
+vars_common_all_admin_packages_rocky:
+  - bind-utils
+  - telnet
+  - tcpdump
+  - tar
+  - unzip
+  - vim
+  - wget
+  - htop
