@@ -2,22 +2,9 @@ collections:
   # Ansible Posix from Ansible Galaxy
   # https://docs.ansible.com/ansible/latest/collections/ansible/posix/
   - name: ansible.posix
-    version: 1.5.1
   # Community General from Ansible Galaxy
   # https://docs.ansible.com/ansible/latest/collections/community/general/
   - name: community.general
-    version: 6.4.0
-  # Smallstep collection for step-ca
-  - name: maxhoesel.smallstep
-    version: ">=0.24.5,<0.26"
-  # Grafana collection
-  # https://docs.ansible.com/ansible/latest/collections/grafana/grafana/index.html
-  - name: grafana.grafana
-    version: 2.2.3
-  # Prometheus collection
-  # https://prometheus-community.github.io/ansible/branch/main/
-  - name: prometheus.prometheus
-    version: 0.11.2
 
 roles:
   - name: pip
@@ -28,13 +15,6 @@ roles:
     src: https://github.com/mikegleasonjr/ansible-role-firewall
   - name: ipsets
     src: https://github.com/sv0/ansible-ipset
-  # Freeze consul, nomad and loki_promtail in place for the thesis
-  #- name: consul
-  #  src: https://github.com/ansible-community/ansible-consul
-  #- name: nomad
-  #  src: https://github.com/ansible-community/ansible-nomad
-  #- name: loki_promtail
-  #  src: https://github.com/rezizter/ansible_loki
   - name: logrotate
     src: https://github.com/robertdebock/ansible-role-logrotate
   - name: java

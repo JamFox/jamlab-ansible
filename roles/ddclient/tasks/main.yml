@@ -3,9 +3,44 @@
     name:
       - ddclient
     state: latest
+  when: ansible_facts['os_family'] == "Debian" and not ddclient_install_from_source | bool
 
-- name: Configure ddclient
-  ansible.builtin.template:
-    src: files/ddclient.conf.j2
-    dest: /etc/ddclient.conf
-  notify: Restart ddclient
+- name: Install ddclient from source
+  when: ddclient_install_from_source | bool
+  block:
+    - name: Get latest ddclient release info
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/ddclient/ddclient/releases/latest
+        return_content: yes
+      register: ddclient_release_tag_r
+    - name: Set ddclient latest version and tarball url
+      ansible.builtin.set_fact:
+        ddclient_latest_tag: "{{ ddclient_release_tag_r.json.tag_name }}"
+        ddclient_tarball_url: "{{ ddclient_release_tag_r.json.tarball_url }}"
+    - name: Download ddclient source tarball
+      ansible.builtin.get_url:
+        url: "{{ ddclient_tarball_url }}"
+        dest: /tmp/ddclient-{{ ddclient_latest_tag }}.tar.gz
+    - name: Extract ddclient source
+      ansible.builtin.unarchive:
+        src: /tmp/ddclient-{{ ddclient_latest_tag }}.tar.gz
+        dest: /tmp/
+        remote_src: yes
+    - name: Build and install ddclient from source
+      ansible.builtin.shell: |
+        cd /tmp/ddclient-ddclient-*
+        ./configure \
+            --prefix=/usr \
+            --sysconfdir=/etc \
+            --localstatedir=/var
+        make
+        make VERBOSE=1 check
+        make install
+      args:
+        creates: /usr/local/sbin/ddclient
+
+#- name: Configure ddclient
+#  ansible.builtin.template:
+#    src: files/ddclient.conf.j2
+#    dest: "{{ ddclient_conf_dir }}/ddclient.conf"
+#  notify: Restart ddclient

@@ -1,0 +1,8 @@
+ddclient_install_from_source: false
+
+# With v4 now conf should be at /etc/ddclient/ddclient.conf not /etc/ddclient.conf
+ddclient_conf_dir: /etc
+
+#ddclient_api_login:
+#ddclient_api_key:
+#ddclient_api_token:

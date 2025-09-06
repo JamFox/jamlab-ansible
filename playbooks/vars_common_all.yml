@@ -183,6 +183,13 @@ vars_common_all_soft_apt_hashicorp:
 pip_package: python3-pip
 pip_executable: "{{ 'pip3' if pip_package.startswith('python3') else 'pip' }}"
 
+vars_common_all_emergency_console_passwd: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  34383263343632343630613263383865343535663631623938623862373233316238326533646566
+  6133346362313937316235356636363237613132326531310a636634303434303066623333316461
+  37343164363565636265626431326365616332383538326432376664396338303065333166346664
+  3637363637373930630a336332336535343536353634366233623238616263363530396263363963
+  3033
 vars_common_all_users_deleted:
   - name: "rocky"
   - name: "debian"
@@ -195,6 +202,7 @@ vars_common_all_main_users:
     primary_group: "{{ vars_common_all_main_group }}"
     homedir: "/home/{{ vars_common_all_main_user }}"
     sudo: "%{{ vars_common_all_main_group }} ALL=(ALL) NOPASSWD: ALL"
+    passwd: "{{ vars_common_all_emergency_console_passwd | password_hash('sha512') }}"
     ssh_authorized_keys:
       - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILayJ7ZP6Z6IDms4ujnz9nRnAJEIXwyto1SbSwfzjqst jamfox"
       - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM0ULeAHpFD9I+oIBImBw+UHQui4Q8V1jQThOIlYExi5 jamfox@5t"
