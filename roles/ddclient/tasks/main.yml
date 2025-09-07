@@ -1,18 +1,43 @@
 - name: Install ddclient
-  ansible.builtin.apt:
+  ansible.builtin.package:
     name:
       - ddclient
     state: latest
-  when: ansible_facts['os_family'] == "Debian" and not ddclient_install_from_source | bool
+  when: not ddclient_install_from_source | bool
+
+- name: Set ddclient executable path
+  ansible.builtin.set_fact:
+    ddclient_executable: "{{ '/usr/local/bin/ddclient' if ddclient_install_from_source | bool else '/usr/bin/ddclient' }}"
+
+- name: Check if ddclient is installed and which version
+  ansible.builtin.shell: "{{ ddclient_executable }} --version"
+  register: ddclient_version_r
+  ignore_errors: true
+
+- name: Extract ddclient version
+  ansible.builtin.set_fact:
+    ddclient_installed_version: "v{{ (ddclient_version_r.stdout | regex_search('ddclient version ([0-9.]+)', '\\1')) | first }}"
+  failed_when: ddclient_version_r.stdout is not search('ddclient version ([0-9.]+)')
+  when: ddclient_version_r.rc == 0 and ddclient_install_from_source | bool
+
+- name: Get latest ddclient release info
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/ddclient/ddclient/releases/latest
+    return_content: true
+  register: ddclient_release_tag_r
+  when: ddclient_install_from_source | bool
 
 - name: Install ddclient from source
-  when: ddclient_install_from_source | bool
+  when: ddclient_install_from_source | bool and (ddclient_version_r.rc != 0 or (ddclient_installed_version is defined and (ddclient_installed_version != ddclient_release_tag_r.json.tag_name)))
   block:
-    - name: Get latest ddclient release info
-      ansible.builtin.uri:
-        url: https://api.github.com/repos/ddclient/ddclient/releases/latest
-        return_content: yes
-      register: ddclient_release_tag_r
+    - name: Install requirements
+      ansible.builtin.yum:
+        name: 
+          - autoconf
+          - automake
+          - perl
+          - sendmail
+        state: present
     - name: Set ddclient latest version and tarball url
       ansible.builtin.set_fact:
         ddclient_latest_tag: "{{ ddclient_release_tag_r.json.tag_name }}"
@@ -25,10 +50,16 @@
       ansible.builtin.unarchive:
         src: /tmp/ddclient-{{ ddclient_latest_tag }}.tar.gz
         dest: /tmp/
-        remote_src: yes
+        remote_src: true
+        list_files: true
+      register: ddclient_unarchive_r
+    #- name: Set extracted ddclient directory path
+    #  ansible.builtin.set_fact:
+    #  ddclient_extracted_dir: "{{ ddclient_unarchive_result.dest }}/{{ ddclient_unarchive_result.files[0].path | basename }}"
     - name: Build and install ddclient from source
       ansible.builtin.shell: |
-        cd /tmp/ddclient-ddclient-*
+        cd {{ ddclient_unarchive_r.dest }}/{{ ddclient_unarchive_r.files[0] }}
+        ./autogen
         ./configure \
             --prefix=/usr \
             --sysconfdir=/etc \
@@ -37,10 +68,41 @@
         make VERBOSE=1 check
         make install
       args:
-        creates: /usr/local/sbin/ddclient
+        creates: /usr/local/bin/ddclient
+    - name: Copy sample systemd service file for ddclient
+      ansible.builtin.copy:
+        src: "{{ ddclient_unarchive_r.dest }}/{{ ddclient_unarchive_r.files[0] }}/sample-etc_systemd.service"
+        dest: /etc/systemd/system/ddclient.service
+        remote_src: yes
+        owner: root
+        group: root
+        mode: '0644'
+    - name: Update ddclient systemd service ExecStart to use /usr/local/bin/ddclient
+      ansible.builtin.replace:
+        path: /etc/systemd/system/ddclient.service
+        regexp: '^ExecStart=/usr/bin/ddclient(.*)$'
+        replace: 'ExecStart=/usr/local/bin/ddclient\1'
 
-#- name: Configure ddclient
-#  ansible.builtin.template:
-#    src: files/ddclient.conf.j2
-#    dest: "{{ ddclient_conf_dir }}/ddclient.conf"
-#  notify: Restart ddclient
+- name: Ensure ddclient config directory exists if not /etc
+  ansible.builtin.file:
+    path: "{{ ddclient_conf_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  when: ddclient_conf_dir != '/etc'
+
+- name: Configure ddclient
+  ansible.builtin.template:
+    src: files/ddclient.conf.j2
+    dest: "{{ ddclient_conf_dir }}/ddclient.conf"
+    owner: root
+    group: root
+    mode: '0600'
+  notify: Restart ddclient
+
+- name: Ensure ddclient service is enabled and started
+  ansible.builtin.service:
+    name: ddclient
+    enabled: yes
+    state: started

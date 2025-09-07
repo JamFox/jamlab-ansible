@@ -15,5 +15,7 @@
     - { role: soft_yum,       tags: [all, soft, soft_yum], when: not (disabled_roles.soft_yum | default(false)) }
     - { role: pip,            tags: [all, pip] }
     - { role: ddclient,       tags: [all, ddclient],       when: not (disabled_roles.ddclient | default(false))}
+    # VPN with Wireguard made with: https://github.com/Nyr/wireguard-install
+    # Cloudflared tunnel made with instructions in tunnel config of Cloudflare Zero Trust dashboard
     #- { role: certbot,        tags: [all, certbot],        when: not (disabled_roles.certbot | default(false))}
     #- { role: haproxy,        tags: [all, haproxy],        when: not (disabled_roles.haproxy | default(false))}

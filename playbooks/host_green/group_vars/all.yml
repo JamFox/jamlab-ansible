@@ -27,8 +27,9 @@ firewalld_zones:
     description: "For use on internal networks. You mostly trust the other computers on the networks to not harm your computer. Only selected incoming connections are accepted."
     source:
       - address: "172.16.0.0/12"
-      - address: "192.168.0.0/16"
       - address: "10.10.0.0/16"
+    port:
+      - { port: "22", protocol: "tcp" } # SSH
   - name: "trusted"
     short: "Trusted"
     description: "All network connections in trusted sources are accepted."
