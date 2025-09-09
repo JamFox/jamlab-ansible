@@ -1,0 +1,12 @@
+network_connections:
+  - name: "enp3s0"
+    type: ethernet
+    autoconnect: true
+    state: up
+    interface_name: enp3s0
+    zone: public # Same as adding with nmcli
+    ip:
+      address:
+        - 192.168.10.67/16
+      ipv6_disabled: true
+# wg0 added with: nmcli con mod wg0 connection.zone internal

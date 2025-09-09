@@ -22,20 +22,28 @@ firewalld_enabled: true
 firewalld_service_state: started
 firewalld_remove_unmanaged: false
 firewalld_zones:
+  - name: "public"
+    short: "Public"
+    description: "For use in untrusted public networks. You do not trust the other computers. Only selected incoming connections are accepted."
+    interface:
+      - name: "enp3s0" # Also needs to be added with network role (check host_vars) or nmcli
+    service:
+      - name: "ssh"
+    port:
+      - { port: "51821", protocol: "udp" }
+    rule:
+      - source: # Needed to route to other hosts in VPN network
+          address: "10.7.0.0/24"
+        destination: "not address=10.7.0.0/24"
+        masquerade: true
   - name: "internal"
     short: "Internal"
-    description: "For use on internal networks. You mostly trust the other computers on the networks to not harm your computer. Only selected incoming connections are accepted."
-    source:
-      - address: "172.16.0.0/12"
-      - address: "10.10.0.0/16"
-    port:
-      - { port: "22", protocol: "tcp" } # SSH
-  - name: "trusted"
-    short: "Trusted"
-    description: "All network connections in trusted sources are accepted."
-    target: "ACCEPT"
-    source:
-      - address: "192.168.0.0/16"
+    description: "For use on internal networks. You mostly trust the other computers. Only selected incoming connections are accepted."
+    interface:
+      - name: "wg0" # Also needs to be added via nmcli: nmcli con mod wg0 connection.zone internal
+    masquerade: true
+    service:
+      - name: "ssh"
 
 sysctl_items: "{{ vars_common_all_sysctl_items }}"
 
