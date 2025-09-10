@@ -44,6 +44,12 @@ firewalld_zones:
     masquerade: true
     service:
       - name: "ssh"
+  - name: "trusted"
+    short: "Trusted"
+    description: "All network connections in trusted sources are accepted."
+    target: "ACCEPT"
+    source:
+      - address: "10.7.0.0/24"
 
 sysctl_items: "{{ vars_common_all_sysctl_items }}"
 
