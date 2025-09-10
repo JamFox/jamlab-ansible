@@ -16,6 +16,7 @@
     - { role: ddclient,       tags: [all, ddclient],                  when: not (disabled_roles.ddclient | default(false))}
     # VPN with Wireguard made with: https://docs.rockylinux.org/10/guides/security/wireguard_vpn/
     # + add: firewall-cmd --permanent --zone=public --add-rich-rule='rule family="ipv4" source address="10.7.0.0/24" destination not address="10.7.0.0/24" masquerade'
+    # + firewall-cmd --permanent --zone=trusted --add-source="10.7.0.0/24"
     # Old method (not updated to nftables as Rocky 10 uses): https://github.com/Nyr/wireguard-install
     # NOTE: Add wireguard with iface before continuing  
     - { role: network,        tags: [all, networking_all, network]}
