@@ -17,3 +17,13 @@
     force: "{{ item.force | default('false') }}"
   with_items: "{{ custom_directories }}"
   when: item.src is defined
+
+- name: Create custom links
+  ansible.builtin.file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+  with_items: "{{ custom_links }}"
+  when:
+    - item.src is defined
+    - custom_links | length > 0

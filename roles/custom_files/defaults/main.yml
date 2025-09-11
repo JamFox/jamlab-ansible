@@ -25,3 +25,8 @@ custom_directories: []
 #    group: root
 #    mode: "0644"
 #    force: true
+
+custom_links: []
+#custom_links:
+#  - src: /var/www/html/dir1
+#    dest: /var/www/html/dirlink1
