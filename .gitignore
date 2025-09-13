@@ -55,7 +55,7 @@ roles/loki_promtail
 roles/mounts_exports
 roles/netplan
 roles/networking
-roles/podman
+#roles/podman # Config changed in Rocky 10 podman version
 roles/resolv_hosts
 roles/rsyslog
 roles/soft_apt

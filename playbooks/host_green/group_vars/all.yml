@@ -51,6 +51,7 @@ firewalld_zones:
     source:
       - address: "10.7.0.0/24"
 
+# For rootless podman to bind to ports lower than 1024, needs net.ipv4.ip_unprivileged_port_start=YOUR_PORT_NUMBER
 sysctl_items: "{{ vars_common_all_sysctl_items }}"
 
 selinux_policy: targeted
@@ -58,6 +59,7 @@ selinux_state: enforcing
 
 soft_epel_enabled: true
 soft_packages_latest: "{{ vars_common_all_admin_packages_rocky }}"
+soft_unattended_updates: true
 
 ddclient_install_from_source: true
 ddclient_conf_dir: /etc/ddclient
@@ -70,17 +72,56 @@ podman_manual_mapping: true
 podman_enable_user_socket: true
 # Set uid:gid, according to https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md
 podman_users:
-  #inside:
-  #outside:
+  inside: '655360:65536'
+  outside: '589824:65536'
 podman_search_registries: 
-  - 'registry.access.redhat.com'
   - 'docker.io'
-  - 'registry.fedoraproject.org'
   - 'quay.io'
+  - 'registry.access.redhat.com'
+  - 'registry.fedoraproject.org'
+  - 'registry.redhat.io'
   - 'registry.centos.org'
 # Use cgroupfs to support Podman in Podman
 podman_configure: true
 podman_conf_cgroup_manager: 'cgroupfs'
+
+cron_service_enabled: yes
+cron_service_state: started
+cron_tasks:
+  - name: "Clean unused Podman resources (inside user)"
+    user: inside
+    weekday: "1"
+    hour: "13"
+    minute: "0"
+    job: "podman image prune -f; podman volume prune -f; podman network prune -f"
+  - name: "Clean unused Podman resources (outside user)"
+    user: outside
+    weekday: "1"
+    hour: "13"
+    minute: "2"
+    job: "podman image prune -f; podman volume prune -f; podman network prune -f"
+
+custom_files:
+  - name: "Podman machinectl shortcut"
+    blockinfile:
+      - "#!/bin/bash"
+      - ""
+      - "if [ \"$(whoami)\" != \"jamfox\" ]; then"
+      - "    echo \"This script can only be run by user jamfox\""
+      - "    exit 1"
+      - "fi"
+      - ""
+      - "if [ \"$1\" != \"inside\" ] && [ \"$1\" != \"outside\" ]; then"
+      - "    echo \"Usage: $0 {inside|outside}\""
+      - "    exit 1"
+      - "fi"
+      - ""
+      - "MACHINE=$1"
+      - "sudo machinectl shell \"${MACHINE}@\" /bin/bash"
+    dest: "/usr/local/bin/jsh"
+    mode: "0750"
+    owner: "jamfox"
+    group: "admin"
 
 certbot_domain: "{{ vars_common_all_default_domain }}"
 certbot_dns_token: "{{ vars_common_all_dns_token }}"

@@ -7,20 +7,23 @@
     - ../vars_disabled_roles.yml
 
   roles:
-    - { role: users_groups,   tags: [all, users_groups],              when: not (disabled_roles.users_groups | default(false))}
-    - { role: sshd,           tags: [all, sshd],                      when: not (disabled_roles.sshd | default(false))}
-    - { role: sysctl,         tags: [all, networking_all, sysctl],    when: not (disabled_roles.sysctl | default(false))}
+    - { role: users_groups,   tags: [all, containers_all, users_groups], when: not (disabled_roles.users_groups | default(false))}
+    - { role: sshd,           tags: [all, networking_all, sshd],         when: not (disabled_roles.sshd | default(false))}
+    - { role: sysctl,         tags: [all, networking_all, sysctl],       when: not (disabled_roles.sysctl | default(false))}
     - { role: selinux,        tags: [all, selinux] }
-    - { role: soft_yum,       tags: [all, soft, soft_yum],            when: not (disabled_roles.soft_yum | default(false)) }
-    - { role: pip,            tags: [all, pip] }
-    - { role: ddclient,       tags: [all, ddclient],                  when: not (disabled_roles.ddclient | default(false))}
+    - { role: soft_yum,       tags: [all, soft_all, soft_yum],           when: not (disabled_roles.soft_yum | default(false)) }
+    - { role: pip,            tags: [all, soft_all, pip] }
+    - { role: ddclient,       tags: [all, ddclient],                     when: not (disabled_roles.ddclient | default(false))}
     # VPN with Wireguard made with: https://docs.rockylinux.org/10/guides/security/wireguard_vpn/
     # + add: firewall-cmd --permanent --zone=public --add-rich-rule='rule family="ipv4" source address="10.7.0.0/24" destination not address="10.7.0.0/24" masquerade'
     # + firewall-cmd --permanent --zone=trusted --add-source="10.7.0.0/24"
     # Old method (not updated to nftables as Rocky 10 uses): https://github.com/Nyr/wireguard-install
     # NOTE: Add wireguard with iface before continuing  
-    - { role: network,        tags: [all, networking_all, network]}
-    - { role: firewalld,      tags: [all, networking_all, firewalld], when: not (disabled_roles.firewalld | default(false)) }
+    - { role: network,        tags: [all, networking_all, network] }
+    - { role: firewalld,      tags: [all, networking_all, firewalld],    when: not (disabled_roles.firewalld | default(false)) }
     # Cloudflared tunnel made with instructions in tunnel config of Cloudflare Zero Trust dashboard
-    #- { role: certbot,        tags: [all, certbot],                  when: not (disabled_roles.certbot | default(false))}
-    #- { role: haproxy,        tags: [all, haproxy],                  when: not (disabled_roles.haproxy | default(false))}
+    - { role: podman,         tags: [all, containers_all, podman] }
+    - { role: cron,           tags: [all, containers_all, cron] }
+    - { role: custom_files,   tags: [all, containers_all, custom_files] }
+    #- { role: certbot,        tags: [all, certbot],                     when: not (disabled_roles.certbot | default(false))}
+    #- { role: haproxy,        tags: [all, haproxy],                     when: not (disabled_roles.haproxy | default(false))}

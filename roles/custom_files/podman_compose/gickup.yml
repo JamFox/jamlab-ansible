@@ -1,0 +1,9 @@
+version: "3"
+services:
+  runner:
+    # build: . # If you want to Build the Image locally (You need the complete Repo on your PC)
+    image: buddyspencer/gickup:latest
+    volumes:
+      - ${HOME}/gickup/backup:/gickup/backup:Z
+      - ${HOME}/gickup/conf.yml:/gickup/conf.yml:Z
+    command: ["/gickup/conf.yml"]

@@ -1,0 +1,29 @@
+---
+# role: ansible-role-podman
+# file: vars/Debian.yml
+
+podman_ppa: "ppa:projectatomic/ppa"
+
+podman_packages:
+  - software-properties-common
+  - podman
+  - git
+  - golang-go
+  - go-md2man
+  - iptables
+  - libassuan-dev
+  - libc6-dev
+  - libdevmapper-dev
+  - libglib2.0-dev
+  - libgpgme-dev
+  - libgpg-error-dev
+  - libostree-dev
+  - libprotobuf-dev
+  - libseccomp-dev
+  - libselinux1-dev
+  - libsystemd-dev
+  - pkg-config
+  - runc
+  - uidmap
+
+podman_manual_mapping: true

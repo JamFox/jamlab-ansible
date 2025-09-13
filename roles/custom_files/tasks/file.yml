@@ -53,6 +53,10 @@
       {{ line }}
       {% endfor %}
     dest: "{{ custom_file.dest }}"
+    mode: "{{ custom_file.mode | default(omit) }}"
+    owner: "{{ custom_file.owner | default(omit) }}"
+    group: "{{ custom_file.group | default(omit) }}"
+    create: yes
     marker: "# {mark} ANSIBLE MANAGED BLOCK"
   register: block_r
   when: 
