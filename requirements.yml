@@ -11,20 +11,8 @@ roles:
     src: https://github.com/geerlingguy/ansible-role-pip
   - name: docker
     src: https://github.com/geerlingguy/ansible-role-docker
-  - name: iptables
-    src: https://github.com/mikegleasonjr/ansible-role-firewall
-  - name: ipsets
-    src: https://github.com/sv0/ansible-ipset
   - name: logrotate
     src: https://github.com/robertdebock/ansible-role-logrotate
-  - name: java
-    src: https://github.com/geerlingguy/ansible-role-java
-  - name: elasticsearch
-    src: https://github.com/geerlingguy/ansible-role-elasticsearch
-  - name: logstash
-    src: https://github.com/geerlingguy/ansible-role-logstash
-  - name: filebeat
-    src: https://github.com/geerlingguy/ansible-role-filebeat
   - name: ansible_parallel
     src: https://gitlab.hpc.taltech.ee/hpc-public/ansible/roles/ansible-ansible-parallel.git
     scm: git

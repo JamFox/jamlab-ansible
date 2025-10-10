@@ -63,9 +63,7 @@ soft_unattended_updates: true
 
 ddclient_install_from_source: true
 ddclient_conf_dir: /etc/ddclient
-ddclient_api_login: "{{ vars_common_all_dns_login }}"
 ddclient_api_key: "{{ vars_common_all_dns_key }}"
-ddclient_api_token: "{{ vars_common_all_dns_token }}"
 
 podman_enabled: true
 podman_manual_mapping: true
@@ -122,8 +120,3 @@ custom_files:
     mode: "0750"
     owner: "jamfox"
     group: "admin"
-
-certbot_domain: "{{ vars_common_all_default_domain }}"
-certbot_dns_token: "{{ vars_common_all_dns_token }}"
-
-haproxy_domain: "{{ vars_common_all_default_domain }}"

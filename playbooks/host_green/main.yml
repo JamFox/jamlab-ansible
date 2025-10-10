@@ -25,5 +25,3 @@
     - { role: podman,         tags: [all, containers_all, podman] }
     - { role: cron,           tags: [all, containers_all, cron] }
     - { role: custom_files,   tags: [all, containers_all, custom_files] }
-    #- { role: certbot,        tags: [all, certbot],                     when: not (disabled_roles.certbot | default(false))}
-    #- { role: haproxy,        tags: [all, haproxy],                     when: not (disabled_roles.haproxy | default(false))}

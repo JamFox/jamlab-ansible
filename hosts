@@ -1,20 +1,8 @@
-[portainer] # Portainer docker management
-portainer    ansible_host=192.168.10.111
-
-[head] # Internal CA, conf management, VPN
-head         ansible_host=192.168.10.10
-
-[observe] # Observability stack on Prometheus
-logmon       ansible_host=192.168.10.50
-
 [bastion] # DNS
 rpi0         ansible_host=192.168.10.53
 
 [proxy] # HAProxy
 rpi1         ansible_host=192.168.10.80
-
-[pve] # Proxmox
-pve0         ansible_host=192.168.10.100 ilo_addr=192.168.10.114
 
 [nas] # NAS
 nas0         ansible_host=192.168.10.66
@@ -22,6 +10,17 @@ nas0         ansible_host=192.168.10.66
 [green]
 green        ansible_host=192.168.10.67  
 
+#############################################
+#                 ARCHIVE                   #
+#############################################
+#[portainer] # Portainer docker management
+#portainer    ansible_host=192.168.10.111
+#[pve] # Proxmox
+#pve0         ansible_host=192.168.10.100 ilo_addr=192.168.10.114
+#[head] # Internal CA, conf management, VPN
+#head         ansible_host=192.168.10.10
+#[observe] # Observability stack on Prometheus
+#logmon       ansible_host=192.168.10.50
 #[vb] # Nomad base nodes aka the control plane
 #vb0          ansible_host=192.168.10.120
 #vb1          ansible_host=192.168.10.121
@@ -37,7 +36,7 @@ green        ansible_host=192.168.10.67
 #[hashistack:children]
 #vb
 #vs
-[loki:children]
-observe
-[promtail:children]
-observe
+#[loki:children]
+#observe
+#[promtail:children]
+#observe
