@@ -22,6 +22,8 @@
     - { role: network,        tags: [all, networking_all, network] }
     - { role: firewalld,      tags: [all, networking_all, firewalld],    when: not (disabled_roles.firewalld | default(false)) }
     # Cloudflared tunnel made with instructions in tunnel config of Cloudflare Zero Trust dashboard
+    # But change in service unit: ExecStart=/usr/bin/cloudflared --no-autoupdate
+    # to: ExecStart=/usr/bin/cloudflared --autoupdate-freq 24h0m0s
     - { role: podman,         tags: [all, containers_all, podman] }
     - { role: cron,           tags: [all, containers_all, cron] }
     - { role: custom_files,   tags: [all, containers_all, custom_files] }
