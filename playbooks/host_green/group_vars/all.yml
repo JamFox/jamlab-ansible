@@ -98,6 +98,10 @@ cron_tasks:
     hour: "13"
     minute: "2"
     job: "podman image prune -f; podman volume prune -f; podman network prune -f"
+  - name: "Copy repo backup to nfs"
+    user: root
+    special_time: "monthly"
+    job: "/bin/rsync -av --no-owner --no-group /home/inside/gickup/backup/ /mnt/nfs/repos/ >> /var/log/repos_rsync.log 2>&1"
 
 custom_files:
   - name: "Podman machinectl shortcut"
