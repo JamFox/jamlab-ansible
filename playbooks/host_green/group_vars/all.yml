@@ -101,7 +101,7 @@ cron_tasks:
   - name: "Copy repo backup to nfs"
     user: root
     special_time: "monthly"
-    job: "/bin/rsync -av --no-owner --no-group /home/inside/gickup/backup/ /mnt/nfs/repos/ >> /var/log/repos_rsync.log 2>&1"
+    job: "/bin/mountpoint -q /mnt/nfs && /bin/rsync -av --no-owner --no-group /home/inside/gickup/backup/ /mnt/nfs/repos/ >> /var/log/repos_rsync.log 2>&1"
 
 custom_files:
   - name: "Podman machinectl shortcut"
